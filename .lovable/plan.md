@@ -1,51 +1,28 @@
 
-# Complete Missing Features for The Remnant Project
 
-## Overview
-After comparing every page against the project description and Figma design, several features are incomplete or missing. This plan addresses all gaps.
+# Redesign Home Page to Match Figma Landing Style
 
----
+## What Changes
+The existing Home Page will be updated to precisely match the specified layout: teal-accented headline with "history" highlighted, a larger hero image card with shadow, cleaner city info section, and a full-width CTA button. The quick links section will be removed since it is not part of this design spec.
 
-## 1. Fix MarkerCard placeholder text
-The MarkerCard currently shows "Supporting line text lorem ipsum dolor sit amet" instead of real data. Replace with the marker's address.
+## Layout (top to bottom)
 
-## 2. Fix Home page quick links
-Currently shows "Share Link" and "Report Issue" -- should show contextual links matching the app purpose:
-- "Your Progress" (links to /progress)
-- "Request a Marker" (links to /request)
-
-## 3. Add Marker Detail location display
-The marker detail page is missing the address/location line beneath the title. Add the marker address below the hero.
-
-## 4. Add Scan success state
-After scanning or entering a code, show a brief success animation/screen before navigating to the marker detail page, including the marker name and a checkmark.
-
-## 5. Add Map page bottom sheet preview
-When tapping a marker card or pin on the map, show a slide-up bottom sheet with a marker preview (image, name, distance, "View Details" button) instead of immediately navigating away.
-
-## 6. Add Marker Detail loading/generating state
-Add a skeleton loading state for the story section with a "Generating story..." indicator, simulated with a brief delay on first expand.
-
-## 7. Add Settings content pages
-"How we use AI" and "Privacy Policy" buttons currently do nothing. Add simple content screens/modals for each with placeholder policy text.
-
----
+1. **Header row** -- "The Remnant Project" (teal, left) + hamburger icon (right, no menu)
+2. **Headline** -- "Discover" on line 1, "history where you stand." on line 2, with "history" in teal
+3. **Hero image card** -- Full-width rounded card with soft shadow, taller image (~220px)
+4. **City title + progress** -- Bold "Tacoma, WA", sub-line "Progress: X/Y Markers"
+5. **Progress bar** -- Thin rounded bar, muted track, teal fill
+6. **CTA button** -- Full-width rounded teal button "Explore Tacoma" with arrow icon on the right side
 
 ## Technical Details
 
-### Files to modify:
-- `src/components/MarkerCard.tsx` -- Replace lorem ipsum with `marker.address`
-- `src/pages/HomePage.tsx` -- Fix quick link labels and icons
-- `src/pages/MarkerDetailPage.tsx` -- Add address display below hero, add story loading state with skeleton
-- `src/pages/ScanPage.tsx` -- Add success state with animation before navigation
-- `src/pages/MapPage.tsx` -- Add bottom sheet component for marker preview on pin/card tap
-- `src/pages/SettingsPage.tsx` -- Add dialog/sheet content for AI and Privacy sections
+### File: `src/pages/HomePage.tsx`
+- Restructure headline to use a `<span className="text-primary">` around "history"
+- Wrap hero image in a card-style container with `rounded-2xl shadow-lg`
+- Increase image height to `h-56`
+- Combine progress label into single line: "Progress: {visited}/{total} Markers"
+- Make CTA button full-width with `w-full rounded-full py-3`
+- Remove the quick links section entirely (those routes are accessible via bottom nav)
+- Keep all existing imports and data references
 
-### New files:
-- None required; all changes fit within existing files using existing UI components (Sheet from shadcn for bottom sheet, Dialog for settings content)
-
-### Approach:
-- Use the existing `vaul` Drawer component for the map bottom sheet (already installed)
-- Use Dialog for settings content pages
-- Add a `useState` timer to simulate story generation loading
-- Maintain the existing teal design system throughout
+No new files or dependencies needed.
