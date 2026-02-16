@@ -18,7 +18,7 @@ const ProgressPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader title="Progress" back />
+      <PageHeader title="Progress" />
 
       <div className="px-5 pt-4">
         {/* Stats card */}

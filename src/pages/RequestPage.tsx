@@ -44,7 +44,7 @@ const RequestPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader title="Request a Marker" back />
+      <PageHeader title="Request a Marker" />
 
       <form onSubmit={handleSubmit} className="space-y-5 px-5 pt-4">
         <div>
