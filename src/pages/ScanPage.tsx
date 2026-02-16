@@ -1,14 +1,73 @@
-import { useState } from "react";
-import { QrCode, CheckCircle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { QrCode, CheckCircle, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/mockData";
 import PageHeader from "@/components/PageHeader";
+import { Html5Qrcode } from "html5-qrcode";
 
 const ScanPage = () => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
   const [successMarker, setSuccessMarker] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleScanResult = (decodedText: string) => {
+    // Stop scanner before navigating
+    scannerRef.current?.stop().catch(() => {});
+
+    // Extract marker ID from URL or use raw text
+    let code = decodedText;
+    try {
+      const url = new URL(decodedText);
+      const parts = url.pathname.split("/");
+      const markerIdx = parts.indexOf("marker");
+      if (markerIdx !== -1 && parts[markerIdx + 1]) {
+        code = parts[markerIdx + 1];
+      }
+    } catch {
+      // Not a URL, use as-is
+    }
+
+    const found = markers.find((m) => m.id === code);
+    setSuccessMarker(found?.name ?? code);
+    setTimeout(() => navigate(`/marker/${code}`), 1500);
+  };
+
+  useEffect(() => {
+    if (successMarker || showManual) return;
+
+    const startScanner = async () => {
+      try {
+        const scanner = new Html5Qrcode("qr-reader");
+        scannerRef.current = scanner;
+
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 220, height: 220 } },
+          (decodedText) => handleScanResult(decodedText),
+          () => {} // ignore scan failures
+        );
+        setScanning(true);
+      } catch (err: any) {
+        setCameraError(
+          err?.message?.includes("NotAllowed")
+            ? "Camera permission denied. Use manual entry below."
+            : "Could not access camera. Use manual entry below."
+        );
+      }
+    };
+
+    startScanner();
+
+    return () => {
+      scannerRef.current?.stop().catch(() => {});
+      scannerRef.current = null;
+    };
+  }, [successMarker, showManual]);
 
   const handleOpenMarker = () => {
     const code = manualCode.trim() || "union-station";
@@ -34,18 +93,32 @@ const ScanPage = () => {
       <PageHeader title="Scan" back />
 
       <div className="flex flex-1 flex-col items-center justify-center px-6">
-        {/* QR Camera placeholder */}
-        <div className="relative mb-8 flex h-64 w-64 items-center justify-center rounded-2xl bg-foreground/90">
-          <div className="absolute inset-4 rounded-xl border-2 border-primary-foreground/30" />
-          <QrCode className="h-16 w-16 text-primary-foreground/60" />
+        {/* QR Camera */}
+        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-2xl bg-foreground/90">
+          {cameraError ? (
+            <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
+              <CameraOff className="h-12 w-12 text-primary-foreground/60" />
+              <p className="text-xs text-primary-foreground/70">{cameraError}</p>
+            </div>
+          ) : (
+            <div id="qr-reader" ref={containerRef} className="h-full w-full" />
+          )}
+          {!scanning && !cameraError && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <QrCode className="h-16 w-16 animate-pulse text-primary-foreground/60" />
+            </div>
+          )}
         </div>
 
         <p className="mb-6 text-center text-sm text-muted-foreground">
-          Point at the QR code on the marker
+          {scanning ? "Point at the QR code on the marker" : "Starting camera…"}
         </p>
 
         <button
-          onClick={() => setShowManual(!showManual)}
+          onClick={() => {
+            scannerRef.current?.stop().catch(() => {});
+            setShowManual(!showManual);
+          }}
           className="text-sm font-medium text-primary"
         >
           Enter Code Manually
