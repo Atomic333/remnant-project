@@ -33,7 +33,7 @@ const MarkerCard = ({ marker, showDistance }: MarkerCardProps) => {
           {showDistance && marker.distance
             ? `${marker.distance} • `
             : ""}
-          Supporting line text lorem ipsum dolor sit amet, consectetur.
+          {marker.address}
         </p>
       </div>
       <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />

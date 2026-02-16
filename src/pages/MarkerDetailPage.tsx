@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Sparkles, FileText, Check } from "lucide-react";
+import { ArrowLeft, BookOpen, Sparkles, FileText, Check, MapPin } from "lucide-react";
 import { markers } from "@/data/mockData";
+import { Skeleton } from "@/components/ui/skeleton";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
 
@@ -16,6 +17,14 @@ const MarkerDetailPage = () => {
   const marker = markers.find((m) => m.id === id);
   const [visited, setVisited] = useState(marker?.visited ?? false);
   const [expandedSection, setExpandedSection] = useState<string | null>("summary");
+  const [storyLoaded, setStoryLoaded] = useState(false);
+
+  useEffect(() => {
+    if (expandedSection === "story" && !storyLoaded) {
+      const timer = setTimeout(() => setStoryLoaded(true), 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [expandedSection, storyLoaded]);
 
   if (!marker) {
     return (
@@ -61,6 +70,12 @@ const MarkerDetailPage = () => {
       </div>
 
       <div className="px-4 pt-4">
+        {/* Address */}
+        <div className="mb-4 flex items-center gap-2 text-muted-foreground">
+          <MapPin className="h-4 w-4 shrink-0" />
+          <span className="text-sm">{marker.address}</span>
+        </div>
+
         {/* Visit button */}
         <button
           onClick={() => setVisited(!visited)}
@@ -100,7 +115,19 @@ const MarkerDetailPage = () => {
           </button>
           {expandedSection === "story" && (
             <div className="animate-fade-in rounded-lg bg-card px-4 pb-4 pt-1">
-              <p className="text-sm leading-relaxed text-muted-foreground">{marker.story}</p>
+              {!storyLoaded ? (
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Sparkles className="h-3 w-3 animate-pulse text-primary" />
+                    Generating story…
+                  </div>
+                  <Skeleton className="h-4 w-full" />
+                  <Skeleton className="h-4 w-5/6" />
+                  <Skeleton className="h-4 w-4/6" />
+                </div>
+              ) : (
+                <p className="text-sm leading-relaxed text-muted-foreground">{marker.story}</p>
+              )}
             </div>
           )}
 
