@@ -1,9 +1,10 @@
-import { Map, QrCode, Trophy, Settings } from "lucide-react";
+import { Map, QrCode, Home, Trophy, Settings } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const tabs = [
   { icon: Map, label: "Map", path: "/map" },
   { icon: QrCode, label: "Scan", path: "/scan" },
+  { icon: Home, label: "Home", path: "/" },
   { icon: Trophy, label: "Progress", path: "/progress" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
