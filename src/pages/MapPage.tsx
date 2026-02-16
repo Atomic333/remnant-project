@@ -7,6 +7,7 @@ import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
+import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -85,8 +86,9 @@ const MapPage = () => {
 
   return (
     <div className="relative flex min-h-screen flex-col pb-20">
+      <PageHeader title="Map" back />
       {/* Search bar overlay */}
-      <div className="absolute left-0 right-0 top-0 z-[1000] p-3">
+      <div className="absolute left-0 right-0 top-[52px] z-[1000] p-3">
         <div className="flex items-center gap-2 rounded-xl bg-card px-3 py-2.5 shadow-lg">
           <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
