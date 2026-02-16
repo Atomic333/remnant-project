@@ -10,10 +10,10 @@ const FilterChips = ({ categories, active, onChange }: FilterChipsProps) => (
       <button
         key={cat}
         onClick={() => onChange(cat)}
-        className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+        className={`shrink-0 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
           active === cat
-            ? "bg-primary text-primary-foreground"
-            : "bg-card text-muted-foreground hover:bg-accent"
+            ? "bg-secondary text-secondary-foreground elevation-1"
+            : "border border-border bg-surface text-on-surface-variant hover:bg-surface-variant"
         }`}
       >
         {cat}

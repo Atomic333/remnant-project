@@ -29,8 +29,6 @@ const ScanPage = () => {
 
   const handleScanResult = (decodedText: string) => {
     stopScanner();
-
-    // Extract marker ID from URL or use raw text
     let code = decodedText;
     try {
       const url = new URL(decodedText);
@@ -40,9 +38,8 @@ const ScanPage = () => {
         code = parts[markerIdx + 1];
       }
     } catch {
-      // Not a URL, use as-is
+      // Not a URL
     }
-
     const found = markers.find((m) => m.id === code);
     setSuccessMarker(found?.name ?? code);
     setTimeout(() => navigate(`/marker/${code}`), 1500);
@@ -50,17 +47,15 @@ const ScanPage = () => {
 
   useEffect(() => {
     if (successMarker || showManual) return;
-
     const startScanner = async () => {
       try {
         const scanner = new Html5Qrcode("qr-reader");
         scannerRef.current = scanner;
-
         await scanner.start(
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 220, height: 220 } },
           (decodedText) => handleScanResult(decodedText),
-          () => {} // ignore scan failures
+          () => {}
         );
         isRunningRef.current = true;
         setScanning(true);
@@ -72,12 +67,8 @@ const ScanPage = () => {
         );
       }
     };
-
     startScanner();
-
-    return () => {
-      stopScanner();
-    };
+    return () => { stopScanner(); };
   }, [successMarker, showManual]);
 
   const handleOpenMarker = () => {
@@ -91,9 +82,11 @@ const ScanPage = () => {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <div className="animate-fade-in flex flex-col items-center gap-4">
-          <CheckCircle className="h-20 w-20 text-primary" />
-          <h2 className="text-xl font-bold text-foreground">Marker Found!</h2>
-          <p className="text-sm text-muted-foreground">{successMarker}</p>
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
+            <CheckCircle className="h-10 w-10 text-primary" />
+          </div>
+          <h2 className="font-display text-xl font-medium text-foreground">Marker Found!</h2>
+          <p className="text-sm text-on-surface-variant">{successMarker}</p>
         </div>
       </div>
     );
@@ -104,32 +97,29 @@ const ScanPage = () => {
       <PageHeader title="Scan" back />
 
       <div className="flex flex-1 flex-col items-center justify-center px-6">
-        {/* QR Camera */}
-        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-2xl border border-border bg-muted">
+        {/* Scanner area */}
+        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
           {cameraError ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
-              <CameraOff className="h-12 w-12 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground">{cameraError}</p>
+              <CameraOff className="h-12 w-12 text-on-surface-variant" />
+              <p className="text-xs text-on-surface-variant">{cameraError}</p>
             </div>
           ) : (
             <div id="qr-reader" ref={containerRef} className="h-full w-full" />
           )}
           {!scanning && !cameraError && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <QrCode className="h-16 w-16 animate-pulse text-muted-foreground" />
+              <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
             </div>
           )}
         </div>
 
-        <p className="mb-6 text-center text-sm text-muted-foreground">
+        <p className="mb-6 text-center text-sm text-on-surface-variant">
           {scanning ? "Point at the QR code on the marker" : "Starting camera…"}
         </p>
 
         <button
-          onClick={() => {
-            stopScanner();
-            setShowManual(!showManual);
-          }}
+          onClick={() => { stopScanner(); setShowManual(!showManual); }}
           className="text-sm font-medium text-primary"
         >
           Enter Code Manually
@@ -142,11 +132,11 @@ const ScanPage = () => {
               placeholder="Enter marker code..."
               value={manualCode}
               onChange={(e) => setManualCode(e.target.value)}
-              className="w-full rounded-lg border border-input bg-card px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <button
               onClick={handleOpenMarker}
-              className="mt-3 w-full rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground"
+              className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground"
             >
               Open Marker
             </button>
