@@ -67,15 +67,15 @@ const HomePage = () => {
             onClick={() => navigate("/progress")}
             className="flex w-full items-center gap-3 rounded-lg bg-card p-3 text-left"
           >
-            <span className="text-lg">🔗</span>
-            <span className="text-sm font-medium text-foreground">Share Link</span>
+            <span className="text-lg">📊</span>
+            <span className="text-sm font-medium text-foreground">Your Progress</span>
           </button>
           <button
             onClick={() => navigate("/request")}
             className="flex w-full items-center gap-3 rounded-lg bg-card p-3 text-left"
           >
-            <span className="text-lg">🔍</span>
-            <span className="text-sm font-medium text-foreground">Report Issue</span>
+            <span className="text-lg">📍</span>
+            <span className="text-sm font-medium text-foreground">Request a Marker</span>
           </button>
         </div>
       </div>

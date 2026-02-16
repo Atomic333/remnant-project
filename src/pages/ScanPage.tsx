@@ -1,20 +1,33 @@
 import { useState } from "react";
-import { QrCode } from "lucide-react";
+import { QrCode, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { markers } from "@/data/mockData";
 import PageHeader from "@/components/PageHeader";
 
 const ScanPage = () => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
+  const [successMarker, setSuccessMarker] = useState<string | null>(null);
 
   const handleOpenMarker = () => {
-    if (manualCode.trim()) {
-      navigate(`/marker/${manualCode.trim()}`);
-    } else {
-      navigate("/marker/union-station");
-    }
+    const code = manualCode.trim() || "union-station";
+    const found = markers.find((m) => m.id === code);
+    setSuccessMarker(found?.name ?? code);
+    setTimeout(() => navigate(`/marker/${code}`), 1500);
   };
+
+  if (successMarker) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center px-6">
+        <div className="animate-fade-in flex flex-col items-center gap-4">
+          <CheckCircle className="h-20 w-20 text-primary" />
+          <h2 className="text-xl font-bold text-foreground">Marker Found!</h2>
+          <p className="text-sm text-muted-foreground">{successMarker}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col pb-20">
