@@ -88,7 +88,7 @@ const MapPage = () => {
     <div className="relative flex h-screen flex-col pb-20">
       <PageHeader title="Map" back />
       {/* Search bar overlay */}
-      <div className="absolute left-0 right-0 top-[52px] z-[1000] p-3">
+      <div className="absolute left-0 right-0 top-[52px] z-[500] p-3">
         <div className="flex items-center gap-2 rounded-xl bg-card px-3 py-2.5 shadow-lg">
           <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
           <input
@@ -117,7 +117,7 @@ const MapPage = () => {
 
       {/* Nearby list panel */}
       {showList && (
-        <div className="absolute bottom-20 left-0 right-0 z-[1000] max-h-[60vh] overflow-y-auto rounded-t-2xl bg-background shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
+        <div className="absolute bottom-20 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-2xl bg-background shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
           <div className="sticky top-0 bg-background px-4 pt-3 pb-2">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-semibold text-foreground">
