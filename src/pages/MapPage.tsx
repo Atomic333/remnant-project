@@ -1,98 +1,65 @@
-import { useState } from "react";
-import { Search } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { markers, categories } from "@/data/mockData";
+import { markers } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
-import FilterChips from "@/components/FilterChips";
-import MarkerCard from "@/components/MarkerCard";
-import tacomaHero from "@/assets/tacoma-hero.jpg";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const markerImages: Record<string, string> = {
   "union-station": unionStation,
   "history-museum": historyMuseum,
 };
 
+const TACOMA_CENTER: [number, number] = [47.2529, -122.4443];
+
 const MapPage = () => {
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [activeFilter, setActiveFilter] = useState("All");
+  const mapRef = useRef<HTMLDivElement>(null);
+  const leafletMap = useRef<L.Map | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
 
-  const filtered = markers.filter((m) => {
-    const matchCat = activeFilter === "All" || m.category === activeFilter;
-    const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  useEffect(() => {
+    if (!mapRef.current || leafletMap.current) return;
 
-  const pinPositions = [
-    "left-1/3 top-1/3",
-    "left-1/2 top-1/2",
-    "left-2/3 top-1/4",
-  ];
+    const map = L.map(mapRef.current, {
+      zoomControl: false,
+    }).setView(TACOMA_CENTER, 14);
+
+    L.control.zoom({ position: "bottomright" }).addTo(map);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }).addTo(map);
+
+    // Custom teal marker icon
+    const icon = L.divIcon({
+      className: "",
+      html: `<div style="width:28px;height:28px;border-radius:50%;background:hsl(var(--primary));border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 14],
+    });
+
+    markers.forEach((m) => {
+      L.marker([m.lat, m.lng], { icon })
+        .addTo(map)
+        .on("click", () => setSelectedMarker(m));
+    });
+
+    leafletMap.current = map;
+
+    return () => {
+      map.remove();
+      leafletMap.current = null;
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen flex-col pb-20">
-      {/* Header */}
-      <header className="bg-card px-4 py-3">
-        <h1 className="text-lg font-semibold text-primary">Tacoma Markers</h1>
-      </header>
-
-      {/* Search */}
-      <div className="px-4 py-2">
-        <div className="flex items-center gap-2 rounded-lg bg-card px-3 py-2">
-          <Search className="h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search markers"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-          />
-        </div>
-      </div>
-
-      {/* Map placeholder */}
-      <div className="relative mx-4 h-48 overflow-hidden rounded-xl bg-muted">
-        <img src={tacomaHero} alt="Map view" className="h-full w-full object-cover opacity-40" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="rounded-lg bg-card/80 px-4 py-2 text-sm font-medium text-foreground backdrop-blur-sm">
-            Explore Tacoma
-          </span>
-        </div>
-        {/* Marker pins */}
-        {filtered.slice(0, 3).map((m, i) => (
-          <button
-            key={m.id}
-            onClick={() => setSelectedMarker(m)}
-            className={`absolute ${pinPositions[i]} h-4 w-4 rounded-full bg-primary shadow-lg transition-transform hover:scale-150`}
-          />
-        ))}
-      </div>
-
-      {/* Filters */}
-      <div className="px-4 py-3">
-        <FilterChips categories={categories} active={activeFilter} onChange={setActiveFilter} />
-      </div>
-
-      {/* Marker list */}
-      <div className="flex-1 space-y-1 px-4">
-        <p className="mb-2 text-sm text-muted-foreground">
-          View all Tacoma markers →
-        </p>
-        {filtered.map((m) => (
-          <div key={m.id} onClick={() => setSelectedMarker(m)} className="cursor-pointer">
-            <MarkerCard marker={m} showDistance />
-          </div>
-        ))}
-        {filtered.length === 0 && (
-          <div className="py-12 text-center text-muted-foreground">
-            No markers found.
-          </div>
-        )}
-      </div>
+      {/* Full-screen map */}
+      <div ref={mapRef} className="flex-1 min-h-[calc(100vh-5rem)]" />
 
       {/* Bottom sheet preview */}
       <Drawer open={!!selectedMarker} onOpenChange={(open) => !open && setSelectedMarker(null)}>
