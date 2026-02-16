@@ -48,7 +48,7 @@ const MarkerDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen pb-8">
+    <div className="min-h-screen pb-20">
       {/* Hero */}
       <div className="relative h-56">
         <img
