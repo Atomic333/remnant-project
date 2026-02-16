@@ -85,7 +85,7 @@ const MapPage = () => {
 
   return (
     <div className="relative flex h-screen flex-col pb-20">
-      <PageHeader title="Map" back />
+      <PageHeader title="Map" />
 
       {/* M3 Search bar */}
       <div className="absolute left-0 right-0 top-[60px] z-[500] px-4">

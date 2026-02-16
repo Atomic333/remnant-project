@@ -94,7 +94,7 @@ const ScanPage = () => {
 
   return (
     <div className="flex min-h-screen flex-col pb-20">
-      <PageHeader title="Scan" back />
+      <PageHeader title="Scan" />
 
       <div className="flex flex-1 flex-col items-center justify-center px-6">
         {/* Scanner area */}

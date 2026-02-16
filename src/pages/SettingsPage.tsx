@@ -11,7 +11,7 @@ const SettingsPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader title="Settings" back />
+      <PageHeader title="Settings" />
 
       <div className="px-5 pt-4">
         {/* Device Permissions */}
