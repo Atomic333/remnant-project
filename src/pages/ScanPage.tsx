@@ -105,18 +105,18 @@ const ScanPage = () => {
 
       <div className="flex flex-1 flex-col items-center justify-center px-6">
         {/* QR Camera */}
-        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-2xl bg-foreground/90">
+        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-2xl border border-border bg-muted">
           {cameraError ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
-              <CameraOff className="h-12 w-12 text-primary-foreground/60" />
-              <p className="text-xs text-primary-foreground/70">{cameraError}</p>
+              <CameraOff className="h-12 w-12 text-muted-foreground" />
+              <p className="text-xs text-muted-foreground">{cameraError}</p>
             </div>
           ) : (
             <div id="qr-reader" ref={containerRef} className="h-full w-full" />
           )}
           {!scanning && !cameraError && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <QrCode className="h-16 w-16 animate-pulse text-primary-foreground/60" />
+              <QrCode className="h-16 w-16 animate-pulse text-muted-foreground" />
             </div>
           )}
         </div>
@@ -146,7 +146,7 @@ const ScanPage = () => {
             />
             <button
               onClick={handleOpenMarker}
-              className="mt-3 w-full rounded-full bg-primary py-2.5 text-sm font-semibold text-primary-foreground"
+              className="mt-3 w-full rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground"
             >
               Open Marker
             </button>

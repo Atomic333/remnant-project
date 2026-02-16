@@ -52,7 +52,7 @@ const HomePage = () => {
         {/* CTA Button */}
         <button
           onClick={() => navigate("/map")}
-          className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+          className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3 text-base font-semibold text-primary-foreground transition-opacity hover:opacity-90"
         >
           Explore Tacoma
           <ArrowRight className="h-5 w-5" />

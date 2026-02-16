@@ -24,10 +24,7 @@ const ProgressPage = () => {
         <h2 className="text-2xl font-bold text-foreground">
           {visited}/{markers.length} Markers Visited
         </h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Progress: {visited}/{markers.length} markers
-        </p>
-        <div className="mt-2 h-3 overflow-hidden rounded-full bg-muted">
+        <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full bg-primary transition-all"
             style={{ width: `${(visited / markers.length) * 100}%` }}
