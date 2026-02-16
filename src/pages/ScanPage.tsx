@@ -13,11 +13,22 @@ const ScanPage = () => {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
+  const isRunningRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const stopScanner = async () => {
+    if (scannerRef.current && isRunningRef.current) {
+      try {
+        await scannerRef.current.stop();
+      } catch {
+        // already stopped
+      }
+      isRunningRef.current = false;
+    }
+  };
+
   const handleScanResult = (decodedText: string) => {
-    // Stop scanner before navigating
-    scannerRef.current?.stop().catch(() => {});
+    stopScanner();
 
     // Extract marker ID from URL or use raw text
     let code = decodedText;
@@ -51,6 +62,7 @@ const ScanPage = () => {
           (decodedText) => handleScanResult(decodedText),
           () => {} // ignore scan failures
         );
+        isRunningRef.current = true;
         setScanning(true);
       } catch (err: any) {
         setCameraError(
@@ -64,8 +76,7 @@ const ScanPage = () => {
     startScanner();
 
     return () => {
-      scannerRef.current?.stop().catch(() => {});
-      scannerRef.current = null;
+      stopScanner();
     };
   }, [successMarker, showManual]);
 
@@ -116,7 +127,7 @@ const ScanPage = () => {
 
         <button
           onClick={() => {
-            scannerRef.current?.stop().catch(() => {});
+            stopScanner();
             setShowManual(!showManual);
           }}
           className="text-sm font-medium text-primary"
