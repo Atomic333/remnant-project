@@ -1,28 +1,76 @@
 
 
-# Redesign Home Page to Match Figma Landing Style
+# Make All Page Designs Consistent
 
-## What Changes
-The existing Home Page will be updated to precisely match the specified layout: teal-accented headline with "history" highlighted, a larger hero image card with shadow, cleaner city info section, and a full-width CTA button. The quick links section will be removed since it is not part of this design spec.
+## Issues Found
 
-## Layout (top to bottom)
+After reviewing every page, here are the inconsistencies to fix:
 
-1. **Header row** -- "The Remnant Project" (teal, left) + hamburger icon (right, no menu)
-2. **Headline** -- "Discover" on line 1, "history where you stand." on line 2, with "history" in teal
-3. **Hero image card** -- Full-width rounded card with soft shadow, taller image (~220px)
-4. **City title + progress** -- Bold "Tacoma, WA", sub-line "Progress: X/Y Markers"
-5. **Progress bar** -- Thin rounded bar, muted track, teal fill
-6. **CTA button** -- Full-width rounded teal button "Explore Tacoma" with arrow icon on the right side
+### 1. Progress Bar Height Mismatch
+- **HomePage**: uses `h-2` (thin)
+- **ProgressPage**: uses `h-3` (thicker)
+- **Fix**: Standardize both to `h-2` (matches the refined landing page style)
 
-## Technical Details
+### 2. Button Padding Inconsistencies
+- HomePage CTA: `py-3.5`
+- ScanPage "Open Marker": `py-2.5`
+- MarkerDetailPage "Mark as Visited": `py-3`
+- RequestPage "Submit Request": `py-3`
+- MapPage drawer "View Details": `py-3`
+- **Fix**: Standardize all full-width primary action buttons to `py-3`
 
-### File: `src/pages/HomePage.tsx`
-- Restructure headline to use a `<span className="text-primary">` around "history"
-- Wrap hero image in a card-style container with `rounded-2xl shadow-lg`
-- Increase image height to `h-56`
-- Combine progress label into single line: "Progress: {visited}/{total} Markers"
-- Make CTA button full-width with `w-full rounded-full py-3`
-- Remove the quick links section entirely (those routes are accessible via bottom nav)
-- Keep all existing imports and data references
+### 3. NotFound Page Uses Wrong Background
+- Currently uses `bg-muted` instead of the app's standard `bg-background`
+- Also lacks consistent typography and button styling
+- **Fix**: Restyle to match the app: `bg-background`, teal button, proper font sizes
 
-No new files or dependencies needed.
+### 4. MarkerDetailPage Missing Bottom Padding
+- Uses `pb-8` but the bottom nav is 5rem tall, so content gets hidden
+- **Fix**: Change to `pb-20` to match all other pages
+
+### 5. Dead NearbyPage Route
+- `/nearby` route still exists in App.tsx but is no longer reachable (removed from BottomNav)
+- **Fix**: Remove the route and the NearbyPage import from App.tsx
+
+### 6. ScanPage Scanner Box Styling
+- Uses `bg-foreground/90` (nearly black) which clashes with the light, airy theme
+- **Fix**: Change to `bg-muted` with a subtle border, keeping the camera area visible but softer
+
+### 7. ProgressPage Header Redundancy
+- Shows "X/Y Markers Visited" as h2, then "Progress: X/Y markers" as subtext -- redundant
+- **Fix**: Simplify to one clean heading + progress bar (matching HomePage pattern)
+
+### 8. HomePage Header vs PageHeader
+- HomePage uses a custom header (by design for the landing page) -- this is intentional and stays as-is
+- All sub-pages correctly use the shared `PageHeader` component -- no change needed
+
+---
+
+## Technical Changes
+
+### `src/pages/HomePage.tsx`
+- Change CTA button padding from `py-3.5` to `py-3`
+
+### `src/pages/ProgressPage.tsx`
+- Change progress bar from `h-3` to `h-2`
+- Remove redundant subtext line; keep just the bold heading and progress bar
+- Ensure spacing matches HomePage pattern
+
+### `src/pages/MarkerDetailPage.tsx`
+- Change `pb-8` to `pb-20`
+
+### `src/pages/ScanPage.tsx`
+- Change scanner box from `bg-foreground/90` to `bg-muted border border-border`
+- Update inner icon/text colors to work on light background (`text-muted-foreground` instead of `text-primary-foreground/60`)
+
+### `src/pages/NotFound.tsx`
+- Remove `bg-muted` wrapper, use standard page structure
+- Add a teal "Go Home" button (`rounded-full bg-primary`) matching other pages
+- Clean up typography to match app style
+
+### `src/App.tsx`
+- Remove NearbyPage import and `/nearby` route
+
+### No changes needed:
+- MapPage, SettingsPage, RequestPage, BottomNav, PageHeader, MarkerCard, FilterChips -- these are already consistent
+
