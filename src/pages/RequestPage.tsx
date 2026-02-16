@@ -19,27 +19,21 @@ const RequestPage = () => {
   if (submitted) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-success">
-          <Check className="h-10 w-10 text-success-foreground" />
+        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
+          <Check className="h-10 w-10 text-primary" />
         </div>
-        <h2 className="text-xl font-bold text-foreground">Request Received</h2>
-        <p className="mt-3 text-sm text-muted-foreground">
+        <h2 className="font-display text-xl font-medium text-foreground">Request Received</h2>
+        <p className="mt-3 text-sm text-on-surface-variant">
           Thank you — we'll review this marker. Your contribution helps preserve our local history.
         </p>
         <button
-          onClick={() => {
-            setSubmitted(false);
-            setForm({ name: "", address: "", why: "", email: "" });
-          }}
-          className="mt-6 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground"
+          onClick={() => { setSubmitted(false); setForm({ name: "", address: "", why: "", email: "" }); }}
+          className="mt-6 rounded-xl bg-primary px-8 py-3 font-display text-sm font-medium text-primary-foreground"
         >
           Return Home
         </button>
         <button
-          onClick={() => {
-            setSubmitted(false);
-            setForm({ name: "", address: "", why: "", email: "" });
-          }}
+          onClick={() => { setSubmitted(false); setForm({ name: "", address: "", why: "", email: "" }); }}
           className="mt-3 text-sm font-medium text-primary"
         >
           Request Another Marker
@@ -52,45 +46,45 @@ const RequestPage = () => {
     <div className="min-h-screen pb-20">
       <PageHeader title="Request a Marker" back />
 
-      <form onSubmit={handleSubmit} className="space-y-4 px-4 pt-4">
+      <form onSubmit={handleSubmit} className="space-y-5 px-5 pt-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Location Name</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Location Name</label>
           <input
             required
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="e.g. Stadium High School"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Address or Description</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Address or Description</label>
           <input
             value={form.address}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Street address or landmark description"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Why It Matters</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Why It Matters</label>
           <textarea
             required
             value={form.why}
             onChange={(e) => setForm({ ...form, why: e.target.value })}
             rows={3}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Tell us why this place matters to Tacoma's history..."
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Photo Upload (optional)</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Photo Upload (optional)</label>
           <button
             type="button"
-            className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-input py-8 text-sm text-muted-foreground"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-surface py-8 text-sm text-on-surface-variant"
           >
             <Camera className="h-5 w-5" />
             <span>Tap to upload image<br />(JPG, PNG up to 10MB)</span>
@@ -98,19 +92,19 @@ const RequestPage = () => {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-foreground">Your Email</label>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">Your Email</label>
           <input
             type="email"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
-            className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Optional — for updates"
           />
         </div>
 
         <button
           type="submit"
-          className="w-full rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground"
+          className="w-full rounded-xl bg-primary py-3.5 font-display text-sm font-medium text-primary-foreground elevation-1"
         >
           Submit Request
         </button>

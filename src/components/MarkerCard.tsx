@@ -20,23 +20,21 @@ const MarkerCard = ({ marker, showDistance }: MarkerCardProps) => {
   return (
     <button
       onClick={() => navigate(`/marker/${marker.id}`)}
-      className="flex w-full items-center gap-3 rounded-lg bg-card p-3 text-left transition-colors hover:bg-accent"
+      className="flex w-full items-center gap-4 rounded-xl bg-card p-3 text-left transition-colors hover:bg-surface-variant elevation-1"
     >
       <img
         src={images[marker.image] || unionStation}
         alt={marker.name}
-        className="h-12 w-12 rounded-lg object-cover"
+        className="h-14 w-14 rounded-xl object-cover"
       />
       <div className="min-w-0 flex-1">
-        <h3 className="font-semibold text-card-foreground">{marker.name}</h3>
-        <p className="truncate text-sm text-muted-foreground">
-          {showDistance && marker.distance
-            ? `${marker.distance} • `
-            : ""}
+        <h3 className="font-display font-medium text-card-foreground">{marker.name}</h3>
+        <p className="truncate text-sm text-on-surface-variant">
+          {showDistance && marker.distance ? `${marker.distance} • ` : ""}
           {marker.address}
         </p>
       </div>
-      <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
+      <ChevronRight className="h-5 w-5 shrink-0 text-on-surface-variant" />
     </button>
   );
 };

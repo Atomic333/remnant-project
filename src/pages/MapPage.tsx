@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Search, List, X, ChevronUp } from "lucide-react";
+import { Search, List, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
@@ -62,15 +62,14 @@ const MapPage = () => {
     const map = leafletMap.current;
     if (!map) return;
 
-    // Remove old markers
     leafletMarkers.current.forEach((m) => m.remove());
     leafletMarkers.current = [];
 
     const icon = L.divIcon({
       className: "",
-      html: `<div style="width:28px;height:28px;border-radius:50%;background:hsl(var(--primary));border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);"></div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
+      html: `<div style="width:32px;height:32px;border-radius:16px;background:hsl(var(--primary));border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>`,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
     });
 
     filtered.forEach((m) => {
@@ -87,47 +86,51 @@ const MapPage = () => {
   return (
     <div className="relative flex h-screen flex-col pb-20">
       <PageHeader title="Map" back />
-      {/* Search bar overlay */}
-      <div className="absolute left-0 right-0 top-[52px] z-[500] p-3">
-        <div className="flex items-center gap-2 rounded-xl bg-card px-3 py-2.5 shadow-lg">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
+
+      {/* M3 Search bar */}
+      <div className="absolute left-0 right-0 top-[60px] z-[500] px-4">
+        <div className="flex items-center gap-3 rounded-xl bg-surface-variant px-4 py-3 elevation-2">
+          <Search className="h-5 w-5 shrink-0 text-on-surface-variant" />
           <input
             type="text"
             placeholder="Search markers..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="flex-1 bg-transparent text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none"
           />
           {search && (
             <button onClick={() => setSearch("")}>
-              <X className="h-4 w-4 text-muted-foreground" />
+              <X className="h-5 w-5 text-on-surface-variant" />
             </button>
           )}
           <button
             onClick={() => setShowList(!showList)}
-            className="ml-1 rounded-lg bg-primary p-1.5"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"
           >
-            <List className="h-4 w-4 text-primary-foreground" />
+            <List className="h-4 w-4" />
           </button>
         </div>
       </div>
 
-      {/* Full-screen map */}
+      {/* Map */}
       <div ref={mapRef} className="flex-1" />
 
-      {/* Nearby list panel */}
+      {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-20 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-2xl bg-background shadow-[0_-4px_20px_rgba(0,0,0,0.1)]">
-          <div className="sticky top-0 bg-background px-4 pt-3 pb-2">
+        <div className="absolute bottom-20 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
+          <div className="sticky top-0 bg-card px-4 pt-4 pb-2">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-semibold text-foreground">
+              <h2 className="font-display text-base font-medium text-foreground">
                 Nearby ({filtered.length})
               </h2>
-              <button onClick={() => setShowList(false)}>
-                <X className="h-5 w-5 text-muted-foreground" />
+              <button
+                onClick={() => setShowList(false)}
+                className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-variant"
+              >
+                <X className="h-5 w-5 text-on-surface-variant" />
               </button>
             </div>
-            <div className="mt-2">
+            <div className="mt-3">
               <FilterChips
                 categories={categories}
                 active={activeFilter}
@@ -135,12 +138,12 @@ const MapPage = () => {
               />
             </div>
           </div>
-          <div className="space-y-1 px-4 pb-4">
+          <div className="space-y-2 px-4 pb-4">
             {filtered.map((m) => (
               <MarkerCard key={m.id} marker={m} showDistance />
             ))}
             {filtered.length === 0 && (
-              <p className="py-8 text-center text-sm text-muted-foreground">No markers found.</p>
+              <p className="py-8 text-center text-sm text-on-surface-variant">No markers found.</p>
             )}
           </div>
         </div>
@@ -159,16 +162,16 @@ const MapPage = () => {
                   className="h-20 w-20 rounded-xl object-cover"
                 />
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-foreground">{selectedMarker.name}</h3>
-                  <p className="text-sm text-muted-foreground">{selectedMarker.address}</p>
+                  <h3 className="font-display text-lg font-medium text-foreground">{selectedMarker.name}</h3>
+                  <p className="text-sm text-on-surface-variant">{selectedMarker.address}</p>
                   {selectedMarker.distance && (
-                    <p className="mt-1 text-xs text-muted-foreground">{selectedMarker.distance}</p>
+                    <p className="mt-1 text-xs text-on-surface-variant">{selectedMarker.distance}</p>
                   )}
                 </div>
               </div>
               <button
                 onClick={() => navigate(`/marker/${selectedMarker.id}`)}
-                className="mt-4 w-full rounded-full bg-primary py-3 text-sm font-semibold text-primary-foreground"
+                className="mt-4 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground"
               >
                 View Details
               </button>

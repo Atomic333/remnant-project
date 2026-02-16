@@ -13,55 +13,59 @@ const SettingsPage = () => {
     <div className="min-h-screen pb-20">
       <PageHeader title="Settings" back />
 
-      <div className="px-4 pt-4">
+      <div className="px-5 pt-4">
         {/* Device Permissions */}
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
           Device Permissions
         </h3>
-        <div className="space-y-1">
-          <div className="flex items-center justify-between rounded-lg bg-card p-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between rounded-xl bg-card p-4 elevation-1">
             <div className="flex items-center gap-3">
-              <Camera className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                <Camera className="h-5 w-5 text-primary" />
+              </div>
               <div>
                 <p className="text-sm font-medium text-card-foreground">Camera</p>
-                <p className="text-xs text-muted-foreground">
-                  {cameraEnabled ? "Can't access in settings" : "Disabled"}
+                <p className="text-xs text-on-surface-variant">
+                  {cameraEnabled ? "Enabled" : "Disabled"}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setCameraEnabled(!cameraEnabled)}
-              className={`relative h-7 w-12 rounded-full transition-colors ${
-                cameraEnabled ? "bg-primary" : "bg-muted"
+              className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
+                cameraEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
             >
               <span
-                className={`absolute top-0.5 h-6 w-6 rounded-full bg-card shadow transition-transform ${
-                  cameraEnabled ? "left-[22px]" : "left-0.5"
+                className={`absolute top-1 h-5 w-5 rounded-full shadow transition-all ${
+                  cameraEnabled ? "left-[26px] bg-primary-foreground" : "left-1 bg-on-surface-variant"
                 }`}
               />
             </button>
           </div>
 
-          <div className="flex items-center justify-between rounded-lg bg-card p-4">
+          <div className="flex items-center justify-between rounded-xl bg-card p-4 elevation-1">
             <div className="flex items-center gap-3">
-              <MapPin className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
               <div>
                 <p className="text-sm font-medium text-card-foreground">Location</p>
-                <p className="text-xs text-muted-foreground">
-                  {locationEnabled ? "Can't access in settings" : "Disabled"}
+                <p className="text-xs text-on-surface-variant">
+                  {locationEnabled ? "Enabled" : "Disabled"}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setLocationEnabled(!locationEnabled)}
-              className={`relative h-7 w-12 rounded-full transition-colors ${
-                locationEnabled ? "bg-primary" : "bg-muted"
+              className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
+                locationEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
             >
               <span
-                className={`absolute top-0.5 h-6 w-6 rounded-full bg-card shadow transition-transform ${
-                  locationEnabled ? "left-[22px]" : "left-0.5"
+                className={`absolute top-1 h-5 w-5 rounded-full shadow transition-all ${
+                  locationEnabled ? "left-[26px] bg-primary-foreground" : "left-1 bg-on-surface-variant"
                 }`}
               />
             </button>
@@ -69,26 +73,27 @@ const SettingsPage = () => {
         </div>
 
         {/* About */}
-        <h3 className="mb-3 mt-6 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <h3 className="mb-3 mt-8 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
           About
         </h3>
-        <div className="space-y-1">
-          {/* How we use AI */}
+        <div className="space-y-2">
           <Dialog>
             <DialogTrigger asChild>
-              <button className="flex w-full items-center justify-between rounded-lg bg-card p-4">
+              <button className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
                 <div className="flex items-center gap-3">
-                  <Sparkles className="h-5 w-5 text-primary" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
                   <span className="text-sm font-medium text-card-foreground">How we use AI</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm">
+            <DialogContent className="max-w-sm rounded-xl">
               <DialogHeader>
-                <DialogTitle>How We Use AI</DialogTitle>
+                <DialogTitle className="font-display">How We Use AI</DialogTitle>
               </DialogHeader>
-              <div className="space-y-3 text-sm text-muted-foreground">
+              <div className="space-y-3 text-sm text-on-surface-variant">
                 <p>The Remnant Project uses AI to bring historical markers to life. When you visit a marker, our system generates an engaging narrative based on verified historical sources.</p>
                 <p><strong className="text-foreground">What AI does:</strong></p>
                 <ul className="list-disc space-y-1 pl-4">
@@ -106,22 +111,23 @@ const SettingsPage = () => {
             </DialogContent>
           </Dialog>
 
-          {/* Privacy Policy */}
           <Dialog>
             <DialogTrigger asChild>
-              <button className="flex w-full items-center justify-between rounded-lg bg-card p-4">
+              <button className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
                 <div className="flex items-center gap-3">
-                  <Shield className="h-5 w-5 text-primary" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                    <Shield className="h-5 w-5 text-primary" />
+                  </div>
                   <span className="text-sm font-medium text-card-foreground">Privacy Policy</span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm">
+            <DialogContent className="max-w-sm rounded-xl">
               <DialogHeader>
-                <DialogTitle>Privacy Policy</DialogTitle>
+                <DialogTitle className="font-display">Privacy Policy</DialogTitle>
               </DialogHeader>
-              <div className="space-y-3 text-sm text-muted-foreground">
+              <div className="space-y-3 text-sm text-on-surface-variant">
                 <p>Your privacy matters to us. The Remnant Project is designed to be used without creating an account.</p>
                 <p><strong className="text-foreground">Data we collect:</strong></p>
                 <ul className="list-disc space-y-1 pl-4">
@@ -141,13 +147,15 @@ const SettingsPage = () => {
 
           <button
             onClick={() => navigate("/request")}
-            className="flex w-full items-center justify-between rounded-lg bg-card p-4"
+            className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1"
           >
             <div className="flex items-center gap-3">
-              <MapPin className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
               <span className="text-sm font-medium text-card-foreground">Request Marker</span>
             </div>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-on-surface-variant" />
           </button>
         </div>
       </div>
