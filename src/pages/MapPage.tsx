@@ -85,7 +85,7 @@ const MapPage = () => {
   }, [filtered]);
 
   return (
-    <div className="relative flex min-h-screen flex-col pb-20">
+    <div className="relative flex h-screen flex-col pb-20">
       <PageHeader title="Map" back />
       {/* Search bar overlay */}
       <div className="absolute left-0 right-0 top-[52px] z-[1000] p-3">
@@ -113,7 +113,7 @@ const MapPage = () => {
       </div>
 
       {/* Full-screen map */}
-      <div ref={mapRef} className="flex-1 min-h-[calc(100vh-5rem)]" />
+      <div ref={mapRef} className="flex-1" />
 
       {/* Nearby list panel */}
       {showList && (
