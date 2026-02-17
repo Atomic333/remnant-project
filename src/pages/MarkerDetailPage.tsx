@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { BookOpen, Sparkles, FileText, Check, MapPin } from "lucide-react";
+import { ArrowLeft, BookOpen, Sparkles, FileText, Check, MapPin } from "lucide-react";
 import { markers } from "@/data/mockData";
 import { Skeleton } from "@/components/ui/skeleton";
 import unionStation from "@/assets/union-station.jpg";
@@ -63,6 +63,12 @@ const MarkerDetailPage = () => {
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/50 via-transparent to-foreground/20" />
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-card/80 backdrop-blur-sm"
+        >
+          <ArrowLeft className="h-5 w-5 text-foreground" />
+        </button>
         <div className="absolute bottom-4 left-5 right-5">
           <span className="text-xs font-medium text-primary-foreground/80">Marker Details</span>
           <h1 className="font-display text-2xl font-medium text-primary-foreground">{marker.name}</h1>
