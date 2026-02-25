@@ -105,7 +105,7 @@ const ScanPage = () => {
               <p className="text-xs text-on-surface-variant">{cameraError}</p>
             </div>
           ) : (
-            <div id="qr-reader" ref={containerRef} className="h-full w-full" />
+            <div id="qr-reader" ref={containerRef} className="qr-reader-container h-full w-full" />
           )}
           {!scanning && !cameraError && (
             <div className="absolute inset-0 flex items-center justify-center">
@@ -115,7 +115,7 @@ const ScanPage = () => {
         </div>
 
         <p className="mb-6 text-center text-sm text-on-surface-variant">
-          {scanning ? "Point at the QR code on the marker" : "Starting camera…"}
+          {cameraError ? "" : scanning ? "Point at the QR code on the marker" : "Starting camera…"}
         </p>
 
         <button
