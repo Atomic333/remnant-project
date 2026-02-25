@@ -42,10 +42,26 @@
 }
 
 /* QR scanner overrides */
+.qr-reader-container,
+.qr-reader-container > div {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+}
+
 .qr-reader-container video {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  min-height: 100% !important;
+  min-width: 100% !important;
+}
+
+.qr-reader-container canvas {
+  display: none !important;
 }
 
 .qr-reader-container #qr-shaded-region {
@@ -54,4 +70,7 @@
 
 #qr-reader {
   border: none !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
 }
