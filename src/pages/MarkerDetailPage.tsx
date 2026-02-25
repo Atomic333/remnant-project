@@ -144,6 +144,19 @@ const MarkerDetailPage = () => {
             </div>
           ))}
         </div>
+
+        {/* QR Code & Marker Number */}
+        <div className="mt-10 flex flex-col items-center gap-3 border-t border-border pt-6">
+          <span className="text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+            Marker #{markers.indexOf(marker) + 1}
+          </span>
+          <img
+            src={`/qr-${marker.id}.png`}
+            alt={`QR code for ${marker.name}`}
+            className="h-36 w-36 rounded-lg"
+          />
+          <span className="text-xs text-on-surface-variant">{marker.id}</span>
+        </div>
       </div>
     </div>
   );
