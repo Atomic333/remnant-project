@@ -72,7 +72,7 @@ const MapPage = () => {
       iconAnchor: [16, 16],
     });
 
-    filtered.forEach((m) => {
+    filtered.filter((m) => m.lat !== 0 && m.lng !== 0).forEach((m) => {
       const lm = L.marker([m.lat, m.lng], { icon })
         .addTo(map)
         .on("click", () => {
