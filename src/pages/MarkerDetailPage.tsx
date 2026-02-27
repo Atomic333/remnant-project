@@ -133,9 +133,18 @@ const MarkerDetailPage = () => {
                     )
                   )}
                   {key === "sources" && (
-                    <ul className="space-y-1">
+                    <ul className="space-y-2">
                       {marker.sources.map((s) => (
-                        <li key={s} className="text-sm text-on-surface-variant">• {s}</li>
+                        <li key={s.name} className="text-sm text-on-surface-variant">
+                          •{" "}
+                          {s.url ? (
+                            <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline text-primary">
+                              {s.name}
+                            </a>
+                          ) : (
+                            s.name
+                          )}
+                        </li>
                       ))}
                     </ul>
                   )}
