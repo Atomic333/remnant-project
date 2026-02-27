@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, Sparkles, FileText, Check, MapPin } from "lucide-react";
 import { markers } from "@/data/mockData";
 import { Skeleton } from "@/components/ui/skeleton";
+import { QRCodeSVG } from "qrcode.react";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
 
@@ -159,11 +160,15 @@ const MarkerDetailPage = () => {
           <span className="text-xs font-medium uppercase tracking-wider text-on-surface-variant">
             Marker #{markers.indexOf(marker) + 1}
           </span>
-          <img
-            src={`/qr-${marker.id}.png`}
-            alt={`QR code for ${marker.name}`}
-            className="h-36 w-36 rounded-lg"
-          />
+          <div className="rounded-xl bg-white p-3 elevation-1">
+            <QRCodeSVG
+              value={marker.qrUrl || `https://markerquest.app/m/tacoma_wa/${marker.id}`}
+              size={128}
+              bgColor="#ffffff"
+              fgColor="#1a1a1a"
+              level="M"
+            />
+          </div>
           <span className="text-xs text-on-surface-variant">{marker.id}</span>
         </div>
       </div>
