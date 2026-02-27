@@ -239,9 +239,9 @@ export const markers: Marker[] = [
   {
     id: "marker-014",
     name: "Dr. Maxine Mimms",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "1210 6th Ave, Tacoma",
+    lat: 47.2469,
+    lng: -122.4607,
     summary: "Dr. Maxine Mimms (1928–2024) founded Tacoma Evergreen, the only community owned Black college in the Pacific Northwest.",
     story: "Dr. Maxine Buie Mimms was a master architect of urban education who famously refused to use the word 'retirement,' preferring to call it 'reassignment.' Her journey began in Newport News, Virginia, fueled by her father's Marcus Garvey-inspired philosophy of self-actualization. After becoming Seattle's first contracted Black elementary teacher, she joined the faculty of Evergreen State College in 1972. Seeing the barriers facing Hilltop residents, she began holding classes at her kitchen table at 5:00 AM to accommodate working adults. This grassroots initiative blossomed into the Evergreen Tacoma campus.",
     sources: [
@@ -256,9 +256,9 @@ export const markers: Marker[] = [
   {
     id: "marker-015",
     name: "The Evergreen State College – Tacoma Campus",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "1210 6th Ave, Tacoma",
+    lat: 47.2469,
+    lng: -122.4607,
     summary: "Emerging from community struggles for access to higher education in the 1970s and '80s, Evergreen-Tacoma is the only community-owned Black college in the Pacific Northwest.",
     story: "Evergreen-Tacoma represents a hard-won victory for educational equity. In the early 1970s, the Hilltop community was an 'educational desert,' lacking a four-year public institution. While the main campus in Olympia felt worlds away for working-class residents, local activists led by Dr. Maxine Mimms and Dr. Elizabeth Duncan Koontz fought to bring the classroom to the neighborhood. By 1982, the program transitioned from kitchen tables and storefronts into a formally accredited branch of the state college.",
     sources: [
@@ -273,11 +273,11 @@ export const markers: Marker[] = [
   {
     id: "marker-016",
     name: "E.S. Brazil",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "Earnest S. Brazil St, Tacoma",
+    lat: 47.2480,
+    lng: -122.4560,
     summary: "Elmer 'E.S.' Brazil was a pioneering Tacoma businessman, civic activist, and a force for economic opportunity in the Black community during the mid-20th century.",
-    story: "Elmer 'E.S.' Brazil was a pioneering Tacoma businessman, civic activist, and a force for economic opportunity in the Black community during the mid-20th century. His legacy helped shape the Hilltop neighborhood and the broader social fabric of Tacoma.",
+    story: "Elmer 'E.S.' Brazil was a pioneering Tacoma businessman, civic activist, and a force for economic opportunity in the Black community during the mid-20th century. His legacy helped shape the Hilltop neighborhood and the broader social fabric of Tacoma. A street in the Hilltop now bears his name.",
     sources: [],
     image: "history-museum",
     visited: false,
@@ -287,9 +287,9 @@ export const markers: Marker[] = [
   {
     id: "marker-017",
     name: "Shiloh Baptist Church",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "1211 S I St, Tacoma",
+    lat: 47.2428,
+    lng: -122.4622,
     summary: "Shiloh Baptist Church, established in 1953, quickly became a spiritual and civic home for Black families in Tacoma.",
     story: "Founded in 1953, Shiloh Baptist Church quickly outgrew its humble beginnings, evolving into a central hub for social justice and community resilience. Under the long-standing leadership of Pastor Gregory Christopher and the late Pastor Dr. E.S. Brazill, the church has balanced spiritual guidance with radical community care. In 1999, it expanded its mission by establishing the Oasis of Hope Center, which provides youth mentoring, educational programs, and low-income housing.",
     sources: [
@@ -304,9 +304,9 @@ export const markers: Marker[] = [
   {
     id: "marker-018",
     name: "USO Club #2",
-    address: "Tacoma, WA",
-    lat: 0,
-    lng: 0,
+    address: "713-715 Commerce St, Tacoma",
+    lat: 47.2527,
+    lng: -122.4405,
     summary: "The USO Club #2 was established in 1942 to serve Black military families during a time when the military was still segregated.",
     story: "Dedicated on September 4, 1942, USO Club #2 was more than just a recreational center; it was a 'home away from home' for nearly a million Black service members and war workers who were barred from Tacoma's white-only venues. One of its most legendary moments occurred in 1943 when Navy Cross recipient and Pearl Harbor hero Doris 'Dorie' Miller visited the club. Despite the era's segregation, the club became a vibrant hub of jazz and community.",
     sources: [
@@ -321,9 +321,9 @@ export const markers: Marker[] = [
   {
     id: "marker-019",
     name: "Pythian Temple",
-    address: "Theater District, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "911 Broadway, Tacoma",
+    lat: 47.2524,
+    lng: -122.4439,
     summary: "The Pythian Temple was built in 1906 by the Knights of Pythias fraternal organization, designed by local architect Frederick Heath in the Beaux-Arts style.",
     story: "Designed by the same architect behind Stadium High School, the Pythian Temple is a 'hidden gem' of the Theater District. While the street-level facade is modest sandstone, the interior houses the magnificent Castle Hall—a soaring, two-story ceremonial chamber that remains virtually untouched since 1907. Complete with original Douglas fir paneling, ornate murals depicting the Greek legend of Damon and Pythias, and three massive art-glass skylights, the building serves as a rare time capsule of fraternal life in the early 20th century.",
     sources: [
@@ -338,9 +338,9 @@ export const markers: Marker[] = [
   {
     id: "marker-020",
     name: "Elks Temple",
-    address: "Tacoma, WA",
-    lat: 0,
-    lng: 0,
+    address: "565 Broadway, Tacoma",
+    lat: 47.2491,
+    lng: -122.4427,
     summary: "The Elks Temple is a historic Beaux Arts building built in 1916 for the Fraternal Order of Elks. It now houses the McMenamins Elks Temple hotel, restaurant and event space.",
     story: "The Elks Temple was once the epicenter of Tacoma's social life, featuring a grand ballroom and a sprawling indoor pool. For decades, it stood as a symbol of the city's early 20th-century prosperity. However, as fraternal memberships declined, the building was vacated in the 1960s and fell into deep disrepair. After sitting derelict for over 40 years, it underwent a massive restoration by McMenamins and reopened in 2019.",
     sources: [
@@ -355,9 +355,9 @@ export const markers: Marker[] = [
   {
     id: "marker-021",
     name: "Point Defiance Park",
-    address: "Point Defiance, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "5400 N Pearl St, Tacoma",
+    lat: 47.3081,
+    lng: -122.5287,
     summary: "Point Defiance Park at the northern tip of Tacoma, where a 19th century military reservation stood before becoming one of the largest and oldest urban parks in the Pacific Northwest.",
     story: "The park owes its name to Captain Charles Wilkes, who in 1841 noted that the high bluffs could 'bid defiance to any attack' if fortified. While President Andrew Johnson set the land aside as a military reserve in 1866, no cannons were ever installed. Instead, Tacoma's civic leaders lobbied Congress to transform the wild peninsula into a public refuge. In 1888, President Grover Cleveland authorized its use as a park, and by 1905, President Theodore Roosevelt signed the land over to the city entirely.",
     sources: [
@@ -372,9 +372,9 @@ export const markers: Marker[] = [
   {
     id: "marker-022",
     name: "Division Street",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "S Division Ave & MLK Jr Way, Tacoma",
+    lat: 47.2450,
+    lng: -122.4531,
     summary: "In the 20th century, many African American families settled in the Hilltop neighborhood, especially after World War II, when they came to work in the shipyards and military bases.",
     story: "During World War II, Tacoma's population surged as thousands of African Americans migrated from the South to work at the Seattle-Tacoma Shipbuilding Corporation and nearby Fort Lewis. Despite facing systemic housing discrimination and 'Jim Crow' conditions in the shipyards, Black families established a vibrant community in the Hilltop neighborhood, centered around Division Street.",
     sources: [
@@ -389,9 +389,9 @@ export const markers: Marker[] = [
   {
     id: "marker-023",
     name: "George Putnam Riley",
-    address: "Tacoma, WA",
-    lat: 0,
-    lng: 0,
+    address: "Hilltop, Tacoma",
+    lat: 47.2500,
+    lng: -122.4550,
     summary: "George Putnam Riley (1833–1905) was a Black abolitionist, writer, and political leader who migrated to the Pacific Northwest after the Civil War.",
     story: "George Putnam Riley was a formidable orator and a pioneer of Black civil rights in the West. After moving to Tacoma, he became a central figure in the city's early political life, co-founding the Workingmen's Joint Stock Association and advocating for enfranchisement. His legacy serves as a reminder of the influential Black leaders who helped build the civic foundations of the Pacific Northwest.",
     sources: [
@@ -406,9 +406,9 @@ export const markers: Marker[] = [
   {
     id: "marker-024",
     name: "Joye Hardiman Park",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "1505 S 5th St, Tacoma",
+    lat: 47.2432,
+    lng: -122.4634,
     summary: "Named for Dr. Joye Hardiman, a longtime director of Evergreen-Tacoma. This site honors her pioneering contributions to education and community empowerment.",
     story: "Dr. Joye Hardiman served as a longtime director of Evergreen-Tacoma and dedicated her career to community education. The park named in her honor stands as a testament to her pioneering contributions to education and community empowerment in the Hilltop neighborhood.",
     sources: [
@@ -424,8 +424,8 @@ export const markers: Marker[] = [
     id: "marker-025",
     name: "Horace Lawhorn's House",
     address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    lat: 47.2490,
+    lng: -122.4558,
     summary: "Horace Lawhorn was a longshoreman, labor activist, and respected community leader who fought for racial equity on Tacoma's docks and in its labor unions.",
     story: "Arriving in 1890, Horace Lawhorn initially worked as a police wagon driver before becoming the city's first Black police officer in 1899, a role that led the department to adopt a permanent policy of racial inclusion. Beyond the badge, Lawhorn was a key figure in the labor movement and real estate, physically constructing his family home in the Hilltop neighborhood.",
     sources: [
@@ -440,9 +440,9 @@ export const markers: Marker[] = [
   {
     id: "marker-026",
     name: "Caballeros Club",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "1516 S 28th St, Tacoma",
+    lat: 47.2293,
+    lng: -122.4594,
     summary: "Founded in 1957, the Caballeros Club was one of Tacoma's earliest Black-owned social organizations, offering a safe and welcoming space for Black residents to gather.",
     story: "At a time when many public and private venues in Tacoma remained informally segregated, the Caballeros Club emerged as a premier destination for Black social life. Founded in 1957, the club became Tacoma's oldest privately owned Black social club, a living testament to community resilience and self-determination.",
     sources: [
@@ -457,9 +457,9 @@ export const markers: Marker[] = [
   {
     id: "marker-027",
     name: "Dr. Nettie Craig Asberry's House",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "S 13th St, Tacoma",
+    lat: 47.2418,
+    lng: -122.4594,
     summary: "Dr. Nettie Craig Asberry (1865–1968) was a classically trained musician, educator, and one of Tacoma's most influential civil rights leaders.",
     story: "In 1913, Dr. Nettie Asberry founded the Tacoma NAACP, one of the earliest branches in the nation, and hosted organizing meetings in her home. She championed women's suffrage, fought discrimination in schools, and nurtured the city's Black cultural life through her piano instruction and leadership in civic groups. Her Hilltop residence remains the cornerstone of Tacoma's civil rights legacy.",
     sources: [
@@ -474,9 +474,9 @@ export const markers: Marker[] = [
   {
     id: "marker-028",
     name: "Bethlehem Baptist Church",
-    address: "Hilltop, Tacoma",
-    lat: 0,
-    lng: 0,
+    address: "4818 E Portland Ave, Tacoma",
+    lat: 47.2315,
+    lng: -122.4115,
     summary: "Founded in 1890, Bethlehem Baptist Church is Tacoma's oldest Black Baptist congregation and one of the city's earliest Black institutions.",
     story: "Originally gathering in the home of its founders just one year after Washington achieved statehood, Bethlehem Baptist Church served as a vital anchor for Black families arriving in the Pacific Northwest. Under the early leadership of Rev. J.B. Beckly, the church quickly grew from a small prayer circle into a spiritual and social headquarters.",
     sources: [
