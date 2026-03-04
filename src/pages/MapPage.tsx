@@ -94,18 +94,9 @@ const MapPage = () => {
             {filtered
               .filter((m) => m.lat !== 0 && m.lng !== 0)
               .map((m) => (
-                <Circle
+                <GMarker
                   key={m.id}
-                  center={{ lat: m.lat, lng: m.lng }}
-                  radius={100}
-                  options={{
-                    fillColor: "hsl(174, 60%, 41%)",
-                    fillOpacity: 0.25,
-                    strokeColor: "hsl(174, 60%, 41%)",
-                    strokeOpacity: 0.9,
-                    strokeWeight: 2,
-                    clickable: true,
-                  }}
+                  position={{ lat: m.lat, lng: m.lng }}
                   onClick={() => onMarkerClick(m)}
                 />
               ))}
