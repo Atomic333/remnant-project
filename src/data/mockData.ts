@@ -87,8 +87,8 @@ export const markers: Marker[] = [
     id: "marker-005",
     name: "Browns Point Light Station — Puyallup Homeland",
     address: "Browns Point, Tacoma",
-    lat: 47.3052,
-    lng: -122.4381,
+    lat: 47.3059,
+    lng: -122.4443,
     summary: "For thousands of years, this area has been the traditional homeland of the Puyallup people. Browns Point was part of the Puyallup Tribal Reservation before federal appropriation for a lighthouse.",
     story: "Long before the federal government built a lighthouse at Browns Point, this headland belonged to the Puyallup people. In the late 19th century the land was deeded to tribal members Joe Douette and Jerry Meeker. The U.S. Lighthouse Service later appropriated the site for navigational purposes, erecting a light that guided ships into the bay. Today's marker acknowledges the site's tribal origin, the loss of Indigenous land, and the ongoing presence of the Puyallup Tribe in the region.",
     sources: [
@@ -356,8 +356,8 @@ export const markers: Marker[] = [
     id: "marker-021",
     name: "Point Defiance Park",
     address: "5400 N Pearl St, Tacoma",
-    lat: 47.3051,
-    lng: -122.5210,
+    lat: 47.3100,
+    lng: -122.5300,
     summary: "Point Defiance Park at the northern tip of Tacoma, where a 19th century military reservation stood before becoming one of the largest and oldest urban parks in the Pacific Northwest.",
     story: "The park owes its name to Captain Charles Wilkes, who in 1841 noted that the high bluffs could 'bid defiance to any attack' if fortified. While President Andrew Johnson set the land aside as a military reserve in 1866, no cannons were ever installed. Instead, Tacoma's civic leaders lobbied Congress to transform the wild peninsula into a public refuge. In 1888, President Grover Cleveland authorized its use as a park, and by 1905, President Theodore Roosevelt signed the land over to the city entirely.",
     sources: [
