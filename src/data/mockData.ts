@@ -206,8 +206,8 @@ export const markers: Marker[] = [
     id: "marker-012",
     name: "Welcome to the Tacoma Chinese Reconciliation Park",
     address: "1741 Schuster Pkwy, Tacoma",
-    lat: 47.2631,
-    lng: -122.4428,
+    lat: 47.2589,
+    lng: -122.4389,
     summary: "The Tacoma Chinese Reconciliation Park honors the Chinese community expelled in 1885 and celebrates the city's commitment to healing and diversity.",
     story: "The Tacoma Chinese Reconciliation Park stands on the site where Chinese homes once stood. Created by the Chinese Reconciliation Project Foundation and the City of Tacoma, the park invites visitors to walk interpretive pathways that tell the story of the 1885 expulsion, acknowledge the harm done, and celebrate the resilience of Chinese Americans. This marker welcomes you to a space dedicated to healing and cultural understanding.",
     sources: [
