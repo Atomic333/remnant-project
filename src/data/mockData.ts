@@ -189,8 +189,8 @@ export const markers: Marker[] = [
     id: "marker-011",
     name: "Journey to Gold Mountain",
     address: "1741 Schuster Pkwy, Tacoma",
-    lat: 47.2635,
-    lng: -122.4431,
+    lat: 47.2592,
+    lng: -122.4392,
     summary: "Chinese immigrants set sail for 'Gold Mountain' seeking opportunity and escape from poverty. Those who survived faced discrimination but forged tight-knit communities in Tacoma until the expulsion of 1885.",
     story: "During the 19th century, thousands of Chinese men and women embarked on perilous voyages to 'Gold Mountain' (America). Many sought fortune in the gold fields or on the railroads but faced discrimination and violence upon arrival. Those who settled in Tacoma built businesses along the waterfront. This vibrant community ended abruptly when city leaders expelled them in 1885. The marker honors their journey and contributions.",
     sources: [
