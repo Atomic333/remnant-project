@@ -30,7 +30,7 @@ const mapOptions: google.maps.MapOptions = {
   ],
 };
 
-type GeocodedMarker = Marker & { resolvedLat: number; resolvedLng: number };
+
 
 const MapPage = () => {
   const navigate = useNavigate();
