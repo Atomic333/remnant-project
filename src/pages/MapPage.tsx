@@ -9,7 +9,7 @@ import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Circle, Marker as GMarker } from "@react-google-maps/api";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
