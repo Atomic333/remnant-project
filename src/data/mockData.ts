@@ -155,8 +155,8 @@ export const markers: Marker[] = [
     id: "marker-009",
     name: "Chinese Expulsion: Climate of Exclusion",
     address: "1741 Schuster Pkwy, Tacoma",
-    lat: 47.2633,
-    lng: -122.4429,
+    lat: 47.2590,
+    lng: -122.4390,
     summary: "Reverend W.D. McFarland preached anti-Chinese rhetoric in Tacoma's churches. Congress responded with the Chinese Exclusion Act of 1882. Tacoma's leaders echoed the cry 'The Chinese Must Go.'",
     story: "Decades of anti-Chinese agitation preceded the 1885 expulsion. Preachers like Reverend W.D. McFarland declared Chinese immigration a curse and warned congregations that 'hordes of Chinamen' threatened white livelihoods. Congress responded with the Chinese Exclusion Act of 1882. Tacoma's leaders echoed the cry 'The Chinese Must Go,' creating a climate that normalized violence. This marker documents the rhetoric that made the expulsion possible.",
     sources: [
