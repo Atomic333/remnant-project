@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Search, List, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
