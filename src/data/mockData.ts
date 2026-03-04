@@ -87,8 +87,8 @@ export const markers: Marker[] = [
     id: "marker-005",
     name: "Browns Point Light Station — Puyallup Homeland",
     address: "Browns Point, Tacoma",
-    lat: 47.3052,
-    lng: -122.4381,
+    lat: 47.3059,
+    lng: -122.4443,
     summary: "For thousands of years, this area has been the traditional homeland of the Puyallup people. Browns Point was part of the Puyallup Tribal Reservation before federal appropriation for a lighthouse.",
     story: "Long before the federal government built a lighthouse at Browns Point, this headland belonged to the Puyallup people. In the late 19th century the land was deeded to tribal members Joe Douette and Jerry Meeker. The U.S. Lighthouse Service later appropriated the site for navigational purposes, erecting a light that guided ships into the bay. Today's marker acknowledges the site's tribal origin, the loss of Indigenous land, and the ongoing presence of the Puyallup Tribe in the region.",
     sources: [
