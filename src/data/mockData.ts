@@ -138,8 +138,8 @@ export const markers: Marker[] = [
     id: "marker-008",
     name: "Chinese Expulsion: Aftermath and Indictments",
     address: "1741 Schuster Pkwy, Tacoma",
-    lat: 47.2632,
-    lng: -122.4428,
+    lat: 47.2589,
+    lng: -122.4389,
     summary: "In 1885, U.S. Attorney W.H. White wired that evidence warranted arrests after Tacoma citizens forcibly expelled hundreds of Chinese residents. A grand jury indicted 27 civic leaders, but charges were dismissed.",
     story: "On November 3, 1885, more than 500 residents forcibly marched Tacoma's Chinese community to a train station and burned Chinatown. U.S. Attorney W.H. White wired that the evidence warranted arrests. A grand jury indicted 27 civic leaders for rioting and arson, but the cases were dismissed or never pursued. This marker highlights the failure of justice and notes that Chinese families did not return to Tacoma until decades later.",
     sources: [
