@@ -223,8 +223,8 @@ export const markers: Marker[] = [
     id: "marker-013",
     name: "Journey to Reconciliation",
     address: "Chinese Reconciliation Park, Tacoma",
-    lat: 47.2632,
-    lng: -122.4427,
+    lat: 47.2589,
+    lng: -122.4389,
     summary: "Governor Gary Locke asked us to place ourselves in the shoes of the expelled Chinese. The Chinese Reconciliation Project Foundation was formed to heal this wound through education, art and dialogue.",
     story: "Governor Gary Locke asked us to imagine the fear and pain of Tacoma's Chinese residents as they were forced to march to the train station in 1885. In response, the Chinese Reconciliation Project Foundation formed to heal that trauma through education, art and dialogue. This marker reminds us that reconciliation is an ongoing journey—one that requires acknowledging past injustice and committing to a future where people of all backgrounds belong.",
     sources: [
