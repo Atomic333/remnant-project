@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useCallback } from "react";
 import { Search, List, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
@@ -9,25 +9,38 @@ import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
+
+const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
 const markerImages: Record<string, string> = {
   "union-station": unionStation,
   "history-museum": historyMuseum,
 };
 
-const TACOMA_CENTER: [number, number] = [47.2529, -122.4443];
+const TACOMA_CENTER = { lat: 47.2529, lng: -122.4443 };
+
+const mapContainerStyle = { width: "100%", height: "100%" };
+
+const mapOptions: google.maps.MapOptions = {
+  disableDefaultUI: true,
+  zoomControl: true,
+  gestureHandling: "greedy",
+  styles: [
+    { featureType: "poi", elementType: "labels", stylers: [{ visibility: "off" }] },
+  ],
+};
 
 const MapPage = () => {
   const navigate = useNavigate();
-  const mapRef = useRef<HTMLDivElement>(null);
-  const leafletMap = useRef<L.Map | null>(null);
-  const leafletMarkers = useRef<L.Marker[]>([]);
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+  });
 
   const filtered = markers.filter((m) => {
     const matchCat = activeFilter === "All" || m.category === activeFilter;
@@ -35,59 +48,16 @@ const MapPage = () => {
     return matchCat && matchSearch;
   });
 
-  // Initialize map
-  useEffect(() => {
-    if (!mapRef.current || leafletMap.current) return;
-
-    const map = L.map(mapRef.current, {
-      zoomControl: false,
-    }).setView(TACOMA_CENTER, 14);
-
-    L.control.zoom({ position: "bottomright" }).addTo(map);
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
-
-    leafletMap.current = map;
-
-    return () => {
-      map.remove();
-      leafletMap.current = null;
-    };
+  const onMarkerClick = useCallback((m: Marker) => {
+    setSelectedMarker(m);
+    setShowList(false);
   }, []);
-
-  // Update markers when filter/search changes
-  useEffect(() => {
-    const map = leafletMap.current;
-    if (!map) return;
-
-    leafletMarkers.current.forEach((m) => m.remove());
-    leafletMarkers.current = [];
-
-    const icon = L.divIcon({
-      className: "",
-      html: `<div style="width:32px;height:32px;border-radius:16px;background:hsl(var(--primary));border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.25);"></div>`,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-    });
-
-    filtered.filter((m) => m.lat !== 0 && m.lng !== 0).forEach((m) => {
-      const lm = L.marker([m.lat, m.lng], { icon })
-        .addTo(map)
-        .on("click", () => {
-          setSelectedMarker(m);
-          setShowList(false);
-        });
-      leafletMarkers.current.push(lm);
-    });
-  }, [filtered]);
 
   return (
     <div className="relative flex h-screen flex-col pb-20">
       <PageHeader title="Map" />
 
-      {/* M3 Search bar */}
+      {/* Search bar */}
       <div className="absolute left-0 right-0 top-[60px] z-[500] px-4">
         <div className="flex items-center gap-3 rounded-xl bg-surface-variant px-4 py-3 elevation-2">
           <Search className="h-5 w-5 shrink-0 text-on-surface-variant" />
@@ -113,7 +83,30 @@ const MapPage = () => {
       </div>
 
       {/* Map */}
-      <div ref={mapRef} className="flex-1" />
+      <div className="flex-1">
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={mapContainerStyle}
+            center={TACOMA_CENTER}
+            zoom={14}
+            options={mapOptions}
+          >
+            {filtered
+              .filter((m) => m.lat !== 0 && m.lng !== 0)
+              .map((m) => (
+                <GMarker
+                  key={m.id}
+                  position={{ lat: m.lat, lng: m.lng }}
+                  onClick={() => onMarkerClick(m)}
+                />
+              ))}
+          </GoogleMap>
+        ) : (
+          <div className="flex h-full items-center justify-center bg-muted">
+            <p className="text-sm text-on-surface-variant">Loading map…</p>
+          </div>
+        )}
+      </div>
 
       {/* Nearby list */}
       {showList && (
