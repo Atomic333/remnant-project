@@ -356,8 +356,8 @@ export const markers: Marker[] = [
     id: "marker-021",
     name: "Point Defiance Park",
     address: "5400 N Pearl St, Tacoma",
-    lat: 47.3051,
-    lng: -122.5210,
+    lat: 47.3100,
+    lng: -122.5300,
     summary: "Point Defiance Park at the northern tip of Tacoma, where a 19th century military reservation stood before becoming one of the largest and oldest urban parks in the Pacific Northwest.",
     story: "The park owes its name to Captain Charles Wilkes, who in 1841 noted that the high bluffs could 'bid defiance to any attack' if fortified. While President Andrew Johnson set the land aside as a military reserve in 1866, no cannons were ever installed. Instead, Tacoma's civic leaders lobbied Congress to transform the wild peninsula into a public refuge. In 1888, President Grover Cleveland authorized its use as a park, and by 1905, President Theodore Roosevelt signed the land over to the city entirely.",
     sources: [
