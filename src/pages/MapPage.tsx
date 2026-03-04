@@ -92,10 +92,10 @@ const MapPage = () => {
             zoom={14}
             options={mapOptions}
           >
-            {filteredGeocoded.map((m) => (
+            {filtered.map((m) => (
               <GMarker
                 key={m.id}
-                position={{ lat: m.resolvedLat, lng: m.resolvedLng }}
+                position={{ lat: m.lat, lng: m.lng }}
                 onClick={() => onMarkerClick(m)}
               />
             ))}
