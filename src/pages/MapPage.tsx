@@ -38,52 +38,12 @@ const MapPage = () => {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
-  const [geocodedMarkers, setGeocodedMarkers] = useState<GeocodedMarker[]>([]);
-  const geocoderRef = useRef<google.maps.Geocoder | null>(null);
-  const geocodedIds = useRef<Set<string>>(new Set());
 
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
 
   const filtered = markers.filter((m) => {
-    const matchCat = activeFilter === "All" || m.category === activeFilter;
-    const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
-
-  // Geocode markers using Google Maps Geocoder
-  useEffect(() => {
-    if (!isLoaded) return;
-    if (!geocoderRef.current) {
-      geocoderRef.current = new google.maps.Geocoder();
-    }
-    const geocoder = geocoderRef.current;
-
-    const toGeocode = markers.filter((m) => !geocodedIds.current.has(m.id));
-
-    // Stagger requests to avoid rate limiting
-    toGeocode.forEach((m, i) => {
-      setTimeout(() => {
-        const query = m.address.toLowerCase().includes("tacoma")
-          ? m.address
-          : `${m.name}, ${m.address}, Tacoma, WA`;
-
-        geocoder.geocode({ address: query }, (results, status) => {
-          if (status === "OK" && results && results[0]) {
-            const loc = results[0].geometry.location;
-            geocodedIds.current.add(m.id);
-            setGeocodedMarkers((prev) => [
-              ...prev.filter((g) => g.id !== m.id),
-              { ...m, resolvedLat: loc.lat(), resolvedLng: loc.lng() },
-            ]);
-          }
-        });
-      }, i * 150); // 150ms between each request
-    });
-  }, [isLoaded]);
-
-  const filteredGeocoded = geocodedMarkers.filter((m) => {
     const matchCat = activeFilter === "All" || m.category === activeFilter;
     const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
     return matchCat && matchSearch;
