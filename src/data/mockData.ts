@@ -172,8 +172,8 @@ export const markers: Marker[] = [
     id: "marker-010",
     name: "Chinese Expulsion: Planning of the Expulsion",
     address: "1741 Schuster Pkwy, Tacoma",
-    lat: 47.2634,
-    lng: -122.4430,
+    lat: 47.2591,
+    lng: -122.4391,
     summary: "On October 31, 1885, Tacoma Mayor Jacob Weisback gave the city's Chinese residents three days to leave. On November 3 a mob of more than 500 forced families onto wagons. Their homes were burned — the 'Tacoma Method.'",
     story: "Tacoma's Chinese expulsion was carefully planned. On October 31, 1885, Mayor Jacob Weisback and a committee of prominent citizens gave the Chinese residents three days to leave. When the deadline passed, a mob rounded up families at gunpoint, loaded them onto wagons and marched them to the Lake View depot. Their homes and businesses were torched. The so-called 'Tacoma Method' became a model for similar actions across the West.",
     sources: [
