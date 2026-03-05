@@ -17,7 +17,8 @@ const MarkerDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);
-  const [visited, setVisited] = useState(marker?.visited ?? false);
+  const { isVisited, toggle } = useVisited();
+  const visited = id ? isVisited(id) : false;
   const [expandedSection, setExpandedSection] = useState<string | null>("summary");
   const [storyLoaded, setStoryLoaded] = useState(false);
 
