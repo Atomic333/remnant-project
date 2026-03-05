@@ -87,7 +87,7 @@ const MarkerDetailPage = () => {
 
         {/* Visit button */}
         <button
-          onClick={() => setVisited(!visited)}
+          onClick={() => id && toggleVisited(id)}
           className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-display text-sm font-medium transition-colors ${
             visited
               ? "bg-secondary text-secondary-foreground"
