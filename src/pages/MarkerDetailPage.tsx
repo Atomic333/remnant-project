@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { QRCodeSVG } from "qrcode.react";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
+import { useVisited } from "@/hooks/useVisited";
 
 const images: Record<string, string> = {
   "union-station": unionStation,
