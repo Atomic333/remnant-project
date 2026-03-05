@@ -35,6 +35,7 @@ const mapOptions: google.maps.MapOptions = {
 
 const MapPage = () => {
   const navigate = useNavigate();
+  const { isVisited } = useVisited();
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
