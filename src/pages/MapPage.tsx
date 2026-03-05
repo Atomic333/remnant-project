@@ -119,6 +119,14 @@ const MapPage = () => {
                 key={m.id}
                 position={{ lat: m.lat, lng: m.lng }}
                 onClick={() => onMarkerClick(m)}
+                icon={{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: m.visited ? "#22c55e" : "#ef4444",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 2,
+                }}
               />
             ))}
           </GoogleMap>
