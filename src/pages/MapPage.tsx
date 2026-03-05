@@ -60,7 +60,7 @@ const MapPage = () => {
 
       {/* Search bar */}
       <div className="absolute left-0 right-0 top-[60px] z-[500] px-4">
-        <div className="flex items-center gap-3 rounded-xl bg-surface-variant px-4 py-3 elevation-2">
+        <div className={`flex items-center gap-3 bg-surface-variant px-4 py-3 elevation-2 ${search && filtered.length > 0 ? "rounded-t-xl" : "rounded-xl"}`}>
           <Search className="h-5 w-5 shrink-0 text-on-surface-variant" />
           <input
             type="text"
@@ -81,6 +81,28 @@ const MapPage = () => {
             <List className="h-4 w-4" />
           </button>
         </div>
+        {/* Search results dropdown */}
+        {search && (
+          <div className="max-h-64 overflow-y-auto rounded-b-xl bg-card elevation-2 border-t border-border">
+            {filtered.length > 0 ? filtered.slice(0, 8).map((m) => (
+              <button
+                key={m.id}
+                onClick={() => { navigate(`/marker/${m.id}`); setSearch(""); }}
+                className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface-variant transition-colors"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Search className="h-4 w-4 text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium text-foreground">{m.name}</p>
+                  <p className="truncate text-xs text-on-surface-variant">{m.address}</p>
+                </div>
+              </button>
+            )) : (
+              <p className="px-4 py-3 text-sm text-on-surface-variant">No results for "{search}"</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Map */}
