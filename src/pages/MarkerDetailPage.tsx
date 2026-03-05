@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { QRCodeSVG } from "qrcode.react";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
+import { useVisited } from "@/hooks/useVisited";
 
 const images: Record<string, string> = {
   "union-station": unionStation,
@@ -16,7 +17,8 @@ const MarkerDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);
-  const [visited, setVisited] = useState(marker?.visited ?? false);
+  const { isVisited, toggle: toggleVisited } = useVisited();
+  const visited = id ? isVisited(id) : false;
   const [expandedSection, setExpandedSection] = useState<string | null>("summary");
   const [storyLoaded, setStoryLoaded] = useState(false);
 
@@ -85,7 +87,7 @@ const MarkerDetailPage = () => {
 
         {/* Visit button */}
         <button
-          onClick={() => setVisited(!visited)}
+          onClick={() => id && toggleVisited(id)}
           className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-display text-sm font-medium transition-colors ${
             visited
               ? "bg-secondary text-secondary-foreground"

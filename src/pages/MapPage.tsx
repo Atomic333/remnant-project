@@ -10,6 +10,7 @@ import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
+import { useVisited } from "@/hooks/useVisited";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
@@ -34,6 +35,7 @@ const mapOptions: google.maps.MapOptions = {
 
 const MapPage = () => {
   const navigate = useNavigate();
+  const { isVisited } = useVisited();
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
@@ -122,7 +124,7 @@ const MapPage = () => {
                 icon={{
                   path: google.maps.SymbolPath.CIRCLE,
                   scale: 10,
-                  fillColor: m.visited ? "#22c55e" : "#ef4444",
+                  fillColor: isVisited(m.id) ? "#22c55e" : "#ef4444",
                   fillOpacity: 1,
                   strokeColor: "#ffffff",
                   strokeWeight: 2,
