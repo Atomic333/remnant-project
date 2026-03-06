@@ -360,7 +360,7 @@ const MapPage = () => {
 
       {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-16 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
+        <div className="absolute bottom-0 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
           <div className="sticky top-0 bg-card px-4 pt-4 pb-2">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-medium text-foreground">
