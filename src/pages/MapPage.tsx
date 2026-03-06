@@ -425,11 +425,13 @@ const MapPage = () => {
 
       {/* Progress bottom sheet */}
       <Drawer open={activeSheet === "progress"} onOpenChange={(open) => !open && setActiveSheet(null)}>
-        <DrawerContent className="pb-2 max-h-[80vh]">
-          <DrawerTitle className="px-4 pt-2 pb-2 font-display text-base font-medium text-foreground">
+        <DrawerContent className="pb-2 h-[80vh] flex flex-col">
+          <DrawerTitle className="shrink-0 px-4 pt-2 pb-2 font-display text-base font-medium text-foreground">
             Progress
           </DrawerTitle>
-          {activeSheet === "progress" && <ProgressPanel />}
+          <div className="flex-1 overflow-hidden">
+            {activeSheet === "progress" && <ProgressPanel />}
+          </div>
         </DrawerContent>
       </Drawer>
     </div>
