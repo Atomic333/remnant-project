@@ -62,7 +62,7 @@ const MapPage = () => {
 
       {/* Search bar */}
       <div className="absolute left-0 right-0 top-[80px] z-[500] px-4">
-        <div className={`flex items-center gap-3 bg-surface-variant px-4 py-3 elevation-2 ${search && filtered.length > 0 ? "rounded-t-xl" : "rounded-xl"}`}>
+        <div className={`flex items-center gap-3 bg-background/90 backdrop-blur-sm px-4 py-3 elevation-2 ${search && filtered.length > 0 ? "rounded-t-xl" : "rounded-xl"}`}>
           <Search className="h-5 w-5 shrink-0 text-on-surface-variant" />
           <input
             type="text"
