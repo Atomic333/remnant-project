@@ -1,6 +1,6 @@
-import { ArrowRight, MapPin, Trophy, Compass, Scan, ChevronRight } from "lucide-react";
+import { ArrowRight, MapPin, Trophy, Compass, Scan } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { markers, categories } from "@/data/mockData";
+import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
 import { useVisited } from "@/hooks/useVisited";
 
