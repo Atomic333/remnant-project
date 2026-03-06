@@ -304,19 +304,23 @@ const MapPage = () => {
       <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-3">
         <button
           onClick={() => setActiveSheet(activeSheet === "progress" ? null : "progress")}
-          className={`flex h-12 w-12 items-center justify-center rounded-full elevation-2 transition-colors ${
-            activeSheet === "progress" ? "bg-primary text-primary-foreground" : "bg-card text-on-surface-variant"
+          className={`flex h-14 w-14 items-center justify-center rounded-full elevation-3 transition-all active:scale-95 ${
+            activeSheet === "progress"
+              ? "bg-primary text-primary-foreground"
+              : "bg-card text-primary ring-1 ring-primary/20"
           }`}
         >
-          <Trophy className="h-5 w-5" />
+          <Trophy className="h-6 w-6" />
         </button>
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
-          className={`flex h-12 w-12 items-center justify-center rounded-full elevation-2 transition-colors ${
-            activeSheet === "scan" ? "bg-primary text-primary-foreground" : "bg-card text-on-surface-variant"
+          className={`flex h-14 w-14 items-center justify-center rounded-full elevation-3 transition-all active:scale-95 ${
+            activeSheet === "scan"
+              ? "bg-primary text-primary-foreground"
+              : "bg-primary text-primary-foreground"
           }`}
         >
-          <QrCode className="h-5 w-5" />
+          <QrCode className="h-6 w-6" />
         </button>
       </div>
 
