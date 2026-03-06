@@ -61,15 +61,6 @@ const HomePage = () => {
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
-                {/* Coming soon overlay */}
-                {!city.active && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
-                    <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm border border-white/20">
-                      <Lock className="h-3.5 w-3.5 text-white/80" />
-                      <span className="text-xs font-medium text-white/80">Coming Soon</span>
-                    </div>
-                  </div>
-                )}
 
                 {/* Content */}
                 <div className="absolute bottom-0 left-0 right-0 p-4">
