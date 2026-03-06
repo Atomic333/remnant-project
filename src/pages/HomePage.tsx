@@ -54,7 +54,6 @@ const HomePage = () => {
           
             {city.image ?
           <img src={city.image} alt={city.name} className="h-full w-full object-cover" /> :
-
           <div className="h-full w-full bg-surface-variant" />
           }
 
@@ -63,35 +62,26 @@ const HomePage = () => {
 
             {/* Content */}
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <div className="flex items-end justify-between">
-                <div>
-                  <h2 className="font-display text-2xl font-medium text-white leading-tight">
-                    {city.name}, {city.state}
-                  </h2>
-                  {city.active &&
-                <p className="text-xs text-white/70 mt-0.5">{visitedCount} of {total} markers visited</p>
-                }
-                </div>
-                {city.active &&
-              <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
-                    {pct}%
-                  </span>
-              }
-              </div>
-              {city.active &&
-            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20">
-                  <div
-                className="h-full rounded-full bg-primary transition-all duration-700"
-                style={{ width: `${pct}%` }} />
-              
-                </div>
-            }
+              <h2 className="font-display text-2xl font-medium text-white leading-tight">
+                {city.name}, {city.state}
+              </h2>
             </div>
           </div>
         )}
 
         {/* Quick Actions */}
         <div className="flex shrink-0 flex-col gap-3">
+          {/* Progress display — not a button */}
+          <div className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-variant/40 p-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+              <Trophy className="h-4 w-4 text-on-surface-variant" />
+            </div>
+            <div className="text-left flex-1">
+              <p className="font-display text-sm font-medium text-foreground">My Progress</p>
+              <p className="text-xs text-muted-foreground">{visitedCount} of {total} markers visited</p>
+            </div>
+            <span className="text-xs font-medium text-primary">{pct}%</span>
+          </div>
           <button
             onClick={() => navigate("/map")}
             className="flex w-full items-center gap-4 rounded-2xl bg-primary p-4 elevation-1 transition-all active:scale-[0.98]">
@@ -102,18 +92,6 @@ const HomePage = () => {
               <p className="font-display text-base font-semibold text-primary-foreground">Explore Tacoma</p>
               <p className="text-xs text-primary-foreground/70">Browse all markers</p>
             </div>
-          </button>
-          <button
-            onClick={() => navigate("/progress")}
-            className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-variant/40 p-3 transition-all active:scale-[0.98]">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-              <Trophy className="h-4 w-4 text-on-surface-variant" />
-            </div>
-            <div className="text-left flex-1">
-              <p className="font-display text-sm font-medium text-foreground">My Progress</p>
-              <p className="text-xs text-muted-foreground">{visitedCount} of {total} markers visited</p>
-            </div>
-            <span className="text-xs font-medium text-primary">{pct}%</span>
           </button>
         </div>
 
