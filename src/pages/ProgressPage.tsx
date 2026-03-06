@@ -2,17 +2,20 @@ import { useState } from "react";
 import { markers } from "@/data/mockData";
 import PageHeader from "@/components/PageHeader";
 import MarkerCard from "@/components/MarkerCard";
+import { useVisited } from "@/hooks/useVisited";
 
 const tabs = ["All", "Visited", "To See"];
 
 const ProgressPage = () => {
   const [activeTab, setActiveTab] = useState("All");
-  const visited = markers.filter((m) => m.visited).length;
-  const pct = Math.round((visited / markers.length) * 100);
+  const { visited: visitedSet } = useVisited();
+
+  const visitedCount = markers.filter((m) => visitedSet.has(m.id)).length;
+  const pct = Math.round((visitedCount / markers.length) * 100);
 
   const filtered = markers.filter((m) => {
-    if (activeTab === "Visited") return m.visited;
-    if (activeTab === "To See") return !m.visited;
+    if (activeTab === "Visited") return visitedSet.has(m.id);
+    if (activeTab === "To See") return !visitedSet.has(m.id);
     return true;
   });
 
@@ -25,7 +28,7 @@ const ProgressPage = () => {
         <div className="rounded-xl bg-card p-4 elevation-1">
           <div className="flex items-center justify-between">
             <h2 className="font-display text-2xl font-medium text-foreground">
-              {visited}/{markers.length}
+              {visitedCount}/{markers.length}
             </h2>
             <span className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
               {pct}%
@@ -40,7 +43,7 @@ const ProgressPage = () => {
           </div>
         </div>
 
-        {/* M3 Segmented button */}
+        {/* Segmented tabs */}
         <div className="mt-6 flex rounded-xl border border-border">
           {tabs.map((tab, i) => (
             <button

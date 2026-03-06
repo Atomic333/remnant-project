@@ -2,12 +2,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import BottomNav from "@/components/BottomNav";
 import HomePage from "@/pages/HomePage";
 import MapPage from "@/pages/MapPage";
-
-import ScanPage from "@/pages/ScanPage";
 import MarkerDetailPage from "@/pages/MarkerDetailPage";
 import ProgressPage from "@/pages/ProgressPage";
 import RequestPage from "@/pages/RequestPage";
@@ -26,8 +24,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/map" element={<MapPage />} />
-            
-            <Route path="/scan" element={<ScanPage />} />
             <Route path="/marker/:id" element={<MarkerDetailPage />} />
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/request" element={<RequestPage />} />
