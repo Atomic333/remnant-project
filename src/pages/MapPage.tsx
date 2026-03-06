@@ -237,8 +237,21 @@ const MapPage = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
   const [activeSheet, setActiveSheet] = useState<Sheet>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
+
+  // Watch user's GPS location
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {}, // silently fail if denied
+      { enableHighAccuracy: true }
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   const filtered = markers.filter((m) => {
     const matchCat = activeFilter === "All" || m.category === activeFilter;
@@ -249,6 +262,10 @@ const MapPage = () => {
   const onMarkerClick = useCallback((m: Marker) => {
     setSelectedMarker(m);
     setShowList(false);
+  }, []);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
   }, []);
 
   return (
