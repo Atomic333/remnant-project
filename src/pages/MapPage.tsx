@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { Search, List, X } from "lucide-react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { Search, List, X, QrCode, Trophy, CheckCircle, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
@@ -11,6 +11,7 @@ import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
 import { useVisited } from "@/hooks/useVisited";
+import { Html5Qrcode } from "html5-qrcode";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
@@ -31,7 +32,201 @@ const mapOptions: google.maps.MapOptions = {
   ],
 };
 
+// ── Progress panel ────────────────────────────────────────────────
+const progressTabs = ["All", "Visited", "To See"];
 
+const ProgressPanel = () => {
+  const { visited: visitedSet } = useVisited();
+  const [activeTab, setActiveTab] = useState("All");
+  const navigate = useNavigate();
+
+  const visitedCount = markers.filter((m) => visitedSet.has(m.id)).length;
+  const pct = Math.round((visitedCount / markers.length) * 100);
+
+  const filtered = markers.filter((m) => {
+    if (activeTab === "Visited") return visitedSet.has(m.id);
+    if (activeTab === "To See") return !visitedSet.has(m.id);
+    return true;
+  });
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Stats */}
+      <div className="rounded-xl bg-card p-4 elevation-1 mx-4 mt-2">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display text-2xl font-medium text-foreground">
+            {visitedCount}/{markers.length}
+          </h2>
+          <span className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
+            {pct}%
+          </span>
+        </div>
+        <p className="mt-1 text-sm text-on-surface-variant">Markers Visited</p>
+        <div className="mt-3 h-1 overflow-hidden rounded-full bg-surface-variant">
+          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="mx-4 mt-4 flex rounded-xl border border-border">
+        {progressTabs.map((tab, i) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors
+              ${i === 0 ? "rounded-l-xl" : ""} ${i === progressTabs.length - 1 ? "rounded-r-xl" : ""}
+              ${activeTab === tab
+                ? "bg-secondary text-secondary-foreground"
+                : "bg-surface text-on-surface-variant hover:bg-surface-variant"
+              }`}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+
+      {/* List */}
+      <div className="mt-3 space-y-2 px-4 pb-6 overflow-y-auto flex-1">
+        {filtered.map((m) => (
+          <MarkerCard key={m.id} marker={m} />
+        ))}
+        {filtered.length === 0 && (
+          <div className="py-12 text-center text-on-surface-variant">No markers in this category yet.</div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ── Scan panel ────────────────────────────────────────────────────
+const ScanPanel = ({ onClose }: { onClose: () => void }) => {
+  const navigate = useNavigate();
+  const [manualCode, setManualCode] = useState("");
+  const [showManual, setShowManual] = useState(false);
+  const [successMarker, setSuccessMarker] = useState<string | null>(null);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [scanning, setScanning] = useState(false);
+  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const isRunningRef = useRef(false);
+
+  const stopScanner = useCallback(async () => {
+    if (scannerRef.current && isRunningRef.current) {
+      try { await scannerRef.current.stop(); } catch { /* already stopped */ }
+      isRunningRef.current = false;
+    }
+  }, []);
+
+  const handleScanResult = useCallback((decodedText: string) => {
+    stopScanner();
+    let code = decodedText;
+    try {
+      const url = new URL(decodedText);
+      const parts = url.pathname.split("/");
+      const idx = parts.indexOf("marker");
+      if (idx !== -1 && parts[idx + 1]) code = parts[idx + 1];
+    } catch { /* not a URL */ }
+    const found = markers.find((m) => m.id === code);
+    setSuccessMarker(found?.name ?? code);
+    setTimeout(() => { onClose(); navigate(`/marker/${code}`); }, 1500);
+  }, [navigate, onClose, stopScanner]);
+
+  useEffect(() => {
+    if (successMarker || showManual) return;
+    const startScanner = async () => {
+      try {
+        const scanner = new Html5Qrcode("qr-reader-map");
+        scannerRef.current = scanner;
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 200, height: 200 } },
+          handleScanResult,
+          () => {}
+        );
+        isRunningRef.current = true;
+        setScanning(true);
+      } catch (err: any) {
+        setCameraError(
+          err?.message?.includes("NotAllowed")
+            ? "Camera permission denied. Use manual entry below."
+            : "Could not access camera. Use manual entry below."
+        );
+      }
+    };
+    startScanner();
+    return () => { stopScanner(); };
+  }, [successMarker, showManual, handleScanResult, stopScanner]);
+
+  const handleOpenMarker = () => {
+    const code = manualCode.trim() || "union-station";
+    const found = markers.find((m) => m.id === code);
+    setSuccessMarker(found?.name ?? code);
+    setTimeout(() => { onClose(); navigate(`/marker/${code}`); }, 1500);
+  };
+
+  if (successMarker) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16 gap-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
+          <CheckCircle className="h-10 w-10 text-primary" />
+        </div>
+        <h2 className="font-display text-xl font-medium text-foreground">Marker Found!</h2>
+        <p className="text-sm text-on-surface-variant">{successMarker}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center px-6 pb-6">
+      <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
+        {cameraError ? (
+          <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
+            <CameraOff className="h-12 w-12 text-on-surface-variant" />
+            <p className="text-xs text-on-surface-variant">{cameraError}</p>
+          </div>
+        ) : (
+          <div id="qr-reader-map" className="qr-reader-container h-full w-full" />
+        )}
+        {!scanning && !cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
+          </div>
+        )}
+      </div>
+
+      <p className="mb-6 text-center text-sm text-on-surface-variant">
+        {cameraError ? "" : scanning ? "Point at the QR code on the marker" : "Starting camera…"}
+      </p>
+
+      <button
+        onClick={() => { stopScanner(); setShowManual(!showManual); }}
+        className="text-sm font-medium text-primary"
+      >
+        Enter Code Manually
+      </button>
+
+      {showManual && (
+        <div className="mt-4 w-full max-w-xs">
+          <input
+            type="text"
+            placeholder="Enter marker code..."
+            value={manualCode}
+            onChange={(e) => setManualCode(e.target.value)}
+            className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
+          />
+          <button
+            onClick={handleOpenMarker}
+            className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground"
+          >
+            Open Marker
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ── MapPage ───────────────────────────────────────────────────────
+type Sheet = "scan" | "progress" | null;
 
 const MapPage = () => {
   const navigate = useNavigate();
@@ -40,10 +235,9 @@ const MapPage = () => {
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
+  const [activeSheet, setActiveSheet] = useState<Sheet>(null);
 
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-  });
+  const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
 
   const filtered = markers.filter((m) => {
     const matchCat = activeFilter === "All" || m.category === activeFilter;
@@ -57,7 +251,7 @@ const MapPage = () => {
   }, []);
 
   return (
-    <div className="relative flex h-screen flex-col pb-20">
+    <div className="relative flex h-screen flex-col pb-16">
       <PageHeader title="Map" />
 
       {/* Search bar */}
@@ -83,7 +277,6 @@ const MapPage = () => {
             <List className="h-4 w-4" />
           </button>
         </div>
-        {/* Search results dropdown */}
         {search && (
           <div className="max-h-64 overflow-y-auto rounded-b-xl bg-card elevation-2 border-t border-border">
             {filtered.length > 0 ? filtered.slice(0, 8).map((m) => (
@@ -105,6 +298,26 @@ const MapPage = () => {
             )}
           </div>
         )}
+      </div>
+
+      {/* Floating action buttons — Scan & Progress */}
+      <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-3">
+        <button
+          onClick={() => setActiveSheet(activeSheet === "progress" ? null : "progress")}
+          className={`flex h-12 w-12 items-center justify-center rounded-full elevation-2 transition-colors ${
+            activeSheet === "progress" ? "bg-primary text-primary-foreground" : "bg-card text-on-surface-variant"
+          }`}
+        >
+          <Trophy className="h-5 w-5" />
+        </button>
+        <button
+          onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
+          className={`flex h-12 w-12 items-center justify-center rounded-full elevation-2 transition-colors ${
+            activeSheet === "scan" ? "bg-primary text-primary-foreground" : "bg-card text-on-surface-variant"
+          }`}
+        >
+          <QrCode className="h-5 w-5" />
+        </button>
       </div>
 
       {/* Map */}
@@ -141,7 +354,7 @@ const MapPage = () => {
 
       {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-20 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
+        <div className="absolute bottom-16 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
           <div className="sticky top-0 bg-card px-4 pt-4 pb-2">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-medium text-foreground">
@@ -155,11 +368,7 @@ const MapPage = () => {
               </button>
             </div>
             <div className="mt-3">
-              <FilterChips
-                categories={categories}
-                active={activeFilter}
-                onChange={setActiveFilter}
-              />
+              <FilterChips categories={categories} active={activeFilter} onChange={setActiveFilter} />
             </div>
           </div>
           <div className="space-y-2 px-4 pb-4">
@@ -173,7 +382,7 @@ const MapPage = () => {
         </div>
       )}
 
-      {/* Bottom sheet preview */}
+      {/* Marker preview bottom sheet */}
       <Drawer open={!!selectedMarker} onOpenChange={(open) => !open && setSelectedMarker(null)}>
         <DrawerContent className="px-4 pb-6">
           {selectedMarker && (
@@ -201,6 +410,26 @@ const MapPage = () => {
               </button>
             </div>
           )}
+        </DrawerContent>
+      </Drawer>
+
+      {/* Scan bottom sheet */}
+      <Drawer open={activeSheet === "scan"} onOpenChange={(open) => !open && setActiveSheet(null)}>
+        <DrawerContent className="pb-2">
+          <DrawerTitle className="px-4 pt-2 pb-4 font-display text-base font-medium text-foreground">
+            Scan QR Code
+          </DrawerTitle>
+          {activeSheet === "scan" && <ScanPanel onClose={() => setActiveSheet(null)} />}
+        </DrawerContent>
+      </Drawer>
+
+      {/* Progress bottom sheet */}
+      <Drawer open={activeSheet === "progress"} onOpenChange={(open) => !open && setActiveSheet(null)}>
+        <DrawerContent className="pb-2 max-h-[80vh]">
+          <DrawerTitle className="px-4 pt-2 pb-2 font-display text-base font-medium text-foreground">
+            Progress
+          </DrawerTitle>
+          {activeSheet === "progress" && <ProgressPanel />}
         </DrawerContent>
       </Drawer>
     </div>
