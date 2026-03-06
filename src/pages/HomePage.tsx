@@ -91,29 +91,27 @@ const HomePage = () => {
         )}
 
         {/* Quick Actions */}
-        <div className="grid shrink-0 grid-cols-2 gap-3">
+        <div className="flex shrink-0 flex-col gap-3">
           <button
             onClick={() => navigate("/map")}
-            className="flex flex-col items-start gap-3 rounded-2xl bg-primary p-4 elevation-1 transition-all active:scale-[0.98]">
-            
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-foreground/20">
-              <Compass className="h-5 w-5 text-primary-foreground" />
+            className="flex w-full items-center gap-4 rounded-2xl bg-primary p-4 elevation-1 transition-all active:scale-[0.98]">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary-foreground/20">
+              <Compass className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="text-left">
-              <p className="font-display text-sm font-medium text-primary-foreground">Explore Map</p>
+              <p className="font-display text-base font-semibold text-primary-foreground">Explore Map</p>
               <p className="text-xs text-primary-foreground/70">Browse all markers</p>
             </div>
           </button>
           <button
             onClick={() => navigate("/scan")}
-            className="flex flex-col items-start gap-3 rounded-2xl bg-secondary p-4 elevation-1 transition-all active:scale-[0.98]">
-            
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-foreground/10">
-              <Scan className="h-5 w-5 text-secondary-foreground" />
+            className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-variant/40 p-3 transition-all active:scale-[0.98]">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
+              <Scan className="h-4 w-4 text-on-surface-variant" />
             </div>
             <div className="text-left">
-              <p className="font-display text-sm font-medium text-secondary-foreground">Scan QR</p>
-              <p className="text-xs text-secondary-foreground/60">​Or enter manually     </p>
+              <p className="font-display text-sm font-medium text-foreground">Scan QR</p>
+              <p className="text-xs text-muted-foreground">Or enter manually</p>
             </div>
           </button>
         </div>
