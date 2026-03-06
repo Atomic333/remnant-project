@@ -53,7 +53,7 @@ const HomePage = () => {
               >
                 {/* Background */}
                 {city.image ? (
-                  <img src={city.image} alt={city.name} className="h-44 w-full object-cover" />
+                  <img src={city.image} alt={city.name} className="h-72 w-full object-cover" />
                 ) : (
                   <div className="h-44 w-full bg-surface-variant" />
                 )}
