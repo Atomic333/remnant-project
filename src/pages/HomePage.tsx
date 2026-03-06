@@ -1,4 +1,4 @@
-import { ArrowRight, Compass, Scan } from "lucide-react";
+import { Compass, Scan } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
@@ -118,14 +118,6 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Explore CTA */}
-        <button
-          onClick={() => navigate("/map")}
-          className="flex shrink-0 w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 font-display text-base font-medium text-primary-foreground elevation-1 transition-all active:scale-[0.99]"
-        >
-          Explore Tacoma
-          <ArrowRight className="h-5 w-5" />
-        </button>
       </div>
     </div>
   );
