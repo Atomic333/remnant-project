@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import { Search, List, X, QrCode, Trophy, CheckCircle, CameraOff } from "lucide-react";
+import { Search, List, X, QrCode, CheckCircle, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
