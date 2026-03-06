@@ -4,23 +4,12 @@ import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
 import { useVisited } from "@/hooks/useVisited";
 
-const categoryIcons: Record<string, string> = {
-  Indigenous: "🪶",
-  Memorials: "🏛️",
-  "Civil Rights": "✊",
-  Architecture: "🏗️",
-  Commerce: "🏪",
-  All: "📍",
-};
-
 const HomePage = () => {
   const navigate = useNavigate();
-  const { visited, isVisited } = useVisited();
+  const { visited } = useVisited();
   const visitedCount = visited.size;
   const total = markers.length;
   const pct = total > 0 ? Math.round((visitedCount / total) * 100) : 0;
-
-  const recentMarkers = markers.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-background pb-24">
@@ -49,9 +38,7 @@ const HomePage = () => {
             alt="Tacoma cityscape with Mount Rainier"
             className="h-52 w-full object-cover"
           />
-          {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          {/* Content */}
           <div className="absolute bottom-0 left-0 right-0 p-4">
             <h1 className="font-display text-2xl font-medium leading-tight text-white">
               Discover history<br />where you stand.
@@ -68,7 +55,8 @@ const HomePage = () => {
           <div className="flex items-start justify-between">
             <div>
               <h2 className="font-display text-sm font-medium text-on-surface-variant uppercase tracking-wide">Your Progress</h2>
-              <p className="mt-1 font-display text-3xl font-medium text-foreground">{visitedCount}
+              <p className="mt-1 font-display text-3xl font-medium text-foreground">
+                {visitedCount}
                 <span className="text-base font-normal text-on-surface-variant">/{total}</span>
               </p>
               <p className="text-xs text-on-surface-variant mt-0.5">markers discovered</p>
@@ -119,68 +107,10 @@ const HomePage = () => {
           </button>
         </div>
 
-        {/* Categories */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-base font-medium text-foreground">Browse by Category</h2>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {categories.filter(c => c !== "All").map((cat) => (
-              <button
-                key={cat}
-                onClick={() => navigate(`/map`)}
-                className="flex shrink-0 flex-col items-center gap-1.5 rounded-xl bg-card px-4 py-3 elevation-1 transition-all active:scale-[0.97] hover:bg-accent"
-              >
-                <span className="text-xl">{categoryIcons[cat] ?? "📍"}</span>
-                <span className="text-xs font-medium text-foreground whitespace-nowrap">{cat}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Recent / Featured Markers */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-display text-base font-medium text-foreground">Featured Markers</h2>
-            <button
-              onClick={() => navigate("/nearby")}
-              className="flex items-center gap-0.5 text-xs font-medium text-primary"
-            >
-              See all <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-          <div className="space-y-2">
-            {recentMarkers.map((m) => {
-              const done = isVisited(m.id);
-              return (
-                <button
-                  key={m.id}
-                  onClick={() => navigate(`/marker/${m.id}`)}
-                  className="flex w-full items-center gap-3 rounded-xl bg-card p-3 text-left elevation-1 transition-all active:scale-[0.99] hover:bg-accent"
-                >
-                  <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${done ? "bg-success/15" : "bg-primary/10"}`}>
-                    <MapPin className={`h-5 w-5 ${done ? "text-success" : "text-primary"}`} />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-foreground">{m.name}</p>
-                    <p className="truncate text-xs text-on-surface-variant">{m.address}</p>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    {done && (
-                      <span className="rounded-full bg-success/15 px-2 py-0.5 text-xs font-medium text-success">✓</span>
-                    )}
-                    <ChevronRight className="h-4 w-4 text-on-surface-variant" />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Explore CTA */}
         <button
           onClick={() => navigate("/map")}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 font-display text-base font-medium text-primary-foreground elevation-1 transition-all active:scale-[0.99] hover:elevation-2"
+          className="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-4 font-display text-base font-medium text-primary-foreground elevation-1 transition-all active:scale-[0.99]"
         >
           Explore Tacoma
           <ArrowRight className="h-5 w-5" />
