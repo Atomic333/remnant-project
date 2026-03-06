@@ -103,17 +103,6 @@ const HomePage = () => {
               <p className="text-xs text-primary-foreground/70">Browse all markers</p>
             </div>
           </button>
-          <button
-            onClick={() => navigate("/scan")}
-            className="flex w-full items-center gap-4 rounded-2xl border border-border bg-surface-variant/40 p-3 transition-all active:scale-[0.98]">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted">
-              <Scan className="h-4 w-4 text-on-surface-variant" />
-            </div>
-            <div className="text-left">
-              <p className="font-display text-sm font-medium text-foreground">Scan QR</p>
-              <p className="text-xs text-muted-foreground">Or enter manually</p>
-            </div>
-          </button>
         </div>
 
       </div>
