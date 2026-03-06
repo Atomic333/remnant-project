@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+
 import { Search, List, X, QrCode, CheckCircle, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
@@ -236,8 +237,21 @@ const MapPage = () => {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
   const [activeSheet, setActiveSheet] = useState<Sheet>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
 
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
+
+  // Watch user's GPS location
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+    const watchId = navigator.geolocation.watchPosition(
+      (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      () => {}, // silently fail if denied
+      { enableHighAccuracy: true }
+    );
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   const filtered = markers.filter((m) => {
     const matchCat = activeFilter === "All" || m.category === activeFilter;
@@ -248,6 +262,10 @@ const MapPage = () => {
   const onMarkerClick = useCallback((m: Marker) => {
     setSelectedMarker(m);
     setShowList(false);
+  }, []);
+
+  const onMapLoad = useCallback((map: google.maps.Map) => {
+    mapRef.current = map;
   }, []);
 
   return (
@@ -323,7 +341,9 @@ const MapPage = () => {
             center={TACOMA_CENTER}
             zoom={14}
             options={mapOptions}
+            onLoad={onMapLoad}
           >
+            {/* Historical markers */}
             {filtered.map((m) => (
               <GMarker
                 key={m.id}
@@ -339,6 +359,22 @@ const MapPage = () => {
                 }}
               />
             ))}
+            {/* User location — blue pulsing dot */}
+            {userLocation && (
+              <GMarker
+                position={userLocation}
+                icon={{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: "#3b82f6",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 3,
+                }}
+                title="Your location"
+                zIndex={1000}
+              />
+            )}
           </GoogleMap>
         ) : (
           <div className="flex h-full items-center justify-center bg-muted">
