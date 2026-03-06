@@ -349,11 +349,12 @@ const MapPage = () => {
 
       {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-0 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
-          <div className="sticky top-0 bg-card px-4 pt-4 pb-2">
+        <div className="absolute bottom-16 left-0 right-0 z-[500] flex flex-col rounded-t-2xl bg-card elevation-3" style={{ maxHeight: "calc(60vh - 64px)" }}>
+          {/* Header — sticky */}
+          <div className="shrink-0 rounded-t-2xl bg-card px-4 pt-4 pb-2 border-b border-border">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-medium text-foreground">
-                Nearby ({filtered.length})
+                Nearby <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">{filtered.length}</span>
               </h2>
               <button
                 onClick={() => setShowList(false)}
@@ -366,13 +367,16 @@ const MapPage = () => {
               <FilterChips categories={categories} active={activeFilter} onChange={setActiveFilter} />
             </div>
           </div>
-          <div className="space-y-2 px-4 pb-4">
-            {filtered.map((m) => (
-              <MarkerCard key={m.id} marker={m} showDistance />
-            ))}
-            {filtered.length === 0 && (
-              <p className="py-8 text-center text-sm text-on-surface-variant">No markers found.</p>
-            )}
+          {/* Scrollable list */}
+          <div className="flex-1 overflow-y-auto">
+            <div className="space-y-2 px-4 py-3">
+              {filtered.map((m) => (
+                <MarkerCard key={m.id} marker={m} showDistance />
+              ))}
+              {filtered.length === 0 && (
+                <p className="py-8 text-center text-sm text-on-surface-variant">No markers found.</p>
+              )}
+            </div>
           </div>
         </div>
       )}
