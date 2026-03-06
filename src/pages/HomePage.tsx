@@ -1,8 +1,32 @@
-import { ArrowRight, MapPin, Trophy, Compass, Scan } from "lucide-react";
+import { ArrowRight, Compass, Scan, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
 import { useVisited } from "@/hooks/useVisited";
+
+const cities = [
+  {
+    id: "tacoma",
+    name: "Tacoma",
+    state: "WA",
+    image: tacomaHero,
+    active: true,
+  },
+  {
+    id: "seattle",
+    name: "Seattle",
+    state: "WA",
+    image: null,
+    active: false,
+  },
+  {
+    id: "olympia",
+    name: "Olympia",
+    state: "WA",
+    image: null,
+    active: false,
+  },
+];
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -31,51 +55,66 @@ const HomePage = () => {
 
       <div className="px-5 space-y-6 mt-4">
 
-        {/* Hero Card */}
-        <div className="relative overflow-hidden rounded-2xl elevation-2">
-          <img
-            src={tacomaHero}
-            alt="Tacoma cityscape with Mount Rainier"
-            className="h-52 w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h1 className="font-display text-2xl font-medium leading-tight text-white">
-              Discover history<br />where you stand.
-            </h1>
-            <div className="mt-1 flex items-center gap-1.5">
-              <MapPin className="h-3.5 w-3.5 text-white/70" />
-              <p className="text-xs text-white/70">Tacoma, Washington</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress Card */}
-        <div className="rounded-2xl bg-card p-4 elevation-1">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="font-display text-sm font-medium text-on-surface-variant uppercase tracking-wide">Your Progress</h2>
-              <p className="mt-1 font-display text-3xl font-medium text-foreground">
-                {visitedCount}
-                <span className="text-base font-normal text-on-surface-variant">/{total}</span>
-              </p>
-              <p className="text-xs text-on-surface-variant mt-0.5">markers discovered</p>
-            </div>
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-              <Trophy className="h-6 w-6 text-primary" />
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex justify-between mb-1.5">
-              <span className="text-xs text-on-surface-variant">Progress</span>
-              <span className="text-xs font-medium text-primary">{pct}%</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-surface-variant">
+        {/* Cities */}
+        <div>
+          <p className="mb-3 text-xs font-medium uppercase tracking-widest text-on-surface-variant">Cities</p>
+          <div className="space-y-3">
+            {cities.map((city) => (
               <div
-                className="h-full rounded-full bg-primary transition-all duration-700"
-                style={{ width: `${pct}%` }}
-              />
-            </div>
+                key={city.id}
+                className={`relative overflow-hidden rounded-2xl elevation-2 ${city.active ? "cursor-pointer" : "cursor-default"}`}
+                onClick={() => city.active && navigate("/map")}
+              >
+                {/* Background */}
+                {city.image ? (
+                  <img src={city.image} alt={city.name} className="h-44 w-full object-cover" />
+                ) : (
+                  <div className="h-44 w-full bg-surface-variant" />
+                )}
+
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+                {/* Coming soon overlay */}
+                {!city.active && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                    <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm border border-white/20">
+                      <Lock className="h-3.5 w-3.5 text-white/80" />
+                      <span className="text-xs font-medium text-white/80">Coming Soon</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <h2 className="font-display text-xl font-medium text-white leading-tight">
+                        {city.name}, {city.state}
+                      </h2>
+                      {city.active && (
+                        <p className="text-xs text-white/70 mt-0.5">{visitedCount} of {total} markers visited</p>
+                      )}
+                    </div>
+                    {city.active && (
+                      <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                        {pct}%
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Progress bar */}
+                  {city.active && (
+                    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all duration-700"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
