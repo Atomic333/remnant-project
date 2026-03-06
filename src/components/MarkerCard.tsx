@@ -13,9 +13,10 @@ const images: Record<string, string> = {
 interface MarkerCardProps {
   marker: Marker;
   showDistance?: boolean;
+  distanceLabel?: string;
 }
 
-const MarkerCard = ({ marker, showDistance }: MarkerCardProps) => {
+const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) => {
   const navigate = useNavigate();
   const { isVisited } = useVisited();
   const visited = isVisited(marker.id);
@@ -40,7 +41,7 @@ const MarkerCard = ({ marker, showDistance }: MarkerCardProps) => {
       <div className="min-w-0 flex-1">
         <h3 className="font-display font-medium text-card-foreground">{marker.name}</h3>
         <p className="truncate text-sm text-on-surface-variant">
-          {showDistance && marker.distance ? `${marker.distance} • ` : ""}
+          {showDistance && (distanceLabel ?? marker.distance) ? `${distanceLabel ?? marker.distance} • ` : ""}
           {marker.address}
         </p>
       </div>
