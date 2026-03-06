@@ -306,8 +306,8 @@ const MapPage = () => {
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
           className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
             activeSheet === "scan"
-              ? "bg-primary/80 text-primary-foreground"
-              : "bg-primary text-primary-foreground"
+              ? "bg-secondary/80 text-secondary-foreground"
+              : "bg-secondary text-secondary-foreground"
           }`}
         >
           <QrCode className="h-5 w-5" />
