@@ -301,26 +301,28 @@ const MapPage = () => {
       </div>
 
       {/* Floating action buttons — Scan & Progress */}
-      <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-3">
+      <div className="absolute top-[144px] right-4 z-[500] flex flex-row gap-2">
         <button
           onClick={() => setActiveSheet(activeSheet === "progress" ? null : "progress")}
-          className={`flex h-14 w-14 items-center justify-center rounded-full elevation-3 transition-all active:scale-95 ${
+          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-3 transition-all active:scale-95 ${
             activeSheet === "progress"
               ? "bg-primary text-primary-foreground"
               : "bg-card text-primary ring-1 ring-primary/20"
           }`}
         >
-          <Trophy className="h-6 w-6" />
+          <Trophy className="h-5 w-5" />
+          <span className="text-xs font-medium">Progress</span>
         </button>
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
-          className={`flex h-14 w-14 items-center justify-center rounded-full elevation-3 transition-all active:scale-95 ${
+          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-3 transition-all active:scale-95 ${
             activeSheet === "scan"
               ? "bg-primary text-primary-foreground"
               : "bg-primary text-primary-foreground"
           }`}
         >
-          <QrCode className="h-6 w-6" />
+          <QrCode className="h-5 w-5" />
+          <span className="text-xs font-medium">Scan</span>
         </button>
       </div>
 
