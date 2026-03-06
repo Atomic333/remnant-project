@@ -341,7 +341,9 @@ const MapPage = () => {
             center={TACOMA_CENTER}
             zoom={14}
             options={mapOptions}
+            onLoad={onMapLoad}
           >
+            {/* Historical markers */}
             {filtered.map((m) => (
               <GMarker
                 key={m.id}
@@ -357,6 +359,22 @@ const MapPage = () => {
                 }}
               />
             ))}
+            {/* User location — blue pulsing dot */}
+            {userLocation && (
+              <GMarker
+                position={userLocation}
+                icon={{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 10,
+                  fillColor: "#3b82f6",
+                  fillOpacity: 1,
+                  strokeColor: "#ffffff",
+                  strokeWeight: 3,
+                }}
+                title="Your location"
+                zIndex={1000}
+              />
+            )}
           </GoogleMap>
         ) : (
           <div className="flex h-full items-center justify-center bg-muted">
