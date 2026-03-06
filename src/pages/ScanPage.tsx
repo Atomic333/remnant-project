@@ -113,9 +113,10 @@ const ScanPage = () => {
     if (found) {
       setResultLabel(found.name);
       setScanState("success");
-      setTimeout(() => navigate(`/marker/${code}`), 1500);
+      setTimeout(() => navigate(`/marker/${found.id}`), 1500);
     } else {
-      setResultLabel(code);
+      // No matching marker — show error screen
+      setResultLabel(code.length > 40 ? code.slice(0, 40) + "…" : code);
       setScanState("not-found");
     }
   };
