@@ -149,7 +149,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://markerquest.app/m/tacoma_wa/marker-008",
+    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-008",
   },
   {
     id: "marker-009",
