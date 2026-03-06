@@ -1,4 +1,4 @@
-import { ArrowRight, Compass, Scan, Lock } from "lucide-react";
+import { ArrowRight, Compass, Scan } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
