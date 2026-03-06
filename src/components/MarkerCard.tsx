@@ -13,9 +13,10 @@ const images: Record<string, string> = {
 interface MarkerCardProps {
   marker: Marker;
   showDistance?: boolean;
+  distanceLabel?: string;
 }
 
-const MarkerCard = ({ marker, showDistance }: MarkerCardProps) => {
+const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) => {
   const navigate = useNavigate();
   const { isVisited } = useVisited();
   const visited = isVisited(marker.id);
