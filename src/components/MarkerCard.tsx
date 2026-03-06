@@ -41,7 +41,7 @@ const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) =>
       <div className="min-w-0 flex-1">
         <h3 className="font-display font-medium text-card-foreground">{marker.name}</h3>
         <p className="truncate text-sm text-on-surface-variant">
-          {showDistance && marker.distance ? `${marker.distance} • ` : ""}
+          {showDistance && (distanceLabel ?? marker.distance) ? `${distanceLabel ?? marker.distance} • ` : ""}
           {marker.address}
         </p>
       </div>
