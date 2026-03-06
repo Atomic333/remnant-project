@@ -300,19 +300,8 @@ const MapPage = () => {
         )}
       </div>
 
-      {/* Floating action buttons — Scan & Progress */}
-      <div className="absolute top-[136px] right-4 z-[400] flex flex-col gap-2">
-        <button
-          onClick={() => setActiveSheet(activeSheet === "progress" ? null : "progress")}
-          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
-            activeSheet === "progress"
-              ? "bg-primary text-primary-foreground"
-              : "bg-card text-primary ring-1 ring-primary/20"
-          }`}
-        >
-          <Trophy className="h-5 w-5" />
-          <span className="text-xs font-medium">Progress</span>
-        </button>
+      {/* Floating action button — Scan */}
+      <div className="absolute top-[136px] right-4 z-[400]">
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
           className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
