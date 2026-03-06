@@ -100,13 +100,15 @@ const ProgressPanel = () => {
 };
 
 // ── Scan panel ────────────────────────────────────────────────────
+type ScanState = "idle" | "scanning" | "success" | "not-found" | "external-url";
+
 const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
-  const [successMarker, setSuccessMarker] = useState<string | null>(null);
+  const [scanState, setScanState] = useState<ScanState>("idle");
+  const [resultLabel, setResultLabel] = useState("");
   const [cameraError, setCameraError] = useState<string | null>(null);
-  const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isRunningRef = useRef(false);
 
@@ -119,20 +121,34 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 
   const handleScanResult = useCallback((decodedText: string) => {
     stopScanner();
-    let code = decodedText;
+    let markerId: string | null = null;
+    let isUrl = false;
+    let hostname = "";
     try {
       const url = new URL(decodedText);
+      isUrl = true;
+      hostname = url.hostname;
       const parts = url.pathname.split("/");
       const idx = parts.indexOf("marker");
-      if (idx !== -1 && parts[idx + 1]) code = parts[idx + 1];
-    } catch { /* not a URL */ }
-    const found = markers.find((m) => m.id === code);
-    setSuccessMarker(found?.name ?? code);
-    setTimeout(() => { onClose(); navigate(`/marker/${code}`); }, 1500);
+      if (idx !== -1 && parts[idx + 1]) markerId = parts[idx + 1];
+    } catch { markerId = decodedText.trim(); }
+
+    if (markerId) {
+      const found = markers.find((m) => m.id === markerId);
+      if (found) {
+        setResultLabel(found.name);
+        setScanState("success");
+        setTimeout(() => { onClose(); navigate(`/marker/${found.id}`); }, 1500);
+        return;
+      }
+    }
+    if (isUrl) { setResultLabel(hostname); setScanState("external-url"); return; }
+    setResultLabel(decodedText.slice(0, 40));
+    setScanState("not-found");
   }, [navigate, onClose, stopScanner]);
 
   useEffect(() => {
-    if (successMarker || showManual) return;
+    if (scanState !== "idle" || showManual) return;
     const startScanner = async () => {
       try {
         const scanner = new Html5Qrcode("qr-reader-map");
@@ -144,7 +160,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
           () => {}
         );
         isRunningRef.current = true;
-        setScanning(true);
+        setScanState("scanning");
       } catch (err: any) {
         setCameraError(
           err?.message?.includes("NotAllowed")
@@ -155,27 +171,76 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
     };
     startScanner();
     return () => { stopScanner(); };
-  }, [successMarker, showManual, handleScanResult, stopScanner]);
+  }, [scanState, showManual, handleScanResult, stopScanner]);
 
   const handleOpenMarker = () => {
-    const code = manualCode.trim() || "union-station";
+    const code = manualCode.trim();
+    if (!code) return;
     const found = markers.find((m) => m.id === code);
-    setSuccessMarker(found?.name ?? code);
-    setTimeout(() => { onClose(); navigate(`/marker/${code}`); }, 1500);
+    if (found) {
+      setResultLabel(found.name);
+      setScanState("success");
+      setTimeout(() => { onClose(); navigate(`/marker/${found.id}`); }, 1500);
+    } else {
+      setResultLabel(code.length > 40 ? code.slice(0, 40) + "…" : code);
+      setScanState("not-found");
+    }
   };
 
-  if (successMarker) {
+  const resetScanner = () => {
+    setScanState("idle");
+    setManualCode("");
+    setShowManual(false);
+  };
+
+  // ── Result states ──────────────────────────────────────────────
+  if (scanState === "success") {
     return (
       <div className="flex flex-col items-center justify-center py-16 gap-4">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
           <CheckCircle className="h-10 w-10 text-primary" />
         </div>
         <h2 className="font-display text-xl font-medium text-foreground">Marker Found!</h2>
-        <p className="text-sm text-on-surface-variant">{successMarker}</p>
+        <p className="text-sm text-on-surface-variant">{resultLabel}</p>
       </div>
     );
   }
 
+  if (scanState === "not-found") {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 gap-4 px-6 text-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
+          <X className="h-10 w-10 text-destructive" />
+        </div>
+        <h2 className="font-display text-xl font-medium text-foreground">No Marker Found</h2>
+        <p className="text-sm text-on-surface-variant max-w-xs">
+          <span className="font-medium text-foreground">"{resultLabel}"</span> doesn't match any known marker.
+        </p>
+        <button onClick={resetScanner} className="mt-2 rounded-xl bg-primary px-8 py-3 font-display text-sm font-medium text-primary-foreground">
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (scanState === "external-url") {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 gap-4 px-6 text-center">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+          <QrCode className="h-10 w-10 text-muted-foreground" />
+        </div>
+        <h2 className="font-display text-xl font-medium text-foreground">Not a Trail Marker</h2>
+        <p className="text-sm text-on-surface-variant max-w-xs">
+          That QR code points to <span className="font-medium text-foreground">{resultLabel}</span>, which isn't part of this app.
+        </p>
+        <button onClick={resetScanner} className="mt-2 rounded-xl bg-primary px-8 py-3 font-display text-sm font-medium text-primary-foreground">
+          Scan Again
+        </button>
+      </div>
+    );
+  }
+
+  // ── Main scanner UI ────────────────────────────────────────────
   return (
     <div className="flex flex-col items-center px-6 pb-6">
       <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
@@ -187,7 +252,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
         ) : (
           <div id="qr-reader-map" className="qr-reader-container h-full w-full" />
         )}
-        {!scanning && !cameraError && (
+        {scanState === "idle" && !cameraError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
           </div>
@@ -195,7 +260,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
       </div>
 
       <p className="mb-6 text-center text-sm text-on-surface-variant">
-        {cameraError ? "" : scanning ? "Point at the QR code on the marker" : "Starting camera…"}
+        {cameraError ? "" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
       </p>
 
       <button
@@ -216,7 +281,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
           />
           <button
             onClick={handleOpenMarker}
-            className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground"
+            disabled={!manualCode.trim()}
+            className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground disabled:opacity-50"
           >
             Open Marker
           </button>
