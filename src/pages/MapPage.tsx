@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
-import { Search, List, X, QrCode, CheckCircle, CameraOff } from "lucide-react";
+import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
@@ -384,8 +384,8 @@ const MapPage = () => {
         )}
       </div>
 
-      {/* Floating action button — Scan */}
-      <div className="absolute top-[148px] right-4 z-[400]">
+      {/* Floating action buttons — Scan + Locate */}
+      <div className="absolute top-[148px] right-4 z-[400] flex flex-col gap-2">
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
           className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
@@ -397,6 +397,16 @@ const MapPage = () => {
           <QrCode className="h-5 w-5" />
           <span className="text-xs font-medium">Scan</span>
         </button>
+
+        {userLocation && (
+          <button
+            onClick={() => mapRef.current?.panTo(userLocation)}
+            className="flex h-11 w-11 items-center justify-center self-end rounded-full bg-background elevation-2 transition-all active:scale-95"
+            title="Centre on my location"
+          >
+            <LocateFixed className="h-5 w-5 text-primary" />
+          </button>
+        )}
       </div>
 
       {/* Map */}
