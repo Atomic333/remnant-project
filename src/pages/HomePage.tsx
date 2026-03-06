@@ -99,7 +99,7 @@ const HomePage = () => {
               <Compass className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="text-left">
-              <p className="font-display text-base font-semibold text-primary-foreground">Explore Map</p>
+              <p className="font-display text-base font-semibold text-primary-foreground">Explore Tacoma</p>
               <p className="text-xs text-primary-foreground/70">Browse all markers</p>
             </div>
           </button>
