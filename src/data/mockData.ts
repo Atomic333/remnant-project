@@ -367,7 +367,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Parks",
-    qrUrl: "https://markerquest.app/m/tacoma_wa/marker-021",
+    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-021",
   },
   {
     id: "marker-022",
