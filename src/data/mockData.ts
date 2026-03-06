@@ -98,7 +98,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://markerquest.app/m/tacoma_wa/marker-005",
+    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-005",
   },
   {
     id: "marker-006",
