@@ -12,20 +12,6 @@ const cities = [
     image: tacomaHero,
     active: true,
   },
-  {
-    id: "seattle",
-    name: "Seattle",
-    state: "WA",
-    image: null,
-    active: false,
-  },
-  {
-    id: "olympia",
-    name: "Olympia",
-    state: "WA",
-    image: null,
-    active: false,
-  },
 ];
 
 const HomePage = () => {
