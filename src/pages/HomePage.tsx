@@ -5,21 +5,21 @@ import tacomaHero from "@/assets/tacoma-hero.jpg";
 import { useVisited } from "@/hooks/useVisited";
 
 const cities = [
-  {
-    id: "tacoma",
-    name: "Tacoma",
-    state: "WA",
-    image: tacomaHero,
-    active: true,
-  },
-];
+{
+  id: "tacoma",
+  name: "Tacoma",
+  state: "WA",
+  image: tacomaHero,
+  active: true
+}];
+
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { visited } = useVisited();
   const visitedCount = visited.size;
   const total = markers.length;
-  const pct = total > 0 ? Math.round((visitedCount / total) * 100) : 0;
+  const pct = total > 0 ? Math.round(visitedCount / total * 100) : 0;
 
   return (
     <div className="flex h-[100dvh] flex-col bg-background pb-20">
@@ -31,8 +31,8 @@ const HomePage = () => {
         </div>
         <button
           onClick={() => navigate("/settings")}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors"
-        >
+          className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors">
+          
           <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
@@ -46,17 +46,17 @@ const HomePage = () => {
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-on-surface-variant">Cities</p>
         </div>
 
-        {cities.map((city) => (
-          <div
-            key={city.id}
-            className={`relative flex-1 overflow-hidden rounded-2xl elevation-2 ${city.active ? "cursor-pointer" : "cursor-default"}`}
-            onClick={() => city.active && navigate("/map")}
-          >
-            {city.image ? (
-              <img src={city.image} alt={city.name} className="h-full w-full object-cover" />
-            ) : (
-              <div className="h-full w-full bg-surface-variant" />
-            )}
+        {cities.map((city) =>
+        <div
+          key={city.id}
+          className={`relative flex-1 overflow-hidden rounded-2xl elevation-2 ${city.active ? "cursor-pointer" : "cursor-default"}`}
+          onClick={() => city.active && navigate("/map")}>
+          
+            {city.image ?
+          <img src={city.image} alt={city.name} className="h-full w-full object-cover" /> :
+
+          <div className="h-full w-full bg-surface-variant" />
+          }
 
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
@@ -68,34 +68,34 @@ const HomePage = () => {
                   <h2 className="font-display text-2xl font-medium text-white leading-tight">
                     {city.name}, {city.state}
                   </h2>
-                  {city.active && (
-                    <p className="text-xs text-white/70 mt-0.5">{visitedCount} of {total} markers visited</p>
-                  )}
+                  {city.active &&
+                <p className="text-xs text-white/70 mt-0.5">{visitedCount} of {total} markers visited</p>
+                }
                 </div>
-                {city.active && (
-                  <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                {city.active &&
+              <span className="rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">
                     {pct}%
                   </span>
-                )}
+              }
               </div>
-              {city.active && (
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20">
+              {city.active &&
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20">
                   <div
-                    className="h-full rounded-full bg-primary transition-all duration-700"
-                    style={{ width: `${pct}%` }}
-                  />
+                className="h-full rounded-full bg-primary transition-all duration-700"
+                style={{ width: `${pct}%` }} />
+              
                 </div>
-              )}
+            }
             </div>
           </div>
-        ))}
+        )}
 
         {/* Quick Actions */}
         <div className="grid shrink-0 grid-cols-2 gap-3">
           <button
             onClick={() => navigate("/map")}
-            className="flex flex-col items-start gap-3 rounded-2xl bg-primary p-4 elevation-1 transition-all active:scale-[0.98]"
-          >
+            className="flex flex-col items-start gap-3 rounded-2xl bg-primary p-4 elevation-1 transition-all active:scale-[0.98]">
+            
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-foreground/20">
               <Compass className="h-5 w-5 text-primary-foreground" />
             </div>
@@ -106,21 +106,21 @@ const HomePage = () => {
           </button>
           <button
             onClick={() => navigate("/scan")}
-            className="flex flex-col items-start gap-3 rounded-2xl bg-secondary p-4 elevation-1 transition-all active:scale-[0.98]"
-          >
+            className="flex flex-col items-start gap-3 rounded-2xl bg-secondary p-4 elevation-1 transition-all active:scale-[0.98]">
+            
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-foreground/10">
               <Scan className="h-5 w-5 text-secondary-foreground" />
             </div>
             <div className="text-left">
               <p className="font-display text-sm font-medium text-secondary-foreground">Scan QR</p>
-              <p className="text-xs text-secondary-foreground/60">Mark as visited</p>
+              <p className="text-xs text-secondary-foreground/60">​Or enter manually     </p>
             </div>
           </button>
         </div>
 
       </div>
-    </div>
-  );
+    </div>);
+
 };
 
 export default HomePage;
