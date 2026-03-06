@@ -301,10 +301,10 @@ const MapPage = () => {
       </div>
 
       {/* Floating action buttons — Scan & Progress */}
-      <div className="absolute top-[144px] right-4 z-[500] flex flex-col gap-2">
+      <div className="absolute top-[136px] right-4 z-[400] flex flex-col gap-2">
         <button
           onClick={() => setActiveSheet(activeSheet === "progress" ? null : "progress")}
-          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-3 transition-all active:scale-95 ${
+          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
             activeSheet === "progress"
               ? "bg-primary text-primary-foreground"
               : "bg-card text-primary ring-1 ring-primary/20"
@@ -315,9 +315,9 @@ const MapPage = () => {
         </button>
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
-          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-3 transition-all active:scale-95 ${
+          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
             activeSheet === "scan"
-              ? "bg-primary text-primary-foreground"
+              ? "bg-primary/80 text-primary-foreground"
               : "bg-primary text-primary-foreground"
           }`}
         >
@@ -360,7 +360,7 @@ const MapPage = () => {
 
       {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-16 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
+        <div className="absolute bottom-0 left-0 right-0 z-[500] max-h-[60vh] overflow-y-auto rounded-t-xl bg-card elevation-3">
           <div className="sticky top-0 bg-card px-4 pt-4 pb-2">
             <div className="flex items-center justify-between">
               <h2 className="font-display text-base font-medium text-foreground">
