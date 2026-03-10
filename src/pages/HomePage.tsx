@@ -26,7 +26,7 @@ const HomePage = () => {
       {/* Top bar */}
       <header className="flex shrink-0 items-center justify-between px-5 pt-5 pb-2">
         <div>
-          <p className="text-xs font-medium uppercase tracking-widest text-on-surface-variant">Welcome to</p>
+          
           <span className="font-display text-xl font-medium text-primary">The Remnant Project</span>
         </div>
         <button
