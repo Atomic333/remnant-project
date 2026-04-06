@@ -81,7 +81,7 @@ const SettingsPage = () => {
               </div>
             </div>
             <button
-              onClick={() => setCameraEnabled(!cameraEnabled)}
+              onClick={handleCameraToggle}
               className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
                 cameraEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
@@ -107,7 +107,7 @@ const SettingsPage = () => {
               </div>
             </div>
             <button
-              onClick={() => setLocationEnabled(!locationEnabled)}
+              onClick={handleLocationToggle}
               className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
                 locationEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
