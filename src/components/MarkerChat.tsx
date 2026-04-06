@@ -37,8 +37,8 @@ const MarkerChat = ({ marker }: MarkerChatProps) => {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-      const url = `https://${projectId}.supabase.co/functions/v1/marker-chat`;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const url = `${supabaseUrl}/functions/v1/marker-chat`;
 
       const response = await fetch(url, {
         method: "POST",
