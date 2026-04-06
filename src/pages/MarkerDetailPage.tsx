@@ -44,7 +44,6 @@ const MarkerDetailPage = () => {
 
   const sections = [
     { key: "summary", icon: BookOpen, label: "Summary" },
-    { key: "chat", icon: MessageCircle, label: "Ask About This" },
     { key: "sources", icon: FileText, label: "Sources" },
   ];
 
@@ -137,6 +136,16 @@ const MarkerDetailPage = () => {
           ))}
         </div>
 
+        {/* Chat - always expanded */}
+        <div className="mt-6 rounded-xl bg-card p-4 elevation-1">
+          <div className="mb-3 flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <MessageCircle className="h-4 w-4" />
+            </div>
+            <span className="font-display font-medium text-card-foreground">Ask About This</span>
+          </div>
+          <MarkerChat marker={marker} />
+        </div>
         {/* QR Code & Marker Number */}
         <div className="mt-10 flex flex-col items-center gap-3 border-t border-border pt-6">
           <span className="text-xs font-medium uppercase tracking-wider text-on-surface-variant">
