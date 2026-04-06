@@ -30,7 +30,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-001",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-001",
   },
   {
     id: "marker-002",
@@ -47,7 +47,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-002",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-002",
   },
   {
     id: "marker-003",
@@ -64,7 +64,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-003",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-003",
   },
   {
     id: "marker-004",
@@ -81,7 +81,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-004",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-004",
   },
   {
     id: "marker-005",
@@ -98,7 +98,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-005",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-005",
   },
   {
     id: "marker-006",
@@ -115,7 +115,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Indigenous",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-006",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-006",
   },
   {
     id: "marker-007",
@@ -132,7 +132,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-007",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-007",
   },
   {
     id: "marker-008",
@@ -149,7 +149,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-008",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-008",
   },
   {
     id: "marker-009",
@@ -166,7 +166,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-009",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-009",
   },
   {
     id: "marker-010",
@@ -183,7 +183,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-010",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-010",
   },
   {
     id: "marker-011",
@@ -200,7 +200,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-011",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-011",
   },
   {
     id: "marker-012",
@@ -217,7 +217,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: true,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-012",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-012",
   },
   {
     id: "marker-013",
@@ -234,7 +234,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Memorials",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-013",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-013",
   },
   {
     id: "marker-014",
@@ -251,7 +251,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-014",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-014",
   },
   {
     id: "marker-015",
@@ -268,7 +268,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-015",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-015",
   },
   {
     id: "marker-016",
@@ -282,7 +282,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-016",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-016",
   },
   {
     id: "marker-017",
@@ -299,7 +299,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-017",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-017",
   },
   {
     id: "marker-018",
@@ -316,7 +316,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-018",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-018",
   },
   {
     id: "marker-019",
@@ -333,7 +333,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Architecture",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-019",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-019",
   },
   {
     id: "marker-020",
@@ -350,7 +350,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Architecture",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-020",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-020",
   },
   {
     id: "marker-021",
@@ -367,7 +367,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Parks",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-021",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-021",
   },
   {
     id: "marker-022",
@@ -384,7 +384,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-022",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-022",
   },
   {
     id: "marker-023",
@@ -401,7 +401,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-023",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-023",
   },
   {
     id: "marker-024",
@@ -418,7 +418,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-024",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-024",
   },
   {
     id: "marker-025",
@@ -435,7 +435,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-025",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-025",
   },
   {
     id: "marker-026",
@@ -452,7 +452,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-026",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-026",
   },
   {
     id: "marker-027",
@@ -469,7 +469,7 @@ export const markers: Marker[] = [
     image: "union-station",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-027",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-027",
   },
   {
     id: "marker-028",
@@ -486,7 +486,7 @@ export const markers: Marker[] = [
     image: "history-museum",
     visited: false,
     category: "Civil Rights",
-    qrUrl: "https://remnant-pathfinder.lovable.app/marker/marker-028",
+    qrUrl: "https://remnant-project.lovable.app/marker/marker-028",
   },
 ];
 
