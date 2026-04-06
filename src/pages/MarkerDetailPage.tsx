@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, Sparkles, FileText, Check, MapPin } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin } from "lucide-react";
 import { markers } from "@/data/mockData";
-import { Skeleton } from "@/components/ui/skeleton";
 import { QRCodeSVG } from "qrcode.react";
 import unionStation from "@/assets/union-station.jpg";
 import historyMuseum from "@/assets/history-museum.jpg";
 import { useVisited } from "@/hooks/useVisited";
+import MarkerChat from "@/components/MarkerChat";
 
 const images: Record<string, string> = {
   "union-station": unionStation,
