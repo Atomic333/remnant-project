@@ -1,76 +1,39 @@
 
 
-# Make All Page Designs Consistent
+# Replace "The Story" Tab with an OpenAI Chatbot
 
-## Issues Found
+## Summary
+Replace the "The Story" accordion section in the marker detail page with an inline AI chatbot powered by your own OpenAI API key. The chatbot will use marker context (name, summary, sources) as system prompt context so users can ask questions about each marker.
 
-After reviewing every page, here are the inconsistencies to fix:
+## Setup Steps
 
-### 1. Progress Bar Height Mismatch
-- **HomePage**: uses `h-2` (thin)
-- **ProgressPage**: uses `h-3` (thicker)
-- **Fix**: Standardize both to `h-2` (matches the refined landing page style)
+### 1. Store your OpenAI API key
+I'll use the secret management tool to securely store your OpenAI API key as `OPENAI_API_KEY`. You'll be prompted to paste it in.
 
-### 2. Button Padding Inconsistencies
-- HomePage CTA: `py-3.5`
-- ScanPage "Open Marker": `py-2.5`
-- MarkerDetailPage "Mark as Visited": `py-3`
-- RequestPage "Submit Request": `py-3`
-- MapPage drawer "View Details": `py-3`
-- **Fix**: Standardize all full-width primary action buttons to `py-3`
+### 2. Enable Lovable Cloud & create edge function
+Create `supabase/functions/marker-chat/index.ts` that:
+- Accepts `{ messages, markerId }` from the client
+- Looks up marker data to build a system prompt (using your provided system prompt + marker context)
+- Calls `https://api.openai.com/v1/chat/completions` with your `OPENAI_API_KEY`
+- Streams the response back via SSE
 
-### 3. NotFound Page Uses Wrong Background
-- Currently uses `bg-muted` instead of the app's standard `bg-background`
-- Also lacks consistent typography and button styling
-- **Fix**: Restyle to match the app: `bg-background`, teal button, proper font sizes
+### 3. Build chat UI component
+Create `src/components/MarkerChat.tsx`:
+- Simple chat interface with message list and input field
+- Renders AI responses with `react-markdown`
+- Streams tokens in real-time
+- Auto-scrolls to latest message
+- Shows typing indicator while streaming
 
-### 4. MarkerDetailPage Missing Bottom Padding
-- Uses `pb-8` but the bottom nav is 5rem tall, so content gets hidden
-- **Fix**: Change to `pb-20` to match all other pages
+### 4. Update MarkerDetailPage
+- Replace the "story" section (`key: "story"`, icon: `Sparkles`, label: "The Story") with a new "chat" section (icon: `MessageCircle`, label: "Ask About This")
+- When expanded, render `<MarkerChat markerId={marker.id} />` instead of the story text
+- Remove the story loading skeleton logic
 
-### 5. Dead NearbyPage Route
-- `/nearby` route still exists in App.tsx but is no longer reachable (removed from BottomNav)
-- **Fix**: Remove the route and the NearbyPage import from App.tsx
+## Technical Details
 
-### 6. ScanPage Scanner Box Styling
-- Uses `bg-foreground/90` (nearly black) which clashes with the light, airy theme
-- **Fix**: Change to `bg-muted` with a subtle border, keeping the camera area visible but softer
-
-### 7. ProgressPage Header Redundancy
-- Shows "X/Y Markers Visited" as h2, then "Progress: X/Y markers" as subtext -- redundant
-- **Fix**: Simplify to one clean heading + progress bar (matching HomePage pattern)
-
-### 8. HomePage Header vs PageHeader
-- HomePage uses a custom header (by design for the landing page) -- this is intentional and stays as-is
-- All sub-pages correctly use the shared `PageHeader` component -- no change needed
-
----
-
-## Technical Changes
-
-### `src/pages/HomePage.tsx`
-- Change CTA button padding from `py-3.5` to `py-3`
-
-### `src/pages/ProgressPage.tsx`
-- Change progress bar from `h-3` to `h-2`
-- Remove redundant subtext line; keep just the bold heading and progress bar
-- Ensure spacing matches HomePage pattern
-
-### `src/pages/MarkerDetailPage.tsx`
-- Change `pb-8` to `pb-20`
-
-### `src/pages/ScanPage.tsx`
-- Change scanner box from `bg-foreground/90` to `bg-muted border border-border`
-- Update inner icon/text colors to work on light background (`text-muted-foreground` instead of `text-primary-foreground/60`)
-
-### `src/pages/NotFound.tsx`
-- Remove `bg-muted` wrapper, use standard page structure
-- Add a teal "Go Home" button (`rounded-full bg-primary`) matching other pages
-- Clean up typography to match app style
-
-### `src/App.tsx`
-- Remove NearbyPage import and `/nearby` route
-
-### No changes needed:
-- MapPage, SettingsPage, RequestPage, BottomNav, PageHeader, MarkerCard, FilterChips -- these are already consistent
+- **Edge function**: Proxies to OpenAI API with streaming, includes CORS headers, handles 429/402 errors
+- **System prompt**: Your custom system prompt + marker-specific context (name, address, summary, sources)
+- **Frontend streaming**: SSE line-by-line parsing with token-by-token rendering
+- **Dependencies**: `react-markdown` for rendering AI responses
 
