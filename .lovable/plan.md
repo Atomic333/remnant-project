@@ -1,39 +1,39 @@
 
 
-# Replace "The Story" Tab with an OpenAI Chatbot
+## Problem
 
-## Summary
-Replace the "The Story" accordion section in the marker detail page with an inline AI chatbot powered by your own OpenAI API key. The chatbot will use marker context (name, summary, sources) as system prompt context so users can ask questions about each marker.
+All 28 printed QR codes will point to the **wrong domain** (`remnant-pathfinder.lovable.app`). Your actual published site is `remnant-project.lovable.app`. This means:
 
-## Setup Steps
+- Scanning with a phone camera (Safari/Chrome) opens a broken link
+- The in-app scanner happens to work because it only checks the `/marker/{id}` path, but that only helps users already in the app
+- The fallback URL uses yet another nonexistent domain (`markerquest.app`)
 
-### 1. Store your OpenAI API key
-I'll use the secret management tool to securely store your OpenAI API key as `OPENAI_API_KEY`. You'll be prompted to paste it in.
+## Plan
 
-### 2. Enable Lovable Cloud & create edge function
-Create `supabase/functions/marker-chat/index.ts` that:
-- Accepts `{ messages, markerId }` from the client
-- Looks up marker data to build a system prompt (using your provided system prompt + marker context)
-- Calls `https://api.openai.com/v1/chat/completions` with your `OPENAI_API_KEY`
-- Streams the response back via SSE
+### Step 1 — Update all 28 QR URLs to the correct published domain
 
-### 3. Build chat UI component
-Create `src/components/MarkerChat.tsx`:
-- Simple chat interface with message list and input field
-- Renders AI responses with `react-markdown`
-- Streams tokens in real-time
-- Auto-scrolls to latest message
-- Shows typing indicator while streaming
+In `src/data/mockData.ts`, replace every instance of `remnant-pathfinder.lovable.app` with `remnant-project.lovable.app`.
 
-### 4. Update MarkerDetailPage
-- Replace the "story" section (`key: "story"`, icon: `Sparkles`, label: "The Story") with a new "chat" section (icon: `MessageCircle`, label: "Ask About This")
-- When expanded, render `<MarkerChat markerId={marker.id} />` instead of the story text
-- Remove the story loading skeleton logic
+### Step 2 — Fix the fallback URL in MarkerDetailPage
 
-## Technical Details
+In `src/pages/MarkerDetailPage.tsx`, change the fallback from `https://markerquest.app/m/tacoma_wa/${marker.id}` to `https://remnant-project.lovable.app/marker/${marker.id}`.
 
-- **Edge function**: Proxies to OpenAI API with streaming, includes CORS headers, handles 429/402 errors
-- **System prompt**: Your custom system prompt + marker-specific context (name, address, summary, sources)
-- **Frontend streaming**: SSE line-by-line parsing with token-by-token rendering
-- **Dependencies**: `react-markdown` for rendering AI responses
+### Step 3 — Make the scanner domain-agnostic
+
+The scanner in `ScanPage.tsx` already extracts marker IDs from any URL path containing `/marker/`. No changes needed here — it will work regardless of domain.
+
+---
+
+## Important consideration for permanence
+
+Since you are printing physical QR codes, the domain baked into them can never change. If you ever rename or move your Lovable project, those printed codes will break. Two options to future-proof:
+
+- **Option A (recommended)**: Buy a custom domain (e.g., `remnantproject.org`) and connect it in Project Settings → Domains. Then use that domain in all QR codes. You own the domain forever and can point it anywhere.
+- **Option B**: Use the current `remnant-project.lovable.app` domain and accept that it is tied to this Lovable project permanently.
+
+## Technical details
+
+- **Files changed**: `src/data/mockData.ts` (28 URL replacements), `src/pages/MarkerDetailPage.tsx` (1 fallback URL)
+- **No scanner changes needed** — it already parses `/marker/{id}` from any domain
+- **QR codes auto-update** in the app since they are generated from the `qrUrl` field at render time
 
