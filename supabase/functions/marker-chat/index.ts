@@ -39,7 +39,7 @@ You have been provided a marker record for the site the user is currently viewin
 - title: ${markerContext?.name || 'Unknown'}
 - address: ${markerContext?.address || 'Unknown'}
 - storyText: ${markerContext?.summary || 'No summary available'}
-- sourceNotes: ${markerContext?.sources?.map((s: { name: string; url: string }) => \`\${s.name} (\${s.url || 'no URL'})\`).join('; ') || 'None'}
+- sourceNotes: ${markerContext?.sources?.map((s: { name: string; url: string }) => s.name + ' (' + (s.url || 'no URL') + ')').join('; ') || 'None'}
 
 ALWAYS ground your answers in this data first. When answering questions about a specific marker or site:
 1. Draw primarily from the storyText
