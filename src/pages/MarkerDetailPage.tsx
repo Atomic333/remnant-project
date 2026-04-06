@@ -111,9 +111,6 @@ const MarkerDetailPage = () => {
                   {key === "summary" && (
                     <p className="text-sm leading-relaxed text-on-surface-variant">{marker.summary}</p>
                   )}
-                  {key === "chat" && (
-                    <MarkerChat marker={marker} />
-                  )}
                   {key === "sources" && (
                     <ul className="space-y-2">
                       {marker.sources.map((s) => (
