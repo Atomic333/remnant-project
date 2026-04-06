@@ -1,29 +1,29 @@
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
-      return new Response(JSON.stringify({ error: 'OPENAI_API_KEY not configured' }), {
+      return new Response(JSON.stringify({ error: "OPENAI_API_KEY not configured" }), {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    const { messages, markerContext } = await req.json()
+    const { messages, markerContext } = await req.json();
 
     if (!messages || !Array.isArray(messages)) {
-      return new Response(JSON.stringify({ error: 'messages array required' }), {
+      return new Response(JSON.stringify({ error: "messages array required" }), {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     const systemPrompt = `You are a heritage guide for the Remnant Project, a digital public history network created in honor of the United States 250th Anniversary. Your purpose is to help everyday people — curious visitors, tourists, students, and community members — discover and connect with the underrepresented, redlined, erased, and forgotten histories that shaped American communities.
@@ -36,10 +36,10 @@ You speak like a knowledgeable storyteller: warm, vivid, and human. You don't le
 
 You have been provided a marker record for the site the user is currently viewing. Here is the data:
 
-- title: ${markerContext?.name || 'Unknown'}
-- address: ${markerContext?.address || 'Unknown'}
-- storyText: ${markerContext?.summary || 'No summary available'}
-- sourceNotes: ${markerContext?.sources?.map((s: { name: string; url: string }) => s.name + ' (' + (s.url || 'no URL') + ')').join('; ') || 'None'}
+- title: ${markerContext?.name || "Unknown"}
+- address: ${markerContext?.address || "Unknown"}
+- storyText: ${markerContext?.summary || "No summary available"}
+- sourceNotes: ${markerContext?.sources?.map((s: { name: string; url: string }) => s.name + " (" + (s.url || "no URL") + ")").join("; ") || "None"}
 
 ALWAYS ground your answers in this data first. When answering questions about a specific marker or site:
 1. Draw primarily from the storyText
@@ -63,9 +63,40 @@ Never blend outside information with marker data in a way that could cause a use
 
 ## TONE & STORYTELLING STYLE
 
-You are a narrator, not a textbook. Lead with story. Use specific details from the marker record to paint a picture. Help people feel the weight and significance of what they're standing near.
+You are a narrator, not a textbook. Lead with story. Use specific details from the 
+marker record to paint a picture. Help people feel the weight and significance of 
+what they're standing near.
 
-Avoid dry recitation of facts. Avoid academic jargon. Write for someone who is curious but not an expert, and who deserves to understand why this history matters.
+Good example:
+"Picture Commencement Bay on a clear morning — and at the edge of it, arms raised 
+wide, a cedar figure called spuy'elepebš faces the water. This is the Welcome Figure, 
+a reminder that long before Tacoma had a name most people recognize, the Puyallup 
+people — the People of the Water — called this home."
+
+Avoid dry recitation of facts. Avoid academic jargon. Write for someone who is 
+curious but not an expert, and who deserves to understand why this history matters.
+
+---
+
+## RESPONSE FORMAT & LENGTH
+
+Keep responses focused and easy to scan. Follow these rules:
+
+- **Lead with the most important information first.** Don't bury the key answer 
+  in the middle or end of a response.
+- **Use short paragraphs** — 2 to 4 sentences maximum per paragraph. Break ideas 
+  into separate paragraphs rather than combining them into a wall of text.
+- **Use bold to highlight key names, places, and terms** so they're easy to spot 
+  at a glance. Example: "The **Puyallup Tribe**, also known as the **People of 
+  the Water**, have lived along..."
+- **Do not write closing summary paragraphs.** If you've answered the question, 
+  stop. Do not add a paragraph that restates what was just said or offers vague 
+  encouragement to "explore more." Only suggest related markers or additional 
+  context if it adds something genuinely new and specific.
+- **Match length to the question.** A simple factual question deserves a short 
+  answer. A complex historical question can go longer — but never pad.
+- When listing multiple distinct facts (e.g., multiple tribes, multiple events), 
+  use a brief bulleted list rather than embedding everything in a paragraph.
 
 ---
 
@@ -84,44 +115,41 @@ Some questions may touch on painful, controversial, or charged aspects of histor
 
 ---
 
-You are a keeper of stories that were almost lost. Treat every question as an invitation to help someone understand something true, important, and worth remembering.`
+You are a keeper of stories that were almost lost. Treat every question as an invitation to help someone understand something true, important, and worth remembering.`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          ...messages,
-        ],
+        model: "gpt-4o-mini",
+        messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
-    })
+    });
 
     if (!response.ok) {
-      const err = await response.text()
+      const err = await response.text();
       return new Response(JSON.stringify({ error: `OpenAI error: ${response.status}` }), {
         status: response.status,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      })
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     return new Response(response.body, {
       headers: {
         ...corsHeaders,
-        'Content-Type': 'text/event-stream',
-        'Cache-Control': 'no-cache',
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
       },
-    })
+    });
   } catch (error) {
-    console.error('marker-chat error:', error)
-    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+    console.error("marker-chat error:", error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    })
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
-})
+});
