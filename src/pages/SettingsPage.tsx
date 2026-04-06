@@ -1,13 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Camera, MapPin, Sparkles, Shield, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { toast } from "sonner";
+
+const queryPermission = async (name: PermissionName): Promise<PermissionState> => {
+  try {
+    const status = await navigator.permissions.query({ name });
+    return status.state;
+  } catch {
+    return "prompt";
+  }
+};
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const [cameraEnabled, setCameraEnabled] = useState(true);
-  const [locationEnabled, setLocationEnabled] = useState(true);
+  const [cameraEnabled, setCameraEnabled] = useState(false);
+  const [locationEnabled, setLocationEnabled] = useState(false);
+
+  // Sync toggle state with actual browser permission on mount
+  useEffect(() => {
+    queryPermission("camera" as PermissionName).then((s) => setCameraEnabled(s === "granted"));
+    queryPermission("geolocation").then((s) => setLocationEnabled(s === "granted"));
+  }, []);
+
+  const handleCameraToggle = useCallback(async () => {
+    if (cameraEnabled) {
+      toast.info("To revoke camera access, update your browser site settings.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      stream.getTracks().forEach((t) => t.stop());
+      setCameraEnabled(true);
+      toast.success("Camera access granted");
+    } catch {
+      setCameraEnabled(false);
+      toast.error("Camera access denied — check your browser settings");
+    }
+  }, [cameraEnabled]);
+
+  const handleLocationToggle = useCallback(async () => {
+    if (locationEnabled) {
+      toast.info("To revoke location access, update your browser site settings.");
+      return;
+    }
+    try {
+      await new Promise<GeolocationPosition>((resolve, reject) =>
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 })
+      );
+      setLocationEnabled(true);
+      toast.success("Location access granted");
+    } catch {
+      setLocationEnabled(false);
+      toast.error("Location access denied — check your browser settings");
+    }
+  }, [locationEnabled]);
 
   return (
     <div className="min-h-screen pb-20">
@@ -32,7 +81,7 @@ const SettingsPage = () => {
               </div>
             </div>
             <button
-              onClick={() => setCameraEnabled(!cameraEnabled)}
+              onClick={handleCameraToggle}
               className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
                 cameraEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
@@ -58,7 +107,7 @@ const SettingsPage = () => {
               </div>
             </div>
             <button
-              onClick={() => setLocationEnabled(!locationEnabled)}
+              onClick={handleLocationToggle}
               className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
                 locationEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
               }`}
