@@ -7,7 +7,6 @@ import PageHeader from "@/components/PageHeader";
 
 type UserLocation = { lat: number; lng: number } | null;
 
-/** Haversine distance in miles between two coords */
 function distanceMiles(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 3958.8;
   const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -58,18 +57,17 @@ const NearbyPage = () => {
     });
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-background">
       <PageHeader title="Tacoma Markers" />
 
-      {/* Location status banner */}
-      <div className="flex items-center gap-2 px-4 py-2">
+      <div className="flex items-center gap-2 px-5 py-2">
         {locationDenied ? (
           <p className="text-xs text-on-surface-variant flex items-center gap-1">
             <MapPin className="h-3.5 w-3.5" />
             Enable location to sort by distance
           </p>
         ) : userLocation ? (
-          <p className="text-xs text-primary flex items-center gap-1">
+          <p className="text-xs text-foreground flex items-center gap-1 font-semibold">
             <LocateFixed className="h-3.5 w-3.5" />
             Sorted by distance from you
           </p>
@@ -81,11 +79,11 @@ const NearbyPage = () => {
         )}
       </div>
 
-      <div className="px-4 pb-3">
+      <div className="px-5 pb-3">
         <FilterChips categories={categories} active={activeFilter} onChange={setActiveFilter} />
       </div>
 
-      <div className="space-y-1 px-4">
+      <div className="space-y-2 px-5">
         {filtered.map((m) => (
           <MarkerCard key={m.id} marker={m} distanceLabel={m._distanceLabel ?? undefined} showDistance />
         ))}
