@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["'Nunito Sans'", "system-ui", "sans-serif"],
-        body: ["'Nunito Sans'", "system-ui", "sans-serif"],
+        display: ["'Google Sans'", "system-ui", "sans-serif"],
+        body: ["'Google Sans Text'", "'Google Sans'", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

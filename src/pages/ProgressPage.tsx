@@ -20,22 +20,22 @@ const ProgressPage = () => {
   });
 
   return (
-    <div className="min-h-screen pb-20 bg-background">
+    <div className="min-h-screen pb-20">
       <PageHeader title="Progress" />
 
-      <div className="px-5 pt-5">
+      <div className="px-5 pt-4">
         {/* Stats card */}
-        <div className="rounded-xl bg-card p-5 elevation-1">
+        <div className="rounded-xl bg-card p-4 elevation-1">
           <div className="flex items-center justify-between">
-            <h2 className="font-display text-3xl font-bold text-foreground">
+            <h2 className="font-display text-2xl font-medium text-foreground">
               {visitedCount}/{markers.length}
             </h2>
-            <span className="rounded-full bg-foreground px-3 py-1 text-xs font-bold text-background">
+            <span className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
               {pct}%
             </span>
           </div>
           <p className="mt-1 text-sm text-on-surface-variant">Markers Visited</p>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-variant">
+          <div className="mt-3 h-1 overflow-hidden rounded-full bg-surface-variant">
             <div
               className="h-full rounded-full bg-primary transition-all"
               style={{ width: `${pct}%` }}
@@ -49,12 +49,11 @@ const ProgressPage = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 text-sm font-semibold transition-colors
+              className={`flex-1 py-2.5 text-sm font-medium transition-colors
                 ${i === 0 ? "rounded-l-xl" : ""} ${i === tabs.length - 1 ? "rounded-r-xl" : ""}
-                ${
-                  activeTab === tab
-                    ? "bg-foreground text-background"
-                    : "bg-background text-on-surface-variant hover:bg-surface-variant"
+                ${activeTab === tab
+                  ? "bg-secondary text-secondary-foreground"
+                  : "bg-surface text-on-surface-variant hover:bg-surface-variant"
                 }`}
             >
               {tab}

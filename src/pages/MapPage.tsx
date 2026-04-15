@@ -53,17 +53,17 @@ const ProgressPanel = () => {
   return (
     <div className="flex flex-col h-full">
       {/* Stats */}
-      <div className="rounded-xl bg-card p-5 elevation-1 mx-4 mt-2">
+      <div className="rounded-xl bg-card p-4 elevation-1 mx-4 mt-2">
         <div className="flex items-center justify-between">
-          <h2 className="font-display text-3xl font-bold text-foreground">
+          <h2 className="font-display text-2xl font-medium text-foreground">
             {visitedCount}/{markers.length}
           </h2>
-          <span className="rounded-full bg-foreground px-3 py-1 text-xs font-bold text-background">
+          <span className="rounded-md bg-secondary px-2.5 py-1 text-xs font-medium text-secondary-foreground">
             {pct}%
           </span>
         </div>
         <p className="mt-1 text-sm text-on-surface-variant">Markers Visited</p>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-variant">
+        <div className="mt-3 h-1 overflow-hidden rounded-full bg-surface-variant">
           <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${pct}%` }} />
         </div>
       </div>
@@ -74,11 +74,11 @@ const ProgressPanel = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2.5 text-sm font-semibold transition-colors
+            className={`flex-1 py-2.5 text-sm font-medium transition-colors
               ${i === 0 ? "rounded-l-xl" : ""} ${i === progressTabs.length - 1 ? "rounded-r-xl" : ""}
               ${activeTab === tab
-                ? "bg-foreground text-background"
-                : "bg-background text-on-surface-variant hover:bg-surface-variant"
+                ? "bg-secondary text-secondary-foreground"
+                : "bg-surface text-on-surface-variant hover:bg-surface-variant"
               }`}
           >
             {tab}
@@ -335,12 +335,12 @@ const MapPage = () => {
   }, []);
 
   return (
-    <div className="relative flex h-screen flex-col pb-16 bg-background">
+    <div className="relative flex h-screen flex-col pb-16">
       <PageHeader title="Map" />
 
       {/* Search bar */}
       <div className="absolute left-0 right-0 top-[80px] z-[500] px-4">
-        <div className={`flex items-center gap-3 bg-background/95 backdrop-blur-md px-4 py-3 elevation-2 ${search && filtered.length > 0 ? "rounded-t-[20px]" : "rounded-[20px]"}`}>
+        <div className={`flex items-center gap-3 bg-background/90 backdrop-blur-sm px-4 py-3 elevation-2 ${search && filtered.length > 0 ? "rounded-t-xl" : "rounded-xl"}`}>
           <Search className="h-5 w-5 shrink-0 text-on-surface-variant" />
           <input
             type="text"
@@ -362,7 +362,7 @@ const MapPage = () => {
           </button>
         </div>
         {search && (
-          <div className="max-h-64 overflow-y-auto rounded-b-[20px] bg-card elevation-2 border-t border-border">
+          <div className="max-h-64 overflow-y-auto rounded-b-xl bg-card elevation-2 border-t border-border">
             {filtered.length > 0 ? filtered.slice(0, 8).map((m) => (
               <button
                 key={m.id}
@@ -390,12 +390,12 @@ const MapPage = () => {
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
           className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
             activeSheet === "scan"
-              ? "bg-foreground text-background"
-              : "bg-background text-foreground"
+              ? "bg-secondary/80 text-secondary-foreground"
+              : "bg-secondary text-secondary-foreground"
           }`}
         >
           <QrCode className="h-5 w-5" />
-          <span className="text-xs font-bold">Scan</span>
+          <span className="text-xs font-medium">Scan</span>
         </button>
 
         {userLocation && (
@@ -404,7 +404,7 @@ const MapPage = () => {
             className="flex h-11 w-11 items-center justify-center self-end rounded-full bg-background elevation-2 transition-all active:scale-95"
             title="Centre on my location"
           >
-            <LocateFixed className="h-5 w-5 text-foreground" />
+            <LocateFixed className="h-5 w-5 text-primary" />
           </button>
         )}
       </div>
@@ -461,11 +461,12 @@ const MapPage = () => {
 
       {/* Nearby list */}
       {showList && (
-        <div className="absolute bottom-16 left-0 right-0 z-[500] flex flex-col rounded-t-[20px] bg-background elevation-3" style={{ maxHeight: "calc(60vh - 64px)" }}>
-          <div className="shrink-0 rounded-t-[20px] bg-background px-4 pt-4 pb-2 border-b border-border">
+        <div className="absolute bottom-16 left-0 right-0 z-[500] flex flex-col rounded-t-2xl bg-card elevation-3" style={{ maxHeight: "calc(60vh - 64px)" }}>
+          {/* Header — sticky */}
+          <div className="shrink-0 rounded-t-2xl bg-card px-4 pt-4 pb-2 border-b border-border">
             <div className="flex items-center justify-between">
-              <h2 className="font-display text-base font-bold text-foreground">
-                Nearby <span className="ml-1 rounded-full bg-foreground px-2 py-0.5 text-xs text-background font-bold">{filtered.length}</span>
+              <h2 className="font-display text-base font-medium text-foreground">
+                Nearby <span className="ml-1 rounded-full bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">{filtered.length}</span>
               </h2>
               <button
                 onClick={() => setShowList(false)}
@@ -505,7 +506,7 @@ const MapPage = () => {
                   className="h-20 w-20 rounded-xl object-cover"
                 />
                 <div className="flex-1">
-                  <h3 className="font-display text-lg font-bold text-foreground">{selectedMarker.name}</h3>
+                  <h3 className="font-display text-lg font-medium text-foreground">{selectedMarker.name}</h3>
                   <p className="text-sm text-on-surface-variant">{selectedMarker.address}</p>
                   {selectedMarker.distance && (
                     <p className="mt-1 text-xs text-on-surface-variant">{selectedMarker.distance}</p>
@@ -514,7 +515,7 @@ const MapPage = () => {
               </div>
               <button
                 onClick={() => navigate(`/marker/${selectedMarker.id}`)}
-                className="mt-4 w-full rounded-lg bg-foreground py-3 font-display text-sm font-bold text-background hover:bg-foreground/90 transition-colors"
+                className="mt-4 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground"
               >
                 View Details
               </button>
@@ -526,7 +527,7 @@ const MapPage = () => {
       {/* Scan bottom sheet */}
       <Drawer open={activeSheet === "scan"} onOpenChange={(open) => !open && setActiveSheet(null)}>
         <DrawerContent className="pb-2">
-          <DrawerTitle className="px-4 pt-2 pb-4 font-display text-base font-bold text-foreground">
+          <DrawerTitle className="px-4 pt-2 pb-4 font-display text-base font-medium text-foreground">
             Scan QR Code
           </DrawerTitle>
           {activeSheet === "scan" && <ScanPanel onClose={() => setActiveSheet(null)} />}
@@ -536,7 +537,7 @@ const MapPage = () => {
       {/* Progress bottom sheet */}
       <Drawer open={activeSheet === "progress"} onOpenChange={(open) => !open && setActiveSheet(null)}>
         <DrawerContent className="pb-2 h-[80vh] flex flex-col">
-          <DrawerTitle className="shrink-0 px-4 pt-2 pb-2 font-display text-base font-bold text-foreground">
+          <DrawerTitle className="shrink-0 px-4 pt-2 pb-2 font-display text-base font-medium text-foreground">
             Progress
           </DrawerTitle>
           <div className="flex-1 overflow-hidden">

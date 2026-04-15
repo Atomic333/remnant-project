@@ -20,26 +20,37 @@ const ScanPage = () => {
 
   const stopScanner = async () => {
     if (scannerRef.current && isRunningRef.current) {
-      try { await scannerRef.current.stop(); } catch {}
+      try {
+        await scannerRef.current.stop();
+      } catch {
+        // already stopped
+      }
       isRunningRef.current = false;
     }
   };
 
   const handleScanResult = (decodedText: string) => {
     stopScanner();
+
+    // Try to parse as URL
     let isUrl = false;
     let markerId: string | null = null;
     let hostname = "";
+
     try {
       const url = new URL(decodedText);
       isUrl = true;
       hostname = url.hostname;
       const parts = url.pathname.split("/");
       const markerIdx = parts.indexOf("marker");
-      if (markerIdx !== -1 && parts[markerIdx + 1]) markerId = parts[markerIdx + 1];
+      if (markerIdx !== -1 && parts[markerIdx + 1]) {
+        markerId = parts[markerIdx + 1];
+      }
     } catch {
+      // Not a URL — treat as raw code
       markerId = decodedText.trim();
     }
+
     if (markerId) {
       const found = markers.find((m) => m.id === markerId);
       if (found) {
@@ -49,7 +60,15 @@ const ScanPage = () => {
         return;
       }
     }
-    if (isUrl) { setResultLabel(hostname); setScanState("external-url"); return; }
+
+    // It's a URL but not one of our markers
+    if (isUrl) {
+      setResultLabel(hostname);
+      setScanState("external-url");
+      return;
+    }
+
+    // Unknown raw text / unrecognized code
     setResultLabel(decodedText.slice(0, 40));
     setScanState("not-found");
   };
@@ -96,19 +115,21 @@ const ScanPage = () => {
       setScanState("success");
       setTimeout(() => navigate(`/marker/${found.id}`), 1500);
     } else {
+      // No matching marker — show error screen
       setResultLabel(code.length > 40 ? code.slice(0, 40) + "…" : code);
       setScanState("not-found");
     }
   };
 
+  // ── Result screens ──────────────────────────────────────────────────────────
   if (scanState === "success") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 bg-background">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <div className="animate-fade-in flex flex-col items-center gap-4">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-surface-variant">
-            <CheckCircle className="h-10 w-10 text-foreground" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
+            <CheckCircle className="h-10 w-10 text-primary" />
           </div>
-          <h2 className="font-display text-xl font-bold text-foreground">Marker Found!</h2>
+          <h2 className="font-display text-xl font-medium text-foreground">Marker Found!</h2>
           <p className="text-sm text-on-surface-variant">{resultLabel}</p>
           <p className="text-xs text-on-surface-variant">Opening…</p>
         </div>
@@ -118,18 +139,18 @@ const ScanPage = () => {
 
   if (scanState === "not-found") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 bg-background">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <div className="animate-fade-in flex flex-col items-center gap-4 text-center">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
             <XCircle className="h-10 w-10 text-destructive" />
           </div>
-          <h2 className="font-display text-xl font-bold text-foreground">No Marker Found</h2>
+          <h2 className="font-display text-xl font-medium text-foreground">No Marker Found</h2>
           <p className="max-w-xs text-sm text-on-surface-variant">
-            <span className="font-semibold text-foreground">"{resultLabel}"</span> doesn't match any known marker.
+            <span className="font-medium text-foreground">"{resultLabel}"</span> doesn't match any known Remnant Pathfinder marker.
           </p>
           <button
             onClick={resetScanner}
-            className="mt-2 rounded-lg bg-foreground px-8 py-3 font-display text-sm font-bold text-background"
+            className="mt-2 rounded-xl bg-primary px-8 py-3 font-display text-sm font-medium text-primary-foreground"
           >
             Try Again
           </button>
@@ -140,18 +161,18 @@ const ScanPage = () => {
 
   if (scanState === "external-url") {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center px-6 bg-background">
+      <div className="flex min-h-screen flex-col items-center justify-center px-6">
         <div className="animate-fade-in flex flex-col items-center gap-4 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-surface-variant">
-            <QrCode className="h-10 w-10 text-on-surface-variant" />
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+            <QrCode className="h-10 w-10 text-muted-foreground" />
           </div>
-          <h2 className="font-display text-xl font-bold text-foreground">Not a Trail Marker</h2>
+          <h2 className="font-display text-xl font-medium text-foreground">Not a Trail Marker</h2>
           <p className="max-w-xs text-sm text-on-surface-variant">
-            That QR code points to <span className="font-semibold text-foreground">{resultLabel}</span>, which isn't part of this app.
+            That QR code points to <span className="font-medium text-foreground">{resultLabel}</span>, which isn't part of this app.
           </p>
           <button
             onClick={resetScanner}
-            className="mt-2 rounded-lg bg-foreground px-8 py-3 font-display text-sm font-bold text-background"
+            className="mt-2 rounded-xl bg-primary px-8 py-3 font-display text-sm font-medium text-primary-foreground"
           >
             Scan Again
           </button>
@@ -160,12 +181,13 @@ const ScanPage = () => {
     );
   }
 
+  // ── Main scanner UI ─────────────────────────────────────────────────────────
   return (
-    <div className="flex min-h-screen flex-col pb-20 bg-background">
+    <div className="flex min-h-screen flex-col pb-20">
       <PageHeader title="Scan" />
 
       <div className="flex flex-1 flex-col items-center justify-center px-6">
-        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-[20px] bg-surface-variant elevation-1">
+        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
           {cameraError ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
               <CameraOff className="h-12 w-12 text-on-surface-variant" />
@@ -187,7 +209,7 @@ const ScanPage = () => {
 
         <button
           onClick={() => { stopScanner(); setShowManual(!showManual); }}
-          className="text-sm font-bold text-foreground underline"
+          className="text-sm font-medium text-primary"
         >
           Enter Code Manually
         </button>
@@ -199,12 +221,12 @@ const ScanPage = () => {
               placeholder="Enter marker code..."
               value={manualCode}
               onChange={(e) => setManualCode(e.target.value)}
-              className="w-full rounded-lg border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-foreground"
+              className="w-full rounded-lg border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <button
               onClick={handleOpenMarker}
               disabled={!manualCode.trim()}
-              className="mt-3 w-full rounded-lg bg-primary py-3 font-display text-sm font-bold text-primary-foreground disabled:opacity-50"
+              className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground disabled:opacity-50"
             >
               Open Marker
             </button>
