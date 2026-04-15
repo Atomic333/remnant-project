@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Google+Sans+Text:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700;1,6..12,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,93 +6,93 @@
 
 @layer base {
   :root {
-    /* M3 Light scheme — Teal seed */
-    --background: 180 10% 98%;
-    --foreground: 180 10% 10%;
+    /* Airbnb-inspired — warm white canvas, Rausch Red accent */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 13%;
 
     --card: 0 0% 100%;
-    --card-foreground: 180 10% 10%;
+    --card-foreground: 0 0% 13%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 180 10% 10%;
+    --popover-foreground: 0 0% 13%;
 
-    --primary: 176 100% 26%;
-    --primary-foreground: 176 100% 97%;
+    --primary: 349 100% 61%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 176 30% 90%;
-    --secondary-foreground: 176 50% 20%;
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 13%;
 
-    --muted: 180 10% 94%;
-    --muted-foreground: 180 8% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 42%;
 
-    --accent: 176 40% 92%;
-    --accent-foreground: 176 50% 20%;
+    --accent: 0 0% 95%;
+    --accent-foreground: 0 0% 13%;
 
-    --destructive: 0 75% 50%;
+    --destructive: 12 80% 45%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 152 55% 40%;
     --success-foreground: 0 0% 100%;
 
-    --border: 180 8% 90%;
-    --input: 180 8% 88%;
-    --ring: 176 100% 26%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 349 100% 61%;
 
-    /* M3 Tertiary */
-    --tertiary: 260 40% 55%;
-    --tertiary-foreground: 260 100% 97%;
+    /* Tertiary / info */
+    --tertiary: 216 100% 69%;
+    --tertiary-foreground: 0 0% 100%;
 
-    /* M3 Surface tones */
-    --surface: 180 10% 98%;
-    --surface-variant: 180 10% 92%;
-    --on-surface-variant: 180 8% 40%;
+    /* Surface tones */
+    --surface: 0 0% 100%;
+    --surface-variant: 0 0% 95%;
+    --on-surface-variant: 0 0% 42%;
 
-    /* M3 Shape */
-    --radius: 1rem;
+    /* Shape — Airbnb generous radius */
+    --radius: 0.75rem;
     --radius-sm: 0.5rem;
-    --radius-lg: 1.75rem;
-    --radius-xl: 1.75rem;
+    --radius-lg: 1.25rem;
+    --radius-xl: 1.25rem;
 
-    /* M3 Elevation */
-    --elevation-1: 0 1px 3px 1px rgba(0,0,0,0.08), 0 1px 2px 0 rgba(0,0,0,0.04);
-    --elevation-2: 0 2px 6px 2px rgba(0,0,0,0.08), 0 1px 2px 0 rgba(0,0,0,0.04);
-    --elevation-3: 0 4px 8px 3px rgba(0,0,0,0.08), 0 1px 3px 0 rgba(0,0,0,0.06);
+    /* Airbnb three-layer elevation */
+    --elevation-1: 0 0 0 1px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.04), 0 4px 8px rgba(0,0,0,0.1);
+    --elevation-2: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.08);
+    --elevation-3: 0 6px 20px rgba(0,0,0,0.12);
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 176 100% 26%;
+    --sidebar-foreground: 0 0% 13%;
+    --sidebar-primary: 349 100% 61%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 176 40% 92%;
-    --sidebar-accent-foreground: 176 50% 20%;
-    --sidebar-border: 180 8% 90%;
-    --sidebar-ring: 176 100% 26%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 13%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 349 100% 61%;
   }
 
   .dark {
-    --background: 180 15% 6%;
-    --foreground: 180 10% 92%;
-    --card: 180 12% 10%;
-    --card-foreground: 180 10% 92%;
-    --popover: 180 12% 10%;
-    --popover-foreground: 180 10% 92%;
-    --primary: 176 80% 60%;
-    --primary-foreground: 176 100% 8%;
-    --secondary: 176 20% 18%;
-    --secondary-foreground: 176 30% 80%;
-    --muted: 180 12% 16%;
-    --muted-foreground: 180 8% 55%;
-    --accent: 176 25% 16%;
-    --accent-foreground: 176 60% 75%;
-    --destructive: 0 62% 40%;
+    --background: 0 0% 7%;
+    --foreground: 0 0% 92%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 92%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 92%;
+    --primary: 349 100% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 85%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 55%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 85%;
+    --destructive: 12 62% 40%;
     --destructive-foreground: 0 0% 100%;
-    --border: 180 10% 18%;
-    --input: 180 10% 18%;
-    --ring: 176 80% 60%;
-    --tertiary: 260 45% 70%;
-    --tertiary-foreground: 260 100% 10%;
-    --surface: 180 15% 6%;
-    --surface-variant: 180 10% 14%;
-    --on-surface-variant: 180 8% 60%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 349 100% 65%;
+    --tertiary: 216 100% 69%;
+    --tertiary-foreground: 0 0% 100%;
+    --surface: 0 0% 7%;
+    --surface-variant: 0 0% 14%;
+    --on-surface-variant: 0 0% 60%;
   }
 }
 
@@ -103,11 +103,14 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Google Sans Text', 'Google Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Nunito Sans', system-ui, -apple-system, sans-serif;
+    color: hsl(0 0% 13%);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Google Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Nunito Sans', system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 }
 
@@ -126,7 +129,7 @@
     box-shadow: var(--elevation-3);
   }
 
-  /* M3 state layer */
+  /* Airbnb state layer */
   .state-layer {
     @apply relative overflow-hidden;
   }
@@ -135,9 +138,9 @@
     @apply absolute inset-0 bg-current opacity-0 transition-opacity;
   }
   .state-layer:hover::after {
-    @apply opacity-[0.08];
+    @apply opacity-[0.04];
   }
   .state-layer:active::after {
-    @apply opacity-[0.12];
+    @apply opacity-[0.08];
   }
 }

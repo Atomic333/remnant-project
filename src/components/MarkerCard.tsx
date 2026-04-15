@@ -24,24 +24,24 @@ const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) =>
   return (
     <button
       onClick={() => navigate(`/marker/${marker.id}`)}
-      className="flex w-full items-center gap-4 rounded-xl bg-card p-3 text-left transition-colors hover:bg-surface-variant elevation-1"
+      className="flex w-full items-center gap-4 rounded-xl bg-card p-3 text-left transition-all hover:elevation-2 elevation-1"
     >
       <div className="relative shrink-0">
         <img
           src={images[marker.image] || unionStation}
           alt={marker.name}
-          className="h-14 w-14 rounded-xl object-cover"
+          className="h-14 w-14 rounded-[10px] object-cover"
         />
         {visited && (
-          <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-card">
+          <div className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-background">
             <CheckCircle2 className="h-4 w-4 text-primary" />
           </div>
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <h3 className="font-display font-medium text-card-foreground">{marker.name}</h3>
-        <p className="truncate text-sm text-on-surface-variant">
-          {showDistance && (distanceLabel ?? marker.distance) ? `${distanceLabel ?? marker.distance} • ` : ""}
+        <h3 className="font-display text-sm font-semibold text-foreground">{marker.name}</h3>
+        <p className="truncate text-[13px] text-on-surface-variant">
+          {showDistance && (distanceLabel ?? marker.distance) ? `${distanceLabel ?? marker.distance} · ` : ""}
           {marker.address}
         </p>
       </div>
