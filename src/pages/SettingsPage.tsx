@@ -19,7 +19,6 @@ const SettingsPage = () => {
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
 
-  // Sync toggle state with actual browser permission on mount
   useEffect(() => {
     queryPermission("camera" as PermissionName).then((s) => setCameraEnabled(s === "granted"));
     queryPermission("geolocation").then((s) => setLocationEnabled(s === "granted"));
@@ -58,71 +57,58 @@ const SettingsPage = () => {
     }
   }, [locationEnabled]);
 
+  const ToggleSwitch = ({ enabled, onToggle }: { enabled: boolean; onToggle: () => void }) => (
+    <button
+      onClick={onToggle}
+      className={`relative h-8 w-[52px] rounded-full transition-colors ${
+        enabled ? "bg-foreground" : "border-2 border-border bg-surface-variant"
+      }`}
+    >
+      <span
+        className={`absolute top-1 h-5 w-5 rounded-full shadow transition-all ${
+          enabled ? "left-[26px] bg-background" : "left-1 bg-on-surface-variant"
+        }`}
+      />
+    </button>
+  );
+
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-background">
       <PageHeader title="Settings" />
 
-      <div className="px-5 pt-4">
-        {/* Device Permissions */}
-        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+      <div className="px-5 pt-5">
+        <h3 className="mb-3 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
           Device Permissions
         </h3>
         <div className="space-y-2">
           <div className="flex items-center justify-between rounded-xl bg-card p-4 elevation-1">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                <Camera className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant">
+                <Camera className="h-5 w-5 text-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium text-card-foreground">Camera</p>
-                <p className="text-xs text-on-surface-variant">
-                  {cameraEnabled ? "Enabled" : "Disabled"}
-                </p>
+                <p className="text-sm font-semibold text-foreground">Camera</p>
+                <p className="text-xs text-on-surface-variant">{cameraEnabled ? "Enabled" : "Disabled"}</p>
               </div>
             </div>
-            <button
-              onClick={handleCameraToggle}
-              className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
-                cameraEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
-              }`}
-            >
-              <span
-                className={`absolute top-1 h-5 w-5 rounded-full shadow transition-all ${
-                  cameraEnabled ? "left-[26px] bg-primary-foreground" : "left-1 bg-on-surface-variant"
-                }`}
-              />
-            </button>
+            <ToggleSwitch enabled={cameraEnabled} onToggle={handleCameraToggle} />
           </div>
 
           <div className="flex items-center justify-between rounded-xl bg-card p-4 elevation-1">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                <MapPin className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant">
+                <MapPin className="h-5 w-5 text-foreground" />
               </div>
               <div>
-                <p className="text-sm font-medium text-card-foreground">Location</p>
-                <p className="text-xs text-on-surface-variant">
-                  {locationEnabled ? "Enabled" : "Disabled"}
-                </p>
+                <p className="text-sm font-semibold text-foreground">Location</p>
+                <p className="text-xs text-on-surface-variant">{locationEnabled ? "Enabled" : "Disabled"}</p>
               </div>
             </div>
-            <button
-              onClick={handleLocationToggle}
-              className={`relative h-8 w-[52px] rounded-full border-2 transition-colors ${
-                locationEnabled ? "border-primary bg-primary" : "border-border bg-surface-variant"
-              }`}
-            >
-              <span
-                className={`absolute top-1 h-5 w-5 rounded-full shadow transition-all ${
-                  locationEnabled ? "left-[26px] bg-primary-foreground" : "left-1 bg-on-surface-variant"
-                }`}
-              />
-            </button>
+            <ToggleSwitch enabled={locationEnabled} onToggle={handleLocationToggle} />
           </div>
         </div>
 
-        {/* About */}
-        <h3 className="mb-3 mt-8 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+        <h3 className="mb-3 mt-8 text-xs font-bold uppercase tracking-wider text-on-surface-variant">
           About
         </h3>
         <div className="space-y-2">
@@ -130,20 +116,20 @@ const SettingsPage = () => {
             <DialogTrigger asChild>
               <button className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                    <Sparkles className="h-5 w-5 text-primary" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant">
+                    <Sparkles className="h-5 w-5 text-foreground" />
                   </div>
-                  <span className="text-sm font-medium text-card-foreground">How we use AI</span>
+                  <span className="text-sm font-semibold text-foreground">How we use AI</span>
                 </div>
                 <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm rounded-xl">
+            <DialogContent className="max-w-sm rounded-[20px]">
               <DialogHeader>
-                <DialogTitle className="font-display">How We Use AI</DialogTitle>
+                <DialogTitle className="font-display font-bold">How We Use AI</DialogTitle>
               </DialogHeader>
               <div className="space-y-3 text-sm text-on-surface-variant">
-                <p>The Remnant Project uses AI to bring historical markers to life. When you visit a marker, our system generates an engaging narrative based on verified historical sources.</p>
+                <p>The Remnant Project uses AI to bring historical markers to life.</p>
                 <p><strong className="text-foreground">What AI does:</strong></p>
                 <ul className="list-disc space-y-1 pl-4">
                   <li>Generates narrative stories from plaque text and archival sources</li>
@@ -164,17 +150,17 @@ const SettingsPage = () => {
             <DialogTrigger asChild>
               <button className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                    <Shield className="h-5 w-5 text-primary" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant">
+                    <Shield className="h-5 w-5 text-foreground" />
                   </div>
-                  <span className="text-sm font-medium text-card-foreground">Privacy Policy</span>
+                  <span className="text-sm font-semibold text-foreground">Privacy Policy</span>
                 </div>
                 <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm rounded-xl">
+            <DialogContent className="max-w-sm rounded-[20px]">
               <DialogHeader>
-                <DialogTitle className="font-display">Privacy Policy</DialogTitle>
+                <DialogTitle className="font-display font-bold">Privacy Policy</DialogTitle>
               </DialogHeader>
               <div className="space-y-3 text-sm text-on-surface-variant">
                 <p>Your privacy matters to us. The Remnant Project is designed to be used without creating an account.</p>
@@ -189,7 +175,6 @@ const SettingsPage = () => {
                   <li>Personal identifying information</li>
                   <li>Browsing history or third-party tracking</li>
                 </ul>
-                <p>All progress data is stored locally and never leaves your device unless you choose to create an account in the future.</p>
               </div>
             </DialogContent>
           </Dialog>
@@ -199,10 +184,10 @@ const SettingsPage = () => {
             className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1"
           >
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
-                <MapPin className="h-5 w-5 text-primary" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-surface-variant">
+                <MapPin className="h-5 w-5 text-foreground" />
               </div>
-              <span className="text-sm font-medium text-card-foreground">Request Marker</span>
+              <span className="text-sm font-semibold text-foreground">Request Marker</span>
             </div>
             <ChevronRight className="h-5 w-5 text-on-surface-variant" />
           </button>
