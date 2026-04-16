@@ -14,7 +14,7 @@ const SettingsPage = () => {
       <div className="px-5 pt-4">
 
         {/* About */}
-        <h3 className="mb-3 mt-8 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
           About
         </h3>
         <div className="space-y-2">
