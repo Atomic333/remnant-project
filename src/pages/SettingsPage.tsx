@@ -1,4 +1,5 @@
-import { Sparkles, Shield, MapPin, ChevronRight } from "lucide-react";
+import { Sparkles, Shield, MapPin, ChevronRight, Users } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
