@@ -1,4 +1,5 @@
-import { Sparkles, Shield, MapPin, ChevronRight } from "lucide-react";
+import { Sparkles, Shield, MapPin, ChevronRight, Users } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -98,6 +99,77 @@ const SettingsPage = () => {
             </div>
             <ChevronRight className="h-5 w-5 text-on-surface-variant" />
           </button>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+                    <Users className="h-5 w-5 text-primary" />
+                  </div>
+                  <span className="text-sm font-medium text-card-foreground">About the Team</span>
+                </div>
+                <ChevronRight className="h-5 w-5 text-on-surface-variant" />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-sm rounded-xl">
+              <DialogHeader>
+                <DialogTitle className="font-display">About the Team</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-2">
+                {/* Team Member 1 */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary text-primary">T1</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">Team Member 1</p>
+                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+                  </div>
+                </div>
+                {/* Team Member 2 */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary text-primary">T2</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">Team Member 2</p>
+                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+                  </div>
+                </div>
+                {/* Team Member 3 */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary text-primary">T3</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">Team Member 3</p>
+                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+                  </div>
+                </div>
+                {/* Team Member 4 */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary text-primary">T4</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">Team Member 4</p>
+                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+                  </div>
+                </div>
+                {/* Team Member 5 */}
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-12 w-12">
+                    <AvatarFallback className="bg-secondary text-primary">T5</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-medium text-foreground">Team Member 5</p>
+                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+                  </div>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>
