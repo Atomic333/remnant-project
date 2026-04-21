@@ -11,28 +11,28 @@ import skylerPhoto from "@/assets/team/skyler.jpg";
 const team = [
   {
     name: "John-Luke Dokupil",
-    role: "Informatics & Japanese",
+    role: "UW MSIM",
     email: "jdokupil@uw.edu",
     photo: johnLukePhoto,
     initials: "JD",
   },
   {
     name: "Terresa Thy Tran",
-    role: "Public Health – Global Health",
+    role: "UW MSIM",
     email: "tran10@uw.edu",
     photo: terresaPhoto,
     initials: "TT",
   },
   {
     name: "Maisie Liu",
-    role: "Public Health – Food Systems, Nutrition & Health",
+    role: "UW MSIM",
     email: "hliu48@uw.edu",
     photo: maisiePhoto,
     initials: "ML",
   },
   {
     name: "Skyler Chen",
-    role: "Psychology & Design",
+    role: "UW MSIM",
     email: "sjc163@uw.edu",
     photo: skylerPhoto,
     initials: "SC",
