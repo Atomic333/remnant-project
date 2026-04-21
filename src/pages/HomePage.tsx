@@ -2,6 +2,7 @@ import { Compass, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
+import logo from "@/assets/logo.png";
 import { useVisited } from "@/hooks/useVisited";
 
 const cities = [
@@ -25,8 +26,8 @@ const HomePage = () => {
     <div className="flex h-[100dvh] flex-col bg-background pb-20">
       {/* Top bar */}
       <header className="flex shrink-0 items-center justify-between px-5 pt-5 pb-2">
-        <div>
-          
+        <div className="flex items-center gap-2">
+          <img src={logo} alt="The Remnant Project logo" className="h-8 w-8 object-contain" />
           <span className="font-display text-xl font-medium text-primary">The Remnant Project</span>
         </div>
         <button
