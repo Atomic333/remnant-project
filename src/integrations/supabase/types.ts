@@ -14,7 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      marker_requests: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          location_name: string
+          status: string
+          submitter_email: string | null
+          why_it_matters: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          location_name: string
+          status?: string
+          submitter_email?: string | null
+          why_it_matters: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          location_name?: string
+          status?: string
+          submitter_email?: string | null
+          why_it_matters?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
