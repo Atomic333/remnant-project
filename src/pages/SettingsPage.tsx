@@ -1,9 +1,43 @@
 import { Sparkles, Shield, MapPin, ChevronRight, Users } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import johnLukePhoto from "@/assets/team/john-luke.jpg";
+import terresaPhoto from "@/assets/team/terresa.jpg";
+import maisiePhoto from "@/assets/team/maisie.jpg";
+import skylerPhoto from "@/assets/team/skyler.jpg";
 
+const team = [
+  {
+    name: "John-Luke Dokupil",
+    role: "Informatics & Japanese",
+    email: "jdokupil@uw.edu",
+    photo: johnLukePhoto,
+    initials: "JD",
+  },
+  {
+    name: "Terresa Thy Tran",
+    role: "Public Health – Global Health",
+    email: "tran10@uw.edu",
+    photo: terresaPhoto,
+    initials: "TT",
+  },
+  {
+    name: "Maisie Liu",
+    role: "Public Health – Food Systems, Nutrition & Health",
+    email: "hliu48@uw.edu",
+    photo: maisiePhoto,
+    initials: "ML",
+  },
+  {
+    name: "Skyler Chen",
+    role: "Psychology & Design",
+    email: "sjc163@uw.edu",
+    photo: skylerPhoto,
+    initials: "SC",
+  },
+];
 
 const SettingsPage = () => {
   const navigate = useNavigate();
@@ -116,57 +150,23 @@ const SettingsPage = () => {
               <DialogHeader>
                 <DialogTitle className="font-display">About the Team</DialogTitle>
               </DialogHeader>
-              <div className="space-y-4 py-2">
-                {/* Team Member 1 */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-secondary text-primary">T1</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">Team Member 1</p>
-                    <p className="text-sm text-on-surface-variant">Role / Position</p>
+              <div className="space-y-1 py-2">
+                <p className="pb-2 text-sm text-on-surface-variant">
+                  A multidisciplinary team from the UW Information School turning data into real-world impact.
+                </p>
+                {team.map((member) => (
+                  <div key={member.email} className="flex items-center gap-3 rounded-lg p-2">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src={member.photo} alt={member.name} className="object-cover" />
+                      <AvatarFallback className="bg-secondary text-primary">{member.initials}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium text-foreground">{member.name}</p>
+                      <p className="truncate text-xs text-on-surface-variant">{member.role}</p>
+                      <p className="truncate text-xs text-primary">{member.email}</p>
+                    </div>
                   </div>
-                </div>
-                {/* Team Member 2 */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-secondary text-primary">T2</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">Team Member 2</p>
-                    <p className="text-sm text-on-surface-variant">Role / Position</p>
-                  </div>
-                </div>
-                {/* Team Member 3 */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-secondary text-primary">T3</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">Team Member 3</p>
-                    <p className="text-sm text-on-surface-variant">Role / Position</p>
-                  </div>
-                </div>
-                {/* Team Member 4 */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-secondary text-primary">T4</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">Team Member 4</p>
-                    <p className="text-sm text-on-surface-variant">Role / Position</p>
-                  </div>
-                </div>
-                {/* Team Member 5 */}
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-12 w-12">
-                    <AvatarFallback className="bg-secondary text-primary">T5</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium text-foreground">Team Member 5</p>
-                    <p className="text-sm text-on-surface-variant">Role / Position</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </DialogContent>
           </Dialog>
