@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { Check, Camera } from "lucide-react";
+import { Check, Camera, Loader2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 
 const RequestPage = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     address: "",
@@ -11,8 +14,42 @@ const RequestPage = () => {
     email: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+
+    const name = form.name.trim();
+    const why = form.why.trim();
+    const address = form.address.trim();
+    const email = form.email.trim();
+
+    if (!name || name.length > 200) {
+      toast({ title: "Please enter a location name (under 200 characters).", variant: "destructive" });
+      return;
+    }
+    if (!why || why.length > 2000) {
+      toast({ title: "Please tell us why it matters (under 2000 characters).", variant: "destructive" });
+      return;
+    }
+
+    setSubmitting(true);
+    const { error } = await supabase.from("marker_requests").insert({
+      location_name: name,
+      address: address || null,
+      why_it_matters: why,
+      submitter_email: email || null,
+    });
+    setSubmitting(false);
+
+    if (error) {
+      toast({
+        title: "Couldn't submit request",
+        description: "Please try again in a moment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -104,9 +141,11 @@ const RequestPage = () => {
 
         <button
           type="submit"
-          className="w-full rounded-xl bg-primary py-3.5 font-display text-sm font-medium text-primary-foreground elevation-1"
+          disabled={submitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3.5 font-display text-sm font-medium text-primary-foreground elevation-1 disabled:opacity-60"
         >
-          Submit Request
+          {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
+          {submitting ? "Submitting..." : "Submit Request"}
         </button>
       </form>
     </div>
