@@ -1,4 +1,4 @@
-import { Menu, Home, Map, Settings } from "lucide-react";
+import { Menu, Home, Map, Settings, QrCode } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -12,6 +12,7 @@ import {
 const links = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Map, label: "Map", path: "/map" },
+  { icon: QrCode, label: "Scan", path: "/map?scan=1" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];
 

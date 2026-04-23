@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
 import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
 import unionStation from "@/assets/union-station.jpg";
@@ -297,6 +297,7 @@ type Sheet = "scan" | "progress" | null;
 
 const MapPage = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { isVisited } = useVisited();
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [search, setSearch] = useState("");
@@ -307,6 +308,15 @@ const MapPage = () => {
   const mapRef = useRef<google.maps.Map | null>(null);
 
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
+
+  // Open scan sheet when navigated with ?scan=1 (from hamburger menu)
+  useEffect(() => {
+    if (searchParams.get("scan") === "1") {
+      setActiveSheet("scan");
+      searchParams.delete("scan");
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Watch user's GPS location
   useEffect(() => {
@@ -388,14 +398,10 @@ const MapPage = () => {
       <div className="absolute top-[148px] right-4 z-[400] flex flex-col gap-2">
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
-          className={`flex h-11 items-center gap-2 rounded-full px-4 elevation-2 transition-all active:scale-95 ${
-            activeSheet === "scan"
-              ? "bg-secondary/80 text-secondary-foreground"
-              : "bg-secondary text-secondary-foreground"
-          }`}
+          className="flex h-11 items-center gap-2 rounded-full bg-background px-4 elevation-2 transition-all active:scale-95"
         >
-          <QrCode className="h-5 w-5" />
-          <span className="text-xs font-medium">Scan</span>
+          <QrCode className="h-5 w-5 text-primary" />
+          <span className="text-xs font-medium text-primary">Scan</span>
         </button>
 
         {userLocation && (
