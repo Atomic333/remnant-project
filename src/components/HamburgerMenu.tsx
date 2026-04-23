@@ -1,4 +1,4 @@
-import { Menu, Home, Map, Settings, QrCode, Trophy, X } from "lucide-react";
+import { Menu, Home, Map, Settings, QrCode, Trophy } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -52,10 +52,6 @@ const HamburgerMenu = () => {
       >
         {/* Branded header */}
         <div className="relative bg-primary px-5 pt-6 pb-8 text-primary-foreground">
-          <SheetClose className="absolute right-4 top-4 rounded-full p-1.5 text-primary-foreground/80 hover:bg-primary-foreground/10 transition-colors">
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close</span>
-          </SheetClose>
           <div className="flex items-center gap-2.5">
             <img src={logo} alt="MarkerQuest" className="h-10 w-10 object-contain" />
             <span className="font-display text-xl font-medium">MarkerQuest</span>
@@ -146,6 +142,11 @@ const HamburgerMenu = () => {
           <p className="mt-3 px-3 text-[11px] text-on-surface-variant">
             MarkerQuest · Tacoma, WA
           </p>
+          <SheetClose asChild>
+            <button className="mt-3 w-full rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground transition-transform active:scale-[0.98]">
+              Close
+            </button>
+          </SheetClose>
         </div>
       </SheetContent>
     </Sheet>
