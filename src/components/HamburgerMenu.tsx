@@ -123,23 +123,29 @@ const HamburgerMenu = () => {
         </nav>
 
         {/* Secondary nav — separated */}
-        <div className="border-t border-border px-4 py-4">
+        <div className="border-t border-border px-4 pt-4 pb-5">
           {secondaryLinks.map(({ icon: Icon, label, path }) => {
             const active = location.pathname === path;
             return (
               <button
                 key={path}
                 onClick={() => go(path)}
-                className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors ${
-                  active ? "bg-secondary text-primary" : "text-foreground hover:bg-surface-variant"
+                className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors ${
+                  active ? "bg-secondary" : "hover:bg-surface-variant"
                 }`}
               >
-                <Icon className="h-5 w-5" />
-                <span className="font-medium text-sm">{label}</span>
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${
+                  active ? "bg-primary text-primary-foreground" : "bg-surface-variant text-on-surface-variant"
+                }`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+                <span className={`font-display text-sm font-medium ${active ? "text-primary" : "text-foreground"}`}>
+                  {label}
+                </span>
               </button>
             );
           })}
-          <p className="mt-3 px-3 text-[11px] text-on-surface-variant">
+          <p className="mt-4 px-3 text-[11px] text-on-surface-variant">
             MarkerQuest · Tacoma, WA
           </p>
           <SheetClose asChild>
