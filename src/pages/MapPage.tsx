@@ -395,7 +395,7 @@ const MapPage = () => {
       </div>
 
       {/* Floating action buttons — Scan + Locate */}
-      <div className="absolute top-[148px] right-4 z-[400] flex flex-col gap-2">
+      <div className="absolute top-[148px] right-4 z-20 flex flex-col gap-2">
         <button
           onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
           className="flex h-11 items-center gap-2 rounded-full bg-background px-4 elevation-2 transition-all active:scale-95"
