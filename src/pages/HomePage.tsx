@@ -4,6 +4,7 @@ import { markers } from "@/data/mockData";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
 import logo from "@/assets/logo.png";
 import { useVisited } from "@/hooks/useVisited";
+import HamburgerMenu from "@/components/HamburgerMenu";
 
 const cities = [
 {
@@ -23,24 +24,17 @@ const HomePage = () => {
   const pct = total > 0 ? Math.round(visitedCount / total * 100) : 0;
 
   return (
-    <div className="flex h-[100dvh] flex-col bg-background pb-20">
+    <div className="flex h-[100dvh] flex-col bg-background">
       {/* Top bar */}
       <header className="flex shrink-0 items-center justify-between px-5 pt-5 pb-2">
         <div className="flex items-center gap-2">
           <img src={logo} alt="MarkerQuest logo" className="h-11 w-11 object-contain" />
           <span className="font-display text-xl font-medium text-primary">MarkerQuest</span>
         </div>
-        <button
-          onClick={() => navigate("/settings")}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors">
-          
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
+        <HamburgerMenu />
       </header>
 
-      <div className="flex flex-1 flex-col gap-4 overflow-hidden px-5 mt-3 pb-4">
+      <div className="flex flex-1 flex-col gap-4 overflow-hidden px-5 mt-3 pb-6">
 
         {/* City card — grows to fill available space */}
         <div className="shrink-0">
