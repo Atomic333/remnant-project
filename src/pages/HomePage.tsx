@@ -28,7 +28,7 @@ const HomePage = () => {
       <header className="flex shrink-0 items-center justify-between px-5 pt-5 pb-2">
         <div className="flex items-center gap-2">
           <img src={logo} alt="MarkerQuest logo" className="h-11 w-11 object-contain" />
-          <span className="font-display text-xl font-medium text-primary">MarkerQuest</span>
+          <span className="font-display text-4xl font-medium leading-none text-primary">MarkerQuest</span>
         </div>
         <button
           onClick={() => navigate("/settings")}
