@@ -47,8 +47,8 @@ const HamburgerMenu = () => {
         </button>
       </SheetTrigger>
       <SheetContent
-        side="left"
-        className="w-[300px] p-0 flex flex-col bg-background border-r-0"
+        side="right"
+        className="w-[300px] p-0 flex flex-col bg-background border-l-0"
       >
         {/* Branded header */}
         <div className="relative bg-primary px-5 pt-6 pb-8 text-primary-foreground">
