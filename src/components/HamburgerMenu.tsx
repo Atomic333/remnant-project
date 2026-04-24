@@ -5,6 +5,7 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { useVisited } from "@/hooks/useVisited";
 import { markers } from "@/data/mockData";
