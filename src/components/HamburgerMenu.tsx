@@ -102,7 +102,7 @@ const HamburgerMenu = () => {
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
         >
           <SheetClose asChild>
-            <button className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium transition-colors hover:bg-primary/90">
+            <button className="interactive flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium hover:bg-primary/90 hover:elevation-2">
               Close
             </button>
           </SheetClose>
