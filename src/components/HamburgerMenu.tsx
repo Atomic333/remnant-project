@@ -97,7 +97,10 @@ const HamburgerMenu = () => {
         </nav>
 
         {/* Close button */}
-        <div className="px-6 pb-8 pt-2">
+        <div
+          className="px-6 pt-2"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
+        >
           <SheetClose asChild>
             <button className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium transition-colors hover:bg-primary/90">
               Close
