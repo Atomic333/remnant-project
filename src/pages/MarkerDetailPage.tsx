@@ -3,15 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin } from "lucide-react";
 import { markers } from "@/data/mockData";
 import { QRCodeSVG } from "qrcode.react";
-import unionStation from "@/assets/union-station.jpg";
-import historyMuseum from "@/assets/history-museum.jpg";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
-
-const images: Record<string, string> = {
-  "union-station": unionStation,
-  "history-museum": historyMuseum,
-};
+import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
@@ -52,7 +46,7 @@ const MarkerDetailPage = () => {
       {/* Hero */}
       <div className="relative h-60">
         <img
-          src={images[marker.image] || unionStation}
+          src={getMarkerImage(marker.id, marker.image)}
           alt={marker.name}
           className="h-full w-full object-cover"
         />
