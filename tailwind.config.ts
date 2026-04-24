@@ -145,7 +145,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 280ms cubic-bezier(0.2, 0, 0, 1)",
         "accordion-up": "accordion-up 240ms cubic-bezier(0.2, 0, 0, 1)",
-        "slide-up": "slide-up 400ms cubic-bezier(0.05, 0.7, 0.1, 1)",
+        "slide-up": "slide-up 500ms cubic-bezier(0.05, 0.7, 0.1, 1)",
         "fade-in": "fade-in 320ms cubic-bezier(0.2, 0, 0, 1)",
         "fade-out": "fade-out 220ms cubic-bezier(0.3, 0, 0.8, 0.15)",
         "scale-in": "scale-in 240ms cubic-bezier(0.2, 0, 0, 1)",
