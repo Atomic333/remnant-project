@@ -92,6 +92,16 @@ const HamburgerMenu = () => {
             );
           })}
         </nav>
+
+        {/* Close button */}
+        <div className="px-6 pb-8 pt-2">
+          <SheetClose asChild>
+            <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium transition-colors hover:bg-primary/90">
+              <X className="h-4 w-4" />
+              Close
+            </button>
+          </SheetClose>
+        </div>
       </SheetContent>
     </Sheet>
   );
