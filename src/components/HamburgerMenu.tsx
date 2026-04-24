@@ -37,7 +37,7 @@ const HamburgerMenu = () => {
       <SheetTrigger asChild>
         <button
           aria-label="Open menu"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors"
+          className="icon-press state-layer flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -66,7 +66,7 @@ const HamburgerMenu = () => {
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-surface-variant">
             <div
-              className="h-full bg-primary transition-all"
+              className="h-full rounded-full bg-primary transition-[width] duration-700 ease-emphasized"
               style={{ width: `${pct}%` }}
             />
           </div>
@@ -83,13 +83,13 @@ const HamburgerMenu = () => {
               <button
                 key={path}
                 onClick={() => go(path)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors ${
+                className={`interactive group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left ${
                   active
                     ? "text-primary"
                     : "text-foreground hover:bg-surface-variant"
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className={`h-5 w-5 transition-transform duration-300 ease-spring ${active ? "scale-110" : "group-hover:scale-110"}`} />
                 <span className="font-display text-sm font-medium">{label}</span>
               </button>
             );
@@ -102,7 +102,7 @@ const HamburgerMenu = () => {
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
         >
           <SheetClose asChild>
-            <button className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium transition-colors hover:bg-primary/90">
+            <button className="interactive flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium hover:bg-primary/90 hover:elevation-2">
               Close
             </button>
           </SheetClose>
