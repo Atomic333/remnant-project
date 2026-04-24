@@ -66,7 +66,7 @@ const HamburgerMenu = () => {
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-surface-variant">
             <div
-              className="h-full bg-primary transition-all"
+              className="h-full rounded-full bg-primary transition-[width] duration-700 ease-emphasized"
               style={{ width: `${pct}%` }}
             />
           </div>
