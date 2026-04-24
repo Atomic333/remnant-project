@@ -462,10 +462,9 @@ const MapPage = () => {
       {/* Nearby list */}
       {showList && (
         <div
-          className="absolute left-0 right-0 z-[500] flex flex-col overflow-hidden rounded-t-2xl bg-card elevation-3 animate-slide-up"
+          className="absolute inset-x-0 bottom-0 z-[500] flex flex-col overflow-hidden rounded-t-2xl bg-card elevation-3 animate-slide-up"
           style={{
-            bottom: "calc(64px + env(safe-area-inset-bottom, 0px))",
-            maxHeight: "70dvh",
+            maxHeight: "calc(70dvh + env(safe-area-inset-bottom, 0px))",
           }}
         >
           {/* Header — sticky */}
@@ -487,7 +486,7 @@ const MapPage = () => {
           </div>
           {/* Scrollable list */}
           <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain">
-            <div className="space-y-2 px-4 pt-3 pb-6">
+            <div className="space-y-2 px-4 pt-3 pb-[calc(1.5rem+env(safe-area-inset-bottom,0px))]">
               {filtered.map((m) => (
                 <MarkerCard key={m.id} marker={m} showDistance />
               ))}
