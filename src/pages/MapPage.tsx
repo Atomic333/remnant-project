@@ -462,7 +462,7 @@ const MapPage = () => {
       {/* Nearby list */}
       {showList && (
         <div
-          className="absolute inset-x-0 bottom-0 z-[500] flex flex-col overflow-hidden rounded-t-2xl bg-card elevation-3 animate-slide-up"
+          className="fixed inset-x-0 bottom-0 z-[500] flex flex-col overflow-hidden rounded-t-2xl bg-card elevation-3 animate-slide-up"
           style={{
             maxHeight: "calc(70dvh + env(safe-area-inset-bottom, 0px))",
           }}
