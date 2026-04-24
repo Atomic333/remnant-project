@@ -83,13 +83,13 @@ const HamburgerMenu = () => {
               <button
                 key={path}
                 onClick={() => go(path)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition-colors ${
+                className={`interactive group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left ${
                   active
                     ? "text-primary"
                     : "text-foreground hover:bg-surface-variant"
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className={`h-5 w-5 transition-transform duration-300 ease-spring ${active ? "scale-110" : "group-hover:scale-110"}`} />
                 <span className="font-display text-sm font-medium">{label}</span>
               </button>
             );
