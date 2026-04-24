@@ -1,14 +1,8 @@
 import { ChevronRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Marker } from "@/data/mockData";
-import unionStation from "@/assets/union-station.jpg";
-import historyMuseum from "@/assets/history-museum.jpg";
 import { useVisited } from "@/hooks/useVisited";
-
-const images: Record<string, string> = {
-  "union-station": unionStation,
-  "history-museum": historyMuseum,
-};
+import { getMarkerImage } from "@/lib/markerImages";
 
 interface MarkerCardProps {
   marker: Marker;
@@ -28,7 +22,7 @@ const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) =>
     >
       <div className="relative shrink-0">
         <img
-          src={images[marker.image] || unionStation}
+          src={getMarkerImage(marker.id, marker.image)}
           alt={marker.name}
           className="h-14 w-14 rounded-xl object-cover"
         />
