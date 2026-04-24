@@ -45,13 +45,12 @@ const HamburgerMenu = () => {
       <SheetContent
         side="right"
         className="w-[280px] p-0 flex flex-col bg-background border-l-0 [&>button]:hidden h-[100dvh] max-h-[100dvh]"
-        style={{
-          paddingTop: "env(safe-area-inset-top)",
-          paddingBottom: "env(safe-area-inset-bottom)",
-        }}
       >
         {/* Title */}
-        <div className="px-6 pt-6 pb-6">
+        <div
+          className="px-6 pb-6"
+          style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}
+        >
           <h2 className="font-display text-xl font-medium text-foreground">
             MarkerQuest
           </h2>
