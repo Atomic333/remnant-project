@@ -4,8 +4,6 @@ import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lu
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { markers, categories } from "@/data/mockData";
 import type { Marker } from "@/data/mockData";
-import unionStation from "@/assets/union-station.jpg";
-import historyMuseum from "@/assets/history-museum.jpg";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
@@ -13,13 +11,9 @@ import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
 import { useVisited } from "@/hooks/useVisited";
 import { Html5Qrcode } from "html5-qrcode";
+import { getMarkerImage } from "@/lib/markerImages";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
-
-const markerImages: Record<string, string> = {
-  "union-station": unionStation,
-  "history-museum": historyMuseum,
-};
 
 const TACOMA_CENTER = { lat: 47.2529, lng: -122.4443 };
 const mapContainerStyle = { width: "100%", height: "100%" };
@@ -507,7 +501,7 @@ const MapPage = () => {
               <DrawerTitle className="sr-only">{selectedMarker.name}</DrawerTitle>
               <div className="flex items-center gap-4">
                 <img
-                  src={markerImages[selectedMarker.image] || unionStation}
+                  src={getMarkerImage(selectedMarker.id, selectedMarker.image)}
                   alt={selectedMarker.name}
                   className="h-20 w-20 rounded-xl object-cover"
                 />
