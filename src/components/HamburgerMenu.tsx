@@ -37,7 +37,7 @@ const HamburgerMenu = () => {
       <SheetTrigger asChild>
         <button
           aria-label="Open menu"
-          className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-variant transition-colors"
+          className="icon-press state-layer flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant"
         >
           <Menu className="h-5 w-5" />
         </button>
