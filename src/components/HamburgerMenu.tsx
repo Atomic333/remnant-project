@@ -1,4 +1,4 @@
-import { Menu, Home, Map, Settings, QrCode } from "lucide-react";
+import { Menu, Home, Map, Settings, QrCode, X } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
