@@ -5,13 +5,19 @@ import { markers } from "@/data/mockData";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
 
-type ScanState = "idle" | "scanning" | "success" | "not-found" | "external-url";
+type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
+
+// Detect iOS Safari — requires explicit user gesture for getUserMedia
+const isIOS = typeof navigator !== "undefined" &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPage = () => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
-  const [scanState, setScanState] = useState<ScanState>("idle");
+  const [scanState, setScanState] = useState<ScanState>(isIOS ? "idle" : "starting");
+  const [needsTap, setNeedsTap] = useState<boolean>(isIOS);
   const [resultLabel, setResultLabel] = useState<string>("");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const scannerRef = useRef<Html5Qrcode | null>(null);
