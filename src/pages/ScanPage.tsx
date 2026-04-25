@@ -86,31 +86,75 @@ const ScanPage = () => {
     setManualCode("");
   };
 
-  useEffect(() => {
-    if (scanState !== "idle" || showManual) return;
-    const startScanner = async () => {
-      try {
-        const scanner = new Html5Qrcode("qr-reader");
-        scannerRef.current = scanner;
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 220, height: 220 } },
-          (decodedText) => handleScanResult(decodedText),
-          () => {}
-        );
-        isRunningRef.current = true;
-        setScanState("scanning");
-      } catch (err: any) {
-        setCameraError(
-          err?.message?.includes("NotAllowed")
-            ? "Camera permission denied. Use manual entry below."
-            : "Could not access camera. Use manual entry below."
-        );
+  // Patch the html5-qrcode <video> element so iOS Safari plays inline.
+  // Safari refuses to render the viewfinder unless the video has playsinline + muted.
+  const patchVideoForIOS = () => {
+    const container = document.getElementById("qr-reader");
+    if (!container) return;
+    const videos = container.getElementsByTagName("video");
+    for (let i = 0; i < videos.length; i++) {
+      const v = videos[i];
+      v.setAttribute("playsinline", "true");
+      v.setAttribute("webkit-playsinline", "true");
+      v.muted = true;
+      v.setAttribute("muted", "");
+      v.setAttribute("autoplay", "");
+      // Nudge playback — Safari sometimes pauses after stream attach
+      const playPromise = v.play();
+      if (playPromise && typeof playPromise.catch === "function") {
+        playPromise.catch(() => {/* ignore */});
       }
-    };
+    }
+  };
+
+  const startScanner = async () => {
+    setCameraError(null);
+    setNeedsTap(false);
+    setScanState("starting");
+    try {
+      // Wait a tick so the #qr-reader div is mounted
+      await new Promise((r) => setTimeout(r, 0));
+      const scanner = new Html5Qrcode("qr-reader");
+      scannerRef.current = scanner;
+      await scanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        (decodedText) => handleScanResult(decodedText),
+        () => {}
+      );
+      isRunningRef.current = true;
+      // Patch video on next frame and again shortly after for safety
+      requestAnimationFrame(patchVideoForIOS);
+      setTimeout(patchVideoForIOS, 250);
+      setTimeout(patchVideoForIOS, 800);
+      setScanState("scanning");
+    } catch (err: any) {
+      const msg = String(err?.message || err?.name || "");
+      setCameraError(
+        msg.includes("NotAllowed") || msg.includes("Permission")
+          ? "Camera permission denied. Enable camera access in your browser settings, or use manual entry below."
+          : msg.includes("NotFound")
+          ? "No camera found on this device. Use manual entry below."
+          : "Could not access camera. Use manual entry below."
+      );
+      setScanState("idle");
+      setNeedsTap(isIOS);
+    }
+  };
+
+  useEffect(() => {
+    // On iOS Safari, getUserMedia must be triggered by a user gesture — wait for tap.
+    if (isIOS || needsTap) return;
+    if (scanState !== "starting" || showManual) return;
     startScanner();
     return () => { stopScanner(); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scanState, showManual]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => { stopScanner(); };
+  }, []);
 
   const handleOpenMarker = () => {
     const code = manualCode.trim();
