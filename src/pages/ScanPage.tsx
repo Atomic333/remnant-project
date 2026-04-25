@@ -80,10 +80,11 @@ const ScanPage = () => {
   };
 
   const resetScanner = () => {
-    setScanState("idle");
     setCameraError(null);
     setShowManual(false);
     setManualCode("");
+    setNeedsTap(isIOS);
+    setScanState(isIOS ? "idle" : "starting");
   };
 
   // Patch the html5-qrcode <video> element so iOS Safari plays inline.
