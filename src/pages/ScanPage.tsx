@@ -246,16 +246,40 @@ const ScanPage = () => {
           ) : (
             <div id="qr-reader" ref={containerRef} className="qr-reader-container h-full w-full" />
           )}
-          {scanState === "idle" && !cameraError && (
-            <div className="absolute inset-0 flex items-center justify-center">
+          {needsTap && !cameraError && (
+            <button
+              onClick={startScanner}
+              className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-variant/95 backdrop-blur-sm transition-transform active:scale-95"
+            >
+              <QrCode className="h-16 w-16 text-primary" />
+              <span className="font-display text-sm font-medium text-foreground">Tap to start camera</span>
+            </button>
+          )}
+          {scanState === "starting" && !needsTap && !cameraError && (
+            <div className="absolute inset-0 flex items-center justify-center bg-surface-variant/60">
               <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
             </div>
           )}
         </div>
 
         <p className="mb-6 text-center text-sm text-on-surface-variant">
-          {cameraError ? "" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
+          {cameraError
+            ? ""
+            : needsTap
+            ? "Camera access required to scan codes"
+            : scanState === "scanning"
+            ? "Point at the QR code on the marker"
+            : "Starting camera…"}
         </p>
+
+        {cameraError && isIOS && (
+          <button
+            onClick={startScanner}
+            className="mb-4 rounded-xl bg-primary px-6 py-2.5 font-display text-sm font-medium text-primary-foreground"
+          >
+            Try Again
+          </button>
+        )}
 
         <button
           onClick={() => { stopScanner(); setShowManual(!showManual); }}
