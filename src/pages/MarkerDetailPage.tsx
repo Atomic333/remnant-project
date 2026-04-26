@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin } from "lucide-react";
-import { markers } from "@/data/mockData";
+import { markers } from "@/data/markers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";

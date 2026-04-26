@@ -1,6 +1,6 @@
 import { ChevronRight, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import type { Marker } from "@/data/mockData";
+import type { Marker } from "@/data/markers";
 import { useVisited } from "@/hooks/useVisited";
 import { getMarkerImage } from "@/lib/markerImages";
 

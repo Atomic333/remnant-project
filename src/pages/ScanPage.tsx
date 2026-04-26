@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { QrCode, CheckCircle, CameraOff, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { markers } from "@/data/mockData";
+import { markers } from "@/data/markers";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
 
