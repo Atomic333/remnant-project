@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Send, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { supabase } from "@/integrations/supabase/client";
-import type { Marker } from "@/data/mockData";
+import type { Marker } from "@/data/markers";
 
 interface MarkerChatProps {
   marker: Marker;

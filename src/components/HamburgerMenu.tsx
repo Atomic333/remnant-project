@@ -8,7 +8,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { useVisited } from "@/hooks/useVisited";
-import { markers } from "@/data/mockData";
+import { markers } from "@/data/markers";
 
 const links = [
   { icon: Home, label: "Home", path: "/" },

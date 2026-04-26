@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 
 import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { markers, categories } from "@/data/mockData";
-import type { Marker } from "@/data/mockData";
+import { markers, categories } from "@/data/markers";
+import type { Marker } from "@/data/markers";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
