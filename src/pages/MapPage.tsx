@@ -149,31 +149,71 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
     setScanState("not-found");
   }, [navigate, onClose, stopScanner]);
 
+  const patchVideoForIOS = () => {
+    const container = document.getElementById("qr-reader-map");
+    if (!container) return;
+    const videos = container.getElementsByTagName("video");
+    for (let i = 0; i < videos.length; i++) {
+      const video = videos[i];
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.muted = true;
+      video.setAttribute("muted", "");
+      video.setAttribute("autoplay", "");
+      video.play().catch(() => {/* ignore */});
+    }
+  };
+
+  const startScanner = useCallback(async () => {
+    await stopScanner();
+    setCameraError(null);
+    setNeedsTap(false);
+    setScanState("starting");
+    try {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const container = document.getElementById("qr-reader-map");
+      if (!container) throw new Error("Scanner container not ready");
+      container.innerHTML = "";
+      const scanner = new Html5Qrcode("qr-reader-map");
+      scannerRef.current = scanner;
+      await scanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        handleScanResult,
+        () => {}
+      );
+      isRunningRef.current = true;
+      requestAnimationFrame(patchVideoForIOS);
+      setTimeout(patchVideoForIOS, 250);
+      setTimeout(patchVideoForIOS, 800);
+      setScanState("scanning");
+    } catch (err: any) {
+      const msg = String(err?.message || err?.name || "");
+      await stopScanner();
+      setCameraError(
+        msg.includes("NotAllowed") || msg.includes("Permission")
+          ? "Camera permission denied. Enable camera access in your browser settings, or use manual entry below."
+          : msg.includes("NotReadable") || msg.includes("TrackStart")
+          ? "Camera is in use by another app or tab. Close other camera apps and tap to retry."
+          : "Could not access camera. Tap to retry, or use manual entry below."
+      );
+      setScanState("idle");
+      setNeedsTap(true);
+    }
+  }, [handleScanResult, stopScanner]);
+
+  const didAutoStartRef = useRef(false);
   useEffect(() => {
-    if (scanState !== "idle" || showManual) return;
-    const startScanner = async () => {
-      try {
-        const scanner = new Html5Qrcode("qr-reader-map");
-        scannerRef.current = scanner;
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 200, height: 200 } },
-          handleScanResult,
-          () => {}
-        );
-        isRunningRef.current = true;
-        setScanState("scanning");
-      } catch (err: any) {
-        setCameraError(
-          err?.message?.includes("NotAllowed")
-            ? "Camera permission denied. Use manual entry below."
-            : "Could not access camera. Use manual entry below."
-        );
-      }
-    };
+    if (isIOS) return;
+    if (didAutoStartRef.current) return;
+    if (showManual) return;
+    didAutoStartRef.current = true;
     startScanner();
+  }, [showManual, startScanner]);
+
+  useEffect(() => {
     return () => { stopScanner(); };
-  }, [scanState, showManual, handleScanResult, stopScanner]);
+  }, [stopScanner]);
 
   const handleOpenMarker = () => {
     const code = manualCode.trim();
@@ -190,7 +230,9 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   };
 
   const resetScanner = () => {
-    setScanState("idle");
+    setCameraError(null);
+    setNeedsTap(isIOS);
+    setScanState(isIOS ? "idle" : "starting");
     setManualCode("");
     setShowManual(false);
   };
