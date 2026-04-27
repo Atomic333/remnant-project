@@ -94,23 +94,31 @@ const ProgressPanel = () => {
 };
 
 // ── Scan panel ────────────────────────────────────────────────────
-type ScanState = "idle" | "scanning" | "success" | "not-found" | "external-url";
+type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
+
+const isIOS = typeof navigator !== "undefined" &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
-  const [scanState, setScanState] = useState<ScanState>("idle");
+  const [scanState, setScanState] = useState<ScanState>(isIOS ? "idle" : "starting");
+  const [needsTap, setNeedsTap] = useState(isIOS);
   const [resultLabel, setResultLabel] = useState("");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isRunningRef = useRef(false);
 
   const stopScanner = useCallback(async () => {
-    if (scannerRef.current && isRunningRef.current) {
-      try { await scannerRef.current.stop(); } catch { /* already stopped */ }
+    const scanner = scannerRef.current;
+    if (scanner && isRunningRef.current) {
       isRunningRef.current = false;
+      try { await scanner.stop(); } catch { /* already stopped */ }
+      try { scanner.clear(); } catch { /* ignore */ }
     }
+    scannerRef.current = null;
   }, []);
 
   const handleScanResult = useCallback((decodedText: string) => {
@@ -141,31 +149,71 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
     setScanState("not-found");
   }, [navigate, onClose, stopScanner]);
 
+  const patchVideoForIOS = () => {
+    const container = document.getElementById("qr-reader-map");
+    if (!container) return;
+    const videos = container.getElementsByTagName("video");
+    for (let i = 0; i < videos.length; i++) {
+      const video = videos[i];
+      video.setAttribute("playsinline", "true");
+      video.setAttribute("webkit-playsinline", "true");
+      video.muted = true;
+      video.setAttribute("muted", "");
+      video.setAttribute("autoplay", "");
+      video.play().catch(() => {/* ignore */});
+    }
+  };
+
+  const startScanner = useCallback(async () => {
+    await stopScanner();
+    setCameraError(null);
+    setNeedsTap(false);
+    setScanState("starting");
+    try {
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const container = document.getElementById("qr-reader-map");
+      if (!container) throw new Error("Scanner container not ready");
+      container.innerHTML = "";
+      const scanner = new Html5Qrcode("qr-reader-map");
+      scannerRef.current = scanner;
+      await scanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: { width: 220, height: 220 } },
+        handleScanResult,
+        () => {}
+      );
+      isRunningRef.current = true;
+      requestAnimationFrame(patchVideoForIOS);
+      setTimeout(patchVideoForIOS, 250);
+      setTimeout(patchVideoForIOS, 800);
+      setScanState("scanning");
+    } catch (err: any) {
+      const msg = String(err?.message || err?.name || "");
+      await stopScanner();
+      setCameraError(
+        msg.includes("NotAllowed") || msg.includes("Permission")
+          ? "Camera permission denied. Enable camera access in your browser settings, or use manual entry below."
+          : msg.includes("NotReadable") || msg.includes("TrackStart")
+          ? "Camera is in use by another app or tab. Close other camera apps and tap to retry."
+          : "Could not access camera. Tap to retry, or use manual entry below."
+      );
+      setScanState("idle");
+      setNeedsTap(true);
+    }
+  }, [handleScanResult, stopScanner]);
+
+  const didAutoStartRef = useRef(false);
   useEffect(() => {
-    if (scanState !== "idle" || showManual) return;
-    const startScanner = async () => {
-      try {
-        const scanner = new Html5Qrcode("qr-reader-map");
-        scannerRef.current = scanner;
-        await scanner.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 200, height: 200 } },
-          handleScanResult,
-          () => {}
-        );
-        isRunningRef.current = true;
-        setScanState("scanning");
-      } catch (err: any) {
-        setCameraError(
-          err?.message?.includes("NotAllowed")
-            ? "Camera permission denied. Use manual entry below."
-            : "Could not access camera. Use manual entry below."
-        );
-      }
-    };
+    if (isIOS) return;
+    if (didAutoStartRef.current) return;
+    if (showManual) return;
+    didAutoStartRef.current = true;
     startScanner();
+  }, [showManual, startScanner]);
+
+  useEffect(() => {
     return () => { stopScanner(); };
-  }, [scanState, showManual, handleScanResult, stopScanner]);
+  }, [stopScanner]);
 
   const handleOpenMarker = () => {
     const code = manualCode.trim();
@@ -182,7 +230,9 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   };
 
   const resetScanner = () => {
-    setScanState("idle");
+    setCameraError(null);
+    setNeedsTap(isIOS);
+    setScanState(isIOS ? "idle" : "starting");
     setManualCode("");
     setShowManual(false);
   };
@@ -236,8 +286,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 
   // ── Main scanner UI ────────────────────────────────────────────
   return (
-    <div className="flex flex-col items-center px-6 pb-6">
-      <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
+    <div className="flex flex-col items-center pb-6">
+      <div className="relative mb-6 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
         {cameraError ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
             <CameraOff className="h-12 w-12 text-on-surface-variant" />
@@ -246,16 +296,34 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
         ) : (
           <div id="qr-reader-map" className="qr-reader-container h-full w-full" />
         )}
-        {scanState === "idle" && !cameraError && (
-          <div className="absolute inset-0 flex items-center justify-center">
+        {needsTap && !cameraError && (
+          <button
+            onClick={startScanner}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-variant/95 backdrop-blur-sm transition-transform active:scale-95"
+          >
+            <QrCode className="h-16 w-16 text-primary" />
+            <span className="font-display text-sm font-medium text-foreground">Tap to start camera</span>
+          </button>
+        )}
+        {scanState === "starting" && !needsTap && !cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-surface-variant/60">
             <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
           </div>
         )}
       </div>
 
-      <p className="mb-6 text-center text-sm text-on-surface-variant">
-        {cameraError ? "" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
+      <p className="mb-6 px-6 text-center text-sm text-on-surface-variant">
+        {cameraError ? "" : needsTap ? "Camera access required to scan codes" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
       </p>
+
+      {cameraError && (
+        <button
+          onClick={startScanner}
+          className="mb-4 rounded-xl bg-primary px-6 py-2.5 font-display text-sm font-medium text-primary-foreground"
+        >
+          Try Again
+        </button>
+      )}
 
       <button
         onClick={() => { stopScanner(); setShowManual(!showManual); }}
