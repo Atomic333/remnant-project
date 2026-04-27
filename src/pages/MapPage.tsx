@@ -178,7 +178,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
       scannerRef.current = scanner;
       await scanner.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
+        { fps: 10 },
         handleScanResult,
         () => {}
       );
