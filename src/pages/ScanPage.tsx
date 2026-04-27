@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { QrCode, CheckCircle, CameraOff, XCircle } from "lucide-react";
+import { QrCode, CheckCircle, Camera, CameraOff, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { markers } from "@/data/markers";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
 
-type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
+type ScanState = "idle" | "starting" | "scanning" | "photo-scanning" | "success" | "not-found" | "external-url";
 
 // Detect iOS Safari — requires explicit user gesture for getUserMedia
 const isIOS = typeof navigator !== "undefined" &&
@@ -23,6 +23,7 @@ const ScanPage = () => {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isRunningRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const stopScanner = async () => {
     const scanner = scannerRef.current;
@@ -165,6 +166,46 @@ const ScanPage = () => {
     }
   };
 
+  const openNativeCamera = async () => {
+    await stopScanner();
+    setCameraError(null);
+    fileInputRef.current?.click();
+  };
+
+  const handleNativeCapture = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    setShowManual(false);
+    setNeedsTap(false);
+    setCameraError(null);
+    setScanState("photo-scanning");
+
+    const tempId = `qr-file-reader-${Date.now()}`;
+    const tempContainer = document.createElement("div");
+    tempContainer.id = tempId;
+    tempContainer.style.display = "none";
+    document.body.appendChild(tempContainer);
+
+    const fileScanner = new Html5Qrcode(tempId);
+    try {
+      const decodedText = await fileScanner.scanFile(file, false);
+      handleScanResult(decodedText);
+    } catch {
+      setCameraError("No QR code found in that photo. Try again, or use manual entry below.");
+      setScanState("idle");
+      setNeedsTap(isIOS);
+    } finally {
+      try {
+        fileScanner.clear();
+      } catch {
+        // ignore
+      }
+      tempContainer.remove();
+    }
+  };
+
   // iOS Safari requires a user gesture to start camera — never auto-start there.
   // On other platforms, only auto-start once on first mount.
   const didAutoStartRef = useRef(false);
@@ -263,6 +304,14 @@ const ScanPage = () => {
       <PageHeader title="Scan" />
 
       <div className="flex flex-1 flex-col items-center justify-center">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleNativeCapture}
+          className="hidden"
+        />
         <div className="relative mb-8 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
           {cameraError ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
@@ -295,8 +344,20 @@ const ScanPage = () => {
             ? "Camera access required to scan codes"
             : scanState === "scanning"
             ? "Point at the QR code on the marker"
+            : scanState === "photo-scanning"
+            ? "Reading QR code from photo…"
             : "Starting camera…"}
         </p>
+
+        {isIOS && (
+          <button
+            onClick={openNativeCamera}
+            className="mb-4 flex items-center gap-2 rounded-xl bg-primary px-6 py-2.5 font-display text-sm font-medium text-primary-foreground"
+          >
+            <Camera className="h-4 w-4" />
+            Open Phone Camera
+          </button>
+        )}
 
         {cameraError && isIOS && (
           <button
