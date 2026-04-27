@@ -65,7 +65,7 @@ const SettingsPage = () => {
                 <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm rounded-xl">
+            <DialogContent >
               <DialogHeader>
                 <DialogTitle className="font-display">How We Use AI</DialogTitle>
               </DialogHeader>
@@ -99,7 +99,7 @@ const SettingsPage = () => {
                 <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm rounded-xl">
+            <DialogContent >
               <DialogHeader>
                 <DialogTitle className="font-display">Privacy Policy</DialogTitle>
               </DialogHeader>
@@ -146,7 +146,7 @@ const SettingsPage = () => {
                 <ChevronRight className="h-5 w-5 text-on-surface-variant" />
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-sm rounded-xl">
+            <DialogContent >
               <DialogHeader>
                 <DialogTitle className="font-display">About the Team</DialogTitle>
               </DialogHeader>
