@@ -286,8 +286,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 
   // ── Main scanner UI ────────────────────────────────────────────
   return (
-    <div className="flex flex-col items-center px-6 pb-6">
-      <div className="relative mb-6 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
+    <div className="flex flex-col items-center pb-6">
+      <div className="relative mb-6 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
         {cameraError ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
             <CameraOff className="h-12 w-12 text-on-surface-variant" />
@@ -296,16 +296,34 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
         ) : (
           <div id="qr-reader-map" className="qr-reader-container h-full w-full" />
         )}
-        {scanState === "idle" && !cameraError && (
-          <div className="absolute inset-0 flex items-center justify-center">
+        {needsTap && !cameraError && (
+          <button
+            onClick={startScanner}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface-variant/95 backdrop-blur-sm transition-transform active:scale-95"
+          >
+            <QrCode className="h-16 w-16 text-primary" />
+            <span className="font-display text-sm font-medium text-foreground">Tap to start camera</span>
+          </button>
+        )}
+        {scanState === "starting" && !needsTap && !cameraError && (
+          <div className="absolute inset-0 flex items-center justify-center bg-surface-variant/60">
             <QrCode className="h-16 w-16 animate-pulse text-on-surface-variant" />
           </div>
         )}
       </div>
 
-      <p className="mb-6 text-center text-sm text-on-surface-variant">
-        {cameraError ? "" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
+      <p className="mb-6 px-6 text-center text-sm text-on-surface-variant">
+        {cameraError ? "" : needsTap ? "Camera access required to scan codes" : scanState === "scanning" ? "Point at the QR code on the marker" : "Starting camera…"}
       </p>
+
+      {cameraError && (
+        <button
+          onClick={startScanner}
+          className="mb-4 rounded-xl bg-primary px-6 py-2.5 font-display text-sm font-medium text-primary-foreground"
+        >
+          Try Again
+        </button>
+      )}
 
       <button
         onClick={() => { stopScanner(); setShowManual(!showManual); }}
