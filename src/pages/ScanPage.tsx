@@ -25,18 +25,26 @@ const ScanPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const stopScanner = async () => {
-    if (scannerRef.current && isRunningRef.current) {
+    const scanner = scannerRef.current;
+    if (scanner && isRunningRef.current) {
+      isRunningRef.current = false;
       try {
-        await scannerRef.current.stop();
+        await scanner.stop();
       } catch {
         // already stopped
       }
-      isRunningRef.current = false;
+      try {
+        scanner.clear();
+      } catch {
+        // ignore
+      }
     }
+    scannerRef.current = null;
   };
 
   const handleScanResult = (decodedText: string) => {
-    stopScanner();
+    // Fire-and-forget; result UI replaces scanner DOM anyway
+    void stopScanner();
 
     // Try to parse as URL
     let isUrl = false;
@@ -109,12 +117,22 @@ const ScanPage = () => {
   };
 
   const startScanner = async () => {
+    // If a previous instance is still around, fully release it first.
+    await stopScanner();
+
     setCameraError(null);
     setNeedsTap(false);
     setScanState("starting");
     try {
-      // Wait a tick so the #qr-reader div is mounted
-      await new Promise((r) => setTimeout(r, 0));
+      // Wait one frame so the #qr-reader div is mounted in DOM
+      await new Promise<void>((r) => requestAnimationFrame(() => r()));
+      const container = document.getElementById("qr-reader");
+      if (!container) {
+        throw new Error("Scanner container not ready");
+      }
+      // Ensure container is empty (html5-qrcode leaves children behind sometimes)
+      container.innerHTML = "";
+
       const scanner = new Html5Qrcode("qr-reader");
       scannerRef.current = scanner;
       await scanner.start(
@@ -131,26 +149,33 @@ const ScanPage = () => {
       setScanState("scanning");
     } catch (err: any) {
       const msg = String(err?.message || err?.name || "");
+      // Make sure we don't leave a half-initialized scanner around
+      await stopScanner();
       setCameraError(
         msg.includes("NotAllowed") || msg.includes("Permission")
           ? "Camera permission denied. Enable camera access in your browser settings, or use manual entry below."
           : msg.includes("NotFound")
           ? "No camera found on this device. Use manual entry below."
-          : "Could not access camera. Use manual entry below."
+          : msg.includes("NotReadable") || msg.includes("TrackStart")
+          ? "Camera is in use by another app or tab. Close other camera apps and tap to retry."
+          : "Could not access camera. Tap to retry, or use manual entry below."
       );
       setScanState("idle");
-      setNeedsTap(isIOS);
+      setNeedsTap(true);
     }
   };
 
+  // iOS Safari requires a user gesture to start camera — never auto-start there.
+  // On other platforms, only auto-start once on first mount.
+  const didAutoStartRef = useRef(false);
   useEffect(() => {
-    // On iOS Safari, getUserMedia must be triggered by a user gesture — wait for tap.
-    if (isIOS || needsTap) return;
-    if (scanState !== "starting" || showManual) return;
+    if (isIOS) return;
+    if (didAutoStartRef.current) return;
+    if (showManual) return;
+    didAutoStartRef.current = true;
     startScanner();
-    return () => { stopScanner(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scanState, showManual]);
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
