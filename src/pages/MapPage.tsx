@@ -94,23 +94,31 @@ const ProgressPanel = () => {
 };
 
 // ── Scan panel ────────────────────────────────────────────────────
-type ScanState = "idle" | "scanning" | "success" | "not-found" | "external-url";
+type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
+
+const isIOS = typeof navigator !== "undefined" &&
+  (/iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
-  const [scanState, setScanState] = useState<ScanState>("idle");
+  const [scanState, setScanState] = useState<ScanState>(isIOS ? "idle" : "starting");
+  const [needsTap, setNeedsTap] = useState(isIOS);
   const [resultLabel, setResultLabel] = useState("");
   const [cameraError, setCameraError] = useState<string | null>(null);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const isRunningRef = useRef(false);
 
   const stopScanner = useCallback(async () => {
-    if (scannerRef.current && isRunningRef.current) {
-      try { await scannerRef.current.stop(); } catch { /* already stopped */ }
+    const scanner = scannerRef.current;
+    if (scanner && isRunningRef.current) {
       isRunningRef.current = false;
+      try { await scanner.stop(); } catch { /* already stopped */ }
+      try { scanner.clear(); } catch { /* ignore */ }
     }
+    scannerRef.current = null;
   }, []);
 
   const handleScanResult = useCallback((decodedText: string) => {
