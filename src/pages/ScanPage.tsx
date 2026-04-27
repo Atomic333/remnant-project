@@ -25,18 +25,26 @@ const ScanPage = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const stopScanner = async () => {
-    if (scannerRef.current && isRunningRef.current) {
+    const scanner = scannerRef.current;
+    if (scanner && isRunningRef.current) {
+      isRunningRef.current = false;
       try {
-        await scannerRef.current.stop();
+        await scanner.stop();
       } catch {
         // already stopped
       }
-      isRunningRef.current = false;
+      try {
+        scanner.clear();
+      } catch {
+        // ignore
+      }
     }
+    scannerRef.current = null;
   };
 
   const handleScanResult = (decodedText: string) => {
-    stopScanner();
+    // Fire-and-forget; result UI replaces scanner DOM anyway
+    void stopScanner();
 
     // Try to parse as URL
     let isUrl = false;
