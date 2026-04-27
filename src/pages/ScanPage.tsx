@@ -137,7 +137,7 @@ const ScanPage = () => {
       scannerRef.current = scanner;
       await scanner.start(
         { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 220, height: 220 } },
+        { fps: 10 },
         (decodedText) => handleScanResult(decodedText),
         () => {}
       );
