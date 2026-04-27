@@ -262,8 +262,8 @@ const ScanPage = () => {
     <div className="flex min-h-screen flex-col pb-20">
       <PageHeader title="Scan" />
 
-      <div className="flex flex-1 flex-col items-center justify-center px-6">
-        <div className="relative mb-8 h-64 w-64 overflow-hidden rounded-xl bg-surface-variant elevation-1">
+      <div className="flex flex-1 flex-col items-center justify-center">
+        <div className="relative mb-8 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
           {cameraError ? (
             <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
               <CameraOff className="h-12 w-12 text-on-surface-variant" />
