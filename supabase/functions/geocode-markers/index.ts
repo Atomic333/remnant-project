@@ -1,6 +1,9 @@
 // One-shot geocoder: takes a list of { id, query } and returns { id, lat, lng, formatted, status } for each.
 // Uses GOOGLE_GEOCODING_API_KEY (server-side, no referrer restriction).
-import { corsHeaders } from "@supabase/supabase-js/cors";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 const TACOMA_BOUNDS = "47.18,-122.60|47.35,-122.32";
 
