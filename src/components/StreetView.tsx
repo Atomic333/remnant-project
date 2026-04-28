@@ -12,7 +12,7 @@ interface StreetViewProps {
 const StreetView = ({ lat, lng, name }: StreetViewProps) => {
   const [errored, setErrored] = useState(false);
 
-  const src = `https://maps.googleapis.com/maps/api/streetview?size=800x400&location=${lat},${lng}&fov=80&pitch=0&key=${GOOGLE_MAPS_API_KEY}`;
+  const src = `https://maps.googleapis.com/maps/api/streetview?size=800x400&location=${lat},${lng}&fov=80&pitch=0&radius=200&source=outdoor&return_error_code=true&key=${GOOGLE_MAPS_API_KEY}`;
   const mapsUrl = `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${lat},${lng}`;
 
   if (errored) {
