@@ -5,6 +5,7 @@ import { markers } from "@/data/markers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
+import StreetView from "@/components/StreetView";
 import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
@@ -64,6 +65,11 @@ const MarkerDetailPage = () => {
       </div>
 
       <div className="px-5 pt-4">
+        {/* Street View */}
+        <div className="mb-4">
+          <StreetView lat={marker.lat} lng={marker.lng} name={marker.name} />
+        </div>
+
         {/* Address chip */}
         <div className="mb-4 flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
           <MapPin className="h-4 w-4 shrink-0 text-primary" />
