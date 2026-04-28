@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { MapPin } from "lucide-react";
+import { MapPin, Eye } from "lucide-react";
 import { useJsApiLoader } from "@react-google-maps/api";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
@@ -11,33 +11,55 @@ interface StreetViewProps {
 }
 
 const StreetView = ({ lat, lng, name }: StreetViewProps) => {
-  const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
+  const [activated, setActivated] = useState(false);
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    // Only request the script once the user opts in
+    preventGoogleFontsLoading: true,
+  });
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
-    if (!isLoaded || !containerRef.current) return;
+    if (!activated || !isLoaded || !containerRef.current) return;
     setUnavailable(false);
     const position = { lat, lng };
     const sv = new google.maps.StreetViewService();
-    sv.getPanorama({ location: position, radius: 200, source: google.maps.StreetViewSource.OUTDOOR }, (data, status) => {
-      if (status !== google.maps.StreetViewStatus.OK || !data?.location?.latLng) {
-        setUnavailable(true);
-        return;
+    sv.getPanorama(
+      { location: position, radius: 200, source: google.maps.StreetViewSource.OUTDOOR },
+      (data, status) => {
+        if (status !== google.maps.StreetViewStatus.OK || !data?.location?.latLng) {
+          setUnavailable(true);
+          return;
+        }
+        if (!containerRef.current) return;
+        new google.maps.StreetViewPanorama(containerRef.current, {
+          position: data.location.latLng,
+          pov: { heading: 0, pitch: 0 },
+          zoom: 0,
+          addressControl: false,
+          fullscreenControl: false,
+          motionTracking: false,
+          motionTrackingControl: false,
+          showRoadLabels: false,
+        });
       }
-      if (!containerRef.current) return;
-      new google.maps.StreetViewPanorama(containerRef.current, {
-        position: data.location.latLng,
-        pov: { heading: 0, pitch: 0 },
-        zoom: 0,
-        addressControl: false,
-        fullscreenControl: false,
-        motionTracking: false,
-        motionTrackingControl: false,
-        showRoadLabels: false,
-      });
-    });
-  }, [isLoaded, lat, lng]);
+    );
+  }, [activated, isLoaded, lat, lng]);
+
+  if (!activated) {
+    return (
+      <button
+        type="button"
+        onClick={() => setActivated(true)}
+        className="focus-ring flex h-56 w-full flex-col items-center justify-center gap-2 rounded-xl bg-surface-variant text-center px-4 transition-transform active:scale-[0.99]"
+      >
+        <Eye className="h-8 w-8 text-primary" />
+        <span className="font-display text-sm font-medium text-foreground">Show Street View</span>
+        <span className="text-xs text-on-surface-variant">Tap to load an interactive view of this spot</span>
+      </button>
+    );
+  }
 
   if (unavailable) {
     return (
