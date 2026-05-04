@@ -1,7 +1,10 @@
 // One-time helper: fetch best Street View panoId + heading aimed at each marker.
 // Call: GET /fetch-streetview  -> JSON keyed by marker id, paste into markers.ts
 // Requires GOOGLE_MAPS_API_KEY (server-side, with Street View Static API enabled).
-import { corsHeaders } from "@supabase/supabase-js/cors";
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
 
 interface MarkerInput {
   id: string;
