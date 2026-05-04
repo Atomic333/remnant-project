@@ -77,7 +77,14 @@ const MarkerDetailPage = () => {
       <div className="px-5 pt-4">
         {/* Street View */}
         <div className="mb-4">
-          <StreetView lat={marker.lat} lng={marker.lng} name={marker.name} />
+          <StreetView
+            lat={marker.lat}
+            lng={marker.lng}
+            name={marker.name}
+            panoId={marker.streetView?.panoId}
+            heading={marker.streetView?.heading}
+            pitch={marker.streetView?.pitch}
+          />
         </div>
 
         {/* Address chip */}

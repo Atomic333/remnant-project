@@ -8,13 +8,15 @@ interface StreetViewProps {
   lat: number;
   lng: number;
   name: string;
+  panoId?: string;
+  heading?: number;
+  pitch?: number;
 }
 
-const StreetView = ({ lat, lng, name }: StreetViewProps) => {
+const StreetView = ({ lat, lng, name, panoId, heading, pitch }: StreetViewProps) => {
   const [activated, setActivated] = useState(false);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
-    // Only request the script once the user opts in
     preventGoogleFontsLoading: true,
   });
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -23,10 +25,28 @@ const StreetView = ({ lat, lng, name }: StreetViewProps) => {
   useEffect(() => {
     if (!activated || !isLoaded || !containerRef.current) return;
     setUnavailable(false);
-    const position = { lat, lng };
+
+    const pov = { heading: heading ?? 0, pitch: pitch ?? 0 };
+
+    // Fast path: precomputed panoId + heading → no metadata lookup needed
+    if (panoId) {
+      new google.maps.StreetViewPanorama(containerRef.current, {
+        pano: panoId,
+        pov,
+        zoom: 0,
+        addressControl: false,
+        fullscreenControl: false,
+        motionTracking: false,
+        motionTrackingControl: false,
+        showRoadLabels: false,
+      });
+      return;
+    }
+
+    // Fallback: search for nearest pano by lat/lng
     const sv = new google.maps.StreetViewService();
     sv.getPanorama(
-      { location: position, radius: 200, source: google.maps.StreetViewSource.OUTDOOR },
+      { location: { lat, lng }, radius: 200, source: google.maps.StreetViewSource.OUTDOOR },
       (data, status) => {
         if (status !== google.maps.StreetViewStatus.OK || !data?.location?.latLng) {
           setUnavailable(true);
@@ -35,7 +55,7 @@ const StreetView = ({ lat, lng, name }: StreetViewProps) => {
         if (!containerRef.current) return;
         new google.maps.StreetViewPanorama(containerRef.current, {
           position: data.location.latLng,
-          pov: { heading: 0, pitch: 0 },
+          pov,
           zoom: 0,
           addressControl: false,
           fullscreenControl: false,
@@ -45,7 +65,7 @@ const StreetView = ({ lat, lng, name }: StreetViewProps) => {
         });
       }
     );
-  }, [activated, isLoaded, lat, lng]);
+  }, [activated, isLoaded, lat, lng, panoId, heading, pitch]);
 
   if (!activated) {
     return (
