@@ -7,6 +7,7 @@ import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
 import { getMarkerImage } from "@/lib/markerImages";
+import { getStreetViewImageUrl } from "@/lib/streetViewImage";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
@@ -45,11 +46,15 @@ const MarkerDetailPage = () => {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero */}
-      <div className="relative h-60">
+      <div className="relative h-60 bg-surface-variant">
         <img
-          src={getMarkerImage(marker.id, marker.image)}
-          alt={marker.name}
+          src={getStreetViewImageUrl(marker, { width: 800, height: 480 })}
+          alt={`Street View of ${marker.name}`}
           className="h-full w-full object-cover"
+          onError={(e) => {
+            // Fallback to curated image if Street View has no coverage
+            (e.currentTarget as HTMLImageElement).src = getMarkerImage(marker.id, marker.image);
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/50 via-transparent to-foreground/20" />
         <button
@@ -58,6 +63,11 @@ const MarkerDetailPage = () => {
         >
           <ArrowLeft className="h-5 w-5 text-foreground" />
         </button>
+        {marker.streetView?.copyright && (
+          <span className="absolute bottom-2 right-2 rounded-md bg-background/70 px-2 py-0.5 text-[10px] text-foreground backdrop-blur-sm">
+            {marker.streetView.copyright}
+          </span>
+        )}
         <div className="absolute bottom-4 left-5 right-5">
           <span className="text-xs font-medium text-primary-foreground/80">Marker Details</span>
           <h1 className="font-display text-2xl font-medium text-primary-foreground">{marker.name}</h1>
