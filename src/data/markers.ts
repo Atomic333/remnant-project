@@ -93,8 +93,8 @@ export const markers: Marker[] = [
     id: "marker-005",
     name: "Browns Point Light Station — Puyallup Homeland",
     address: "Browns Point, Tacoma",
-    lat: 47.3059167,
-    lng: -122.4442667,
+    lat: 47.306024,
+    lng: -122.443729,
     summary: "For thousands of years, this area has been the traditional homeland of the Puyallup people. Browns Point was part of the Puyallup Tribal Reservation before federal appropriation for a lighthouse.",
     story: "Long before the federal government built a lighthouse at Browns Point, this headland belonged to the Puyallup people. In the late 19th century the land was deeded to tribal members Joe Douette and Jerry Meeker. The U.S. Lighthouse Service later appropriated the site for navigational purposes, erecting a light that guided ships into the bay. Today's marker acknowledges the site's tribal origin, the loss of Indigenous land, and the ongoing presence of the Puyallup Tribe in the region.",
     sources: [
@@ -126,9 +126,9 @@ export const markers: Marker[] = [
   {
     id: "marker-007",
     name: "Commemorating Nihongo Gakko (Japanese Language School)",
-    address: "Tacoma, WA",
-    lat: 47.2590833,
-    lng: -122.451,
+    address: "1702 Pacific Ave, Tacoma, WA (UWT)",
+    lat: 47.246856,
+    lng: -122.437602,
     summary: "Opened in 1922, the Tacoma Japanese Language School served as the heart of Tacoma's Japanese American community. After Pearl Harbor, it was used to register residents for forced removal.",
     story: "The Tacoma Japanese Language School, or Nihongo Gakko, opened in 1922 to serve the growing Japanese American community. Students gathered after public school to study Japanese and maintain cultural traditions. After the Pearl Harbor attack in 1941, federal authorities used the school to register Tacoma's Japanese residents for forced removal to incarceration camps. Although the community reopened the school after World War II, the building was eventually demolished. This marker honors the Japanese American families who learned, taught and endured here.",
     sources: [
@@ -279,6 +279,8 @@ export const markers: Marker[] = [
   {
     id: "marker-016",
     name: "E.S. Brazil",
+    // Note: Earnest S Brazil St is a short Hilltop street (renamed S 17th St segment).
+    // Coordinates approximated to mid-block; no point-of-interest pin available.
     address: "Earnest S. Brazil St, Tacoma",
     lat: 47.2520,
     lng: -122.4497,
@@ -311,8 +313,8 @@ export const markers: Marker[] = [
     id: "marker-018",
     name: "USO Club #2",
     address: "713-715 Commerce St, Tacoma",
-    lat: 47.2567187,
-    lng: -122.4399665,
+    lat: 47.256681,
+    lng: -122.439958,
     summary: "The USO Club #2 was established in 1942 to serve Black military families during a time when the military was still segregated.",
     story: "Dedicated on September 4, 1942, USO Club #2 was more than just a recreational center; it was a 'home away from home' for nearly a million Black service members and war workers who were barred from Tacoma's white-only venues. One of its most legendary moments occurred in 1943 when Navy Cross recipient and Pearl Harbor hero Doris 'Dorie' Miller visited the club. Despite the era's segregation, the club became a vibrant hub of jazz and community.",
     sources: [
@@ -327,9 +329,9 @@ export const markers: Marker[] = [
   {
     id: "marker-019",
     name: "Pythian Temple",
-    address: "911 Broadway, Tacoma",
-    lat: 47.254722,
-    lng: -122.439722,
+    address: "924 Broadway, Tacoma",
+    lat: 47.254336,
+    lng: -122.440599,
     summary: "The Pythian Temple was built in 1906 by the Knights of Pythias fraternal organization, designed by local architect Frederick Heath in the Beaux-Arts style.",
     story: "Designed by the same architect behind Stadium High School, the Pythian Temple is a 'hidden gem' of the Theater District. While the street-level facade is modest sandstone, the interior houses the magnificent Castle Hall—a soaring, two-story ceremonial chamber that remains virtually untouched since 1907. Complete with original Douglas fir paneling, ornate murals depicting the Greek legend of Damon and Pythias, and three massive art-glass skylights, the building serves as a rare time capsule of fraternal life in the early 20th century.",
     sources: [
@@ -345,8 +347,8 @@ export const markers: Marker[] = [
     id: "marker-020",
     name: "Elks Temple",
     address: "565 Broadway, Tacoma",
-    lat: 47.25778,
-    lng: -122.44083,
+    lat: 47.258048,
+    lng: -122.440909,
     summary: "The Elks Temple is a historic Beaux Arts building built in 1916 for the Fraternal Order of Elks. It now houses the McMenamins Elks Temple hotel, restaurant and event space.",
     story: "The Elks Temple was once the epicenter of Tacoma's social life, featuring a grand ballroom and a sprawling indoor pool. For decades, it stood as a symbol of the city's early 20th-century prosperity. However, as fraternal memberships declined, the building was vacated in the 1960s and fell into deep disrepair. After sitting derelict for over 40 years, it underwent a massive restoration by McMenamins and reopened in 2019.",
     sources: [
@@ -361,7 +363,9 @@ export const markers: Marker[] = [
   {
     id: "marker-021",
     name: "Point Defiance Park",
-    address: "5400 N Pearl St, Tacoma",
+    // Note: Point Defiance Park is ~760 acres. Pin set near park entrance / center;
+    // no single canonical point exists for this marker.
+    address: "5400 N Pearl St, Tacoma (Point Defiance Park)",
     lat: 47.3078759,
     lng: -122.5309605,
     summary: "Point Defiance Park at the northern tip of Tacoma, where a 19th century military reservation stood before becoming one of the largest and oldest urban parks in the Pacific Northwest.",
@@ -378,6 +382,8 @@ export const markers: Marker[] = [
   {
     id: "marker-022",
     name: "Division Street",
+    // Note: Marker references the historical Black community along Division St;
+    // pin placed at S Division Ave & MLK Jr Way intersection.
     address: "S Division Ave & MLK Jr Way, Tacoma",
     lat: 47.2610079,
     lng: -122.4536839,
@@ -395,6 +401,8 @@ export const markers: Marker[] = [
   {
     id: "marker-023",
     name: "George Putnam Riley",
+    // Note: Riley's specific Tacoma residence is undocumented in available sources;
+    // pin placed in the Hilltop neighborhood where he was politically active.
     address: "Hilltop, Tacoma",
     lat: 47.2509871,
     lng: -122.4605348,
@@ -413,8 +421,8 @@ export const markers: Marker[] = [
     id: "marker-024",
     name: "Joye Hardiman Park",
     address: "1505 S 5th St, Tacoma",
-    lat: 47.2564151,
-    lng: -122.454931,
+    lat: 47.257633,
+    lng: -122.459096,
     summary: "Named for Dr. Joye Hardiman, a longtime director of Evergreen-Tacoma. This site honors her pioneering contributions to education and community empowerment.",
     story: "Dr. Joye Hardiman served as a longtime director of Evergreen-Tacoma and dedicated her career to community education. The park named in her honor stands as a testament to her pioneering contributions to education and community empowerment in the Hilltop neighborhood.",
     sources: [
@@ -463,9 +471,9 @@ export const markers: Marker[] = [
   {
     id: "marker-027",
     name: "Dr. Nettie Craig Asberry's House",
-    address: "S 13th St, Tacoma",
-    lat: 47.2530,
-    lng: -122.4419,
+    address: "1219 S 13th St, Tacoma",
+    lat: 47.249870,
+    lng: -122.453893,
     summary: "Dr. Nettie Craig Asberry (1865–1968) was a classically trained musician, educator, and one of Tacoma's most influential civil rights leaders.",
     story: "In 1913, Dr. Nettie Asberry founded the Tacoma NAACP, one of the earliest branches in the nation, and hosted organizing meetings in her home. She championed women's suffrage, fought discrimination in schools, and nurtured the city's Black cultural life through her piano instruction and leadership in civic groups. Her Hilltop residence remains the cornerstone of Tacoma's civil rights legacy.",
     sources: [
@@ -481,8 +489,8 @@ export const markers: Marker[] = [
     id: "marker-028",
     name: "Bethlehem Baptist Church",
     address: "4818 E Portland Ave, Tacoma",
-    lat: 47.234676,
-    lng: -122.399587,
+    lat: 47.212726,
+    lng: -122.409152,
     summary: "Founded in 1890, Bethlehem Baptist Church is Tacoma's oldest Black Baptist congregation and one of the city's earliest Black institutions.",
     story: "Originally gathering in the home of its founders just one year after Washington achieved statehood, Bethlehem Baptist Church served as a vital anchor for Black families arriving in the Pacific Northwest. Under the early leadership of Rev. J.B. Beckly, the church quickly grew from a small prayer circle into a spiritual and social headquarters.",
     sources: [
