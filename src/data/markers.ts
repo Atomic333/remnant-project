@@ -12,6 +12,12 @@ export interface Marker {
   visited: boolean;
   category: string;
   qrUrl?: string;
+  streetView?: {
+    panoId: string;
+    heading: number;
+    pitch?: number;
+    copyright?: string;
+  };
 }
 
 export const markers: Marker[] = [
