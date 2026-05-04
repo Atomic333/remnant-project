@@ -429,9 +429,9 @@ export const markers: Marker[] = [
   {
     id: "marker-025",
     name: "Horace Lawhorn's House",
-    address: "Hilltop, Tacoma",
-    lat: 47.2500,
-    lng: -122.4500,
+    address: "825 South State Street, Tacoma, WA",
+    lat: 47.244722,
+    lng: -122.445278,
     summary: "Horace Lawhorn was a longshoreman, labor activist, and respected community leader who fought for racial equity on Tacoma's docks and in its labor unions.",
     story: "Arriving in 1890, Horace Lawhorn initially worked as a police wagon driver before becoming the city's first Black police officer in 1899, a role that led the department to adopt a permanent policy of racial inclusion. Beyond the badge, Lawhorn was a key figure in the labor movement and real estate, physically constructing his family home in the Hilltop neighborhood.",
     sources: [
