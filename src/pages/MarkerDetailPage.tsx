@@ -108,46 +108,54 @@ const MarkerDetailPage = () => {
 
         {/* Accordion */}
         <div className="mt-6 space-y-2">
-          {sections.map(({ key, icon: Icon, label }) => (
-            <div key={key}>
-              <button
-                onClick={() => toggle(key)}
-                className={`flex w-full items-center gap-3 rounded-xl p-4 text-left transition-colors ${
-                  expandedSection === key ? "bg-secondary" : "bg-card elevation-1"
+          {sections.map(({ key, icon: Icon, label }) => {
+            const isOpen = expandedSection === key;
+            return (
+              <div
+                key={key}
+                className={`overflow-hidden rounded-xl ${
+                  isOpen ? "bg-card elevation-1" : "bg-card elevation-1"
                 }`}
               >
-                <div className={`flex h-9 w-9 items-center justify-center rounded-full ${
-                  expandedSection === key ? "bg-primary text-primary-foreground" : "bg-secondary text-primary"
-                }`}>
-                  <Icon className="h-4 w-4" />
-                </div>
-                <span className="font-display font-medium text-card-foreground">{label}</span>
-              </button>
-              {expandedSection === key && (
-                <div className="animate-fade-in mt-1 rounded-xl bg-card px-4 pb-4 pt-3 elevation-1">
-                  {key === "summary" && (
-                    <p className="text-sm leading-relaxed text-on-surface-variant">{marker.summary}</p>
-                  )}
-                  {key === "sources" && (
-                    <ul className="space-y-2">
-                      {marker.sources.map((s) => (
-                        <li key={s.name} className="text-sm text-on-surface-variant">
-                          •{" "}
-                          {s.url ? (
-                            <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline text-primary">
-                              {s.name}
-                            </a>
-                          ) : (
-                            s.name
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              )}
-            </div>
-          ))}
+                <button
+                  onClick={() => toggle(key)}
+                  className={`flex w-full items-center gap-3 p-4 text-left transition-colors ${
+                    isOpen ? "bg-secondary" : ""
+                  }`}
+                >
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-full ${
+                    isOpen ? "bg-primary text-primary-foreground" : "bg-secondary text-primary"
+                  }`}>
+                    <Icon className="h-4 w-4" />
+                  </div>
+                  <span className="font-display font-medium text-card-foreground">{label}</span>
+                </button>
+                {isOpen && (
+                  <div className="animate-fade-in px-4 pb-4 pt-3">
+                    {key === "summary" && (
+                      <p className="text-sm leading-relaxed text-on-surface-variant">{marker.summary}</p>
+                    )}
+                    {key === "sources" && (
+                      <ul className="space-y-2">
+                        {marker.sources.map((s) => (
+                          <li key={s.name} className="text-sm text-on-surface-variant">
+                            •{" "}
+                            {s.url ? (
+                              <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline text-primary">
+                                {s.name}
+                              </a>
+                            ) : (
+                              s.name
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Chat - always expanded */}
