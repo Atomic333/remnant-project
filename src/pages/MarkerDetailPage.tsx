@@ -35,7 +35,12 @@ const MarkerDetailPage = () => {
   }
 
   const toggle = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(section)) next.delete(section);
+      else next.add(section);
+      return next;
+    });
   };
 
   const sections = [
