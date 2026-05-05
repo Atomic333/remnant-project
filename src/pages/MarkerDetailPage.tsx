@@ -75,8 +75,8 @@ const MarkerDetailPage = () => {
       </div>
 
       <div className="px-5 pt-4">
-        {/* Street View */}
-        <div className="mb-4">
+        {/* Street View temporarily disabled - re-enable later */}
+        {/* <div className="mb-4">
           <StreetView
             lat={marker.lat}
             lng={marker.lng}
@@ -85,7 +85,7 @@ const MarkerDetailPage = () => {
             heading={marker.streetView?.heading}
             pitch={marker.streetView?.pitch}
           />
-        </div>
+        </div> */}
 
         {/* Address chip */}
         <div className="mb-4 flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
