@@ -114,7 +114,7 @@ const MarkerDetailPage = () => {
         {/* Accordion */}
         <div className="mt-6 space-y-2">
           {sections.map(({ key, icon: Icon, label }) => {
-            const isOpen = expandedSection === key;
+            const isOpen = expandedSections.has(key);
             return (
               <div
                 key={key}
