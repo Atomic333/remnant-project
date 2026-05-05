@@ -15,7 +15,7 @@ const MarkerDetailPage = () => {
   const marker = markers.find((m) => m.id === id);
   const { isVisited, toggle: toggleVisited } = useVisited();
   const visited = id ? isVisited(id) : false;
-  const [expandedSection, setExpandedSection] = useState<string | null>("summary");
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
 
   if (!marker) {
     return (
