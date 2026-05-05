@@ -92,36 +92,31 @@ const MarkerDetailPage = () => {
           />
         </div> */}
 
-        {/* Address chip */}
-        <div className="mb-4 flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
-          <MapPin className="h-4 w-4 shrink-0 text-primary" />
-          <span className="text-sm text-on-surface-variant">{marker.address}</span>
-        </div>
+        <div className="space-y-3">
+          {/* Address chip */}
+          <div className="flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
+            <MapPin className="h-4 w-4 shrink-0 text-primary" />
+            <span className="text-sm text-on-surface-variant">{marker.address}</span>
+          </div>
 
-        {/* Visit button */}
-        <button
-          onClick={() => id && toggleVisited(id)}
-          className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-display text-sm font-medium transition-colors ${
-            visited
-              ? "bg-secondary text-secondary-foreground"
-              : "bg-primary text-primary-foreground elevation-1"
-          }`}
-        >
-          {visited ? <Check className="h-4 w-4" /> : null}
-          {visited ? "Visited" : "Mark as Visited"}
-        </button>
+          {/* Visit button */}
+          <button
+            onClick={() => id && toggleVisited(id)}
+            className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 font-display text-sm font-medium transition-colors ${
+              visited
+                ? "bg-secondary text-secondary-foreground"
+                : "bg-primary text-primary-foreground elevation-1"
+            }`}
+          >
+            {visited ? <Check className="h-4 w-4" /> : null}
+            {visited ? "Visited" : "Mark as Visited"}
+          </button>
 
-        {/* Accordion */}
-        <div className="mt-6 space-y-2">
+          {/* Accordion */}
           {sections.map(({ key, icon: Icon, label }) => {
             const isOpen = expandedSections.has(key);
             return (
-              <div
-                key={key}
-                className={`overflow-hidden rounded-xl ${
-                  isOpen ? "bg-card elevation-1" : "bg-card elevation-1"
-                }`}
-              >
+              <div key={key} className="overflow-hidden rounded-xl bg-card elevation-1">
                 <button
                   onClick={() => toggle(key)}
                   className={`flex w-full items-center gap-3 p-4 text-left transition-colors ${
@@ -161,6 +156,17 @@ const MarkerDetailPage = () => {
               </div>
             );
           })}
+
+          {/* Chat - always expanded */}
+          <div className="rounded-xl bg-card p-4 elevation-1">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <MessageCircle className="h-4 w-4" />
+              </div>
+              <span className="font-display font-medium text-card-foreground">Ask About This</span>
+            </div>
+            <MarkerChat marker={marker} />
+          </div>
         </div>
 
         {/* Chat - always expanded */}
