@@ -113,9 +113,9 @@ const MarkerChat = ({ marker }: MarkerChatProps) => {
   return (
     <div className="flex flex-col gap-3">
       {/* Messages */}
-      <div ref={scrollRef} className="flex min-h-[200px] max-h-[400px] flex-col gap-2 overflow-y-auto">
+      <div ref={scrollRef} className="relative flex min-h-[200px] max-h-[400px] flex-col gap-2 overflow-y-auto">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center gap-2 py-4 text-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-4 text-center">
             <Sparkles className="h-5 w-5 text-primary" />
             <p className="text-xs text-on-surface-variant">
               Ask anything about this marker's history
