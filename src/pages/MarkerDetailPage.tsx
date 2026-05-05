@@ -5,7 +5,7 @@ import { markers } from "@/data/markers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
-import StreetView from "@/components/StreetView";
+// import StreetView from "@/components/StreetView"; // temporarily disabled
 import { getMarkerImage } from "@/lib/markerImages";
 import { getStreetViewImageUrl } from "@/lib/streetViewImage";
 
