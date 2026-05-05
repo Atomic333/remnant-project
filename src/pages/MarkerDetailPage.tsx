@@ -15,7 +15,7 @@ const MarkerDetailPage = () => {
   const marker = markers.find((m) => m.id === id);
   const { isVisited, toggle: toggleVisited } = useVisited();
   const visited = id ? isVisited(id) : false;
-  const [expandedSection, setExpandedSection] = useState<string | null>("summary");
+  const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
 
   if (!marker) {
     return (
@@ -35,7 +35,12 @@ const MarkerDetailPage = () => {
   }
 
   const toggle = (section: string) => {
-    setExpandedSection(expandedSection === section ? null : section);
+    setExpandedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(section)) next.delete(section);
+      else next.add(section);
+      return next;
+    });
   };
 
   const sections = [
@@ -109,7 +114,7 @@ const MarkerDetailPage = () => {
         {/* Accordion */}
         <div className="mt-6 space-y-2">
           {sections.map(({ key, icon: Icon, label }) => {
-            const isOpen = expandedSection === key;
+            const isOpen = expandedSections.has(key);
             return (
               <div
                 key={key}
