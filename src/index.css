@@ -16,17 +16,17 @@
     --popover: 0 0% 100%;
     --popover-foreground: 180 10% 10%;
 
-    --primary: 176 100% 26%;
-    --primary-foreground: 176 100% 97%;
+    --primary: 263 75% 50%;
+    --primary-foreground: 263 100% 98%;
 
-    --secondary: 176 30% 90%;
-    --secondary-foreground: 176 50% 20%;
+    --secondary: 263 40% 94%;
+    --secondary-foreground: 263 50% 25%;
 
     --muted: 180 10% 94%;
     --muted-foreground: 180 8% 45%;
 
-    --accent: 176 40% 92%;
-    --accent-foreground: 176 50% 20%;
+    --accent: 263 40% 94%;
+    --accent-foreground: 263 50% 25%;
 
     --destructive: 0 75% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -36,7 +36,7 @@
 
     --border: 180 8% 90%;
     --input: 180 8% 88%;
-    --ring: 176 100% 26%;
+    --ring: 263 75% 50%;
 
     /* M3 Tertiary */
     --tertiary: 260 40% 55%;
@@ -60,12 +60,12 @@
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 176 100% 26%;
+    --sidebar-primary: 263 75% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 176 40% 92%;
-    --sidebar-accent-foreground: 176 50% 20%;
+    --sidebar-accent: 263 40% 94%;
+    --sidebar-accent-foreground: 263 50% 25%;
     --sidebar-border: 180 8% 90%;
-    --sidebar-ring: 176 100% 26%;
+    --sidebar-ring: 263 75% 50%;
   }
 
   .dark {
@@ -75,19 +75,19 @@
     --card-foreground: 180 10% 92%;
     --popover: 180 12% 10%;
     --popover-foreground: 180 10% 92%;
-    --primary: 176 80% 60%;
-    --primary-foreground: 176 100% 8%;
-    --secondary: 176 20% 18%;
-    --secondary-foreground: 176 30% 80%;
+    --primary: 263 80% 70%;
+    --primary-foreground: 263 100% 10%;
+    --secondary: 263 25% 20%;
+    --secondary-foreground: 263 40% 80%;
     --muted: 180 12% 16%;
     --muted-foreground: 180 8% 55%;
-    --accent: 176 25% 16%;
-    --accent-foreground: 176 60% 75%;
+    --accent: 263 25% 18%;
+    --accent-foreground: 263 70% 80%;
     --destructive: 0 62% 40%;
     --destructive-foreground: 0 0% 100%;
     --border: 180 10% 18%;
     --input: 180 10% 18%;
-    --ring: 176 80% 60%;
+    --ring: 263 80% 70%;
     --tertiary: 260 45% 70%;
     --tertiary-foreground: 260 100% 10%;
     --surface: 180 15% 6%;
