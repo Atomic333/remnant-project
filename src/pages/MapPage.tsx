@@ -12,6 +12,7 @@ import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps
 import { useVisited } from "@/hooks/useVisited";
 import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
+import { getMarkerImage } from "@/lib/markerImages";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
@@ -574,8 +575,8 @@ const MapPage = () => {
               <DrawerTitle className="sr-only">{selectedMarker.name}</DrawerTitle>
               <div className="flex items-center gap-4">
                 <img
-                  src={getStaticMapUrl(selectedMarker.lat, selectedMarker.lng, { size: 80 })}
-                  alt={`Map of ${selectedMarker.name}`}
+                  src={getMarkerImage(selectedMarker.id, selectedMarker.image)}
+                  alt={selectedMarker.name}
                   loading="lazy"
                   className="h-20 w-20 rounded-xl object-cover"
                 />
