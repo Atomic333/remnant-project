@@ -52,7 +52,7 @@ const HamburgerMenu = () => {
           style={{ paddingTop: "calc(env(safe-area-inset-top) + 1.5rem)" }}
         >
           <h2 className="font-display text-xl font-medium text-foreground">
-            MarkerQuest
+            MarkerQuest.ai
           </h2>
         </div>
 
