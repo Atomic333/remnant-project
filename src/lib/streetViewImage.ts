@@ -1,6 +1,6 @@
 import type { Marker } from "@/data/markers";
+import { GOOGLE_MAPS_STATIC_KEY } from "./googleMapsKey";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 const BASE = "https://maps.googleapis.com/maps/api/streetview";
 
 /**
