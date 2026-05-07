@@ -15,6 +15,7 @@ const MarkerDetailPage = () => {
   const { isVisited, toggle: toggleVisited } = useVisited();
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
+  const [showStreetView, setShowStreetView] = useState(false);
 
   if (!marker) {
     return (
