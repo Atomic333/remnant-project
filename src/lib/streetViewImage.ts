@@ -16,7 +16,7 @@ export function getStreetViewImageUrl(
   const params = new URLSearchParams({
     size: `${width}x${height}`,
     fov: String(fov),
-    key: GOOGLE_MAPS_API_KEY,
+    key: GOOGLE_MAPS_STATIC_KEY,
     return_error_code: "true",
   });
 

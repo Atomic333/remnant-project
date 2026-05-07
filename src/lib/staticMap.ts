@@ -23,7 +23,7 @@ export function getStaticMapUrl(
     scale: String(scale),
     maptype: "roadmap",
     markers: `color:0x0d9488|${lat},${lng}`,
-    key: GOOGLE_MAPS_API_KEY,
+    key: GOOGLE_MAPS_STATIC_KEY,
   });
   return `${BASE}?${params.toString()}`;
 }
