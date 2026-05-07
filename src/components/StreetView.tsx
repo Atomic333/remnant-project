@@ -11,10 +11,11 @@ interface StreetViewProps {
   panoId?: string;
   heading?: number;
   pitch?: number;
+  autoActivate?: boolean;
 }
 
-const StreetView = ({ lat, lng, name, panoId, heading, pitch }: StreetViewProps) => {
-  const [activated, setActivated] = useState(false);
+const StreetView = ({ lat, lng, name, panoId, heading, pitch, autoActivate = false }: StreetViewProps) => {
+  const [activated, setActivated] = useState(autoActivate);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     preventGoogleFontsLoading: true,
