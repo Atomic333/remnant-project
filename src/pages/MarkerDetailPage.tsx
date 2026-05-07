@@ -6,7 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
-import { getStreetViewImageUrl } from "@/lib/streetViewImage";
+import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
