@@ -25,8 +25,8 @@ export const markers: Marker[] = [
     id: "marker-001",
     name: "Welcome Figure (spuy'elepebŠ)",
     address: "Prairie Line Trail, Tacoma",
-    lat: 47.2475167,
-    lng: -122.4375167,
+    lat: 47.2468565,
+    lng: -122.4373367,
     summary: "This welcome figure, called spuy'elepebŠ, represents Puyallup people and culture. The upraised arms invite travelers to Tacoma and are anchored by cedar and a rope of lake weed to show connection between all living things.",
     story: "The Welcome Figure, called spuy'elepebŠ, faces the waters of Commencement Bay with outstretched arms to greet visitors. Carved from cedar and anchored with a rope of lake weed, it symbolizes the Puyallup people's connection to land and water. Commissioned by the City of Tacoma, the Puyallup Tribe of Indians and the Tacoma Art Museum, this figure reminds us that Tacoma sits on the ancestral land of the spuy'elepebŠ—the People of the Water. It honors the resilience of the tribe and invites residents and travelers alike to respect Indigenous culture and history.",
     sources: [
@@ -42,8 +42,8 @@ export const markers: Marker[] = [
     id: "marker-002",
     name: "People of the Water",
     address: "Commencement Bay, Tacoma",
-    lat: 47.2776833,
-    lng: -122.4704333,
+    lat: 47.236954,
+    lng: -122.4102845,
     summary: "For generations, Coast Salish people relied on the bay for trade and travel. The People of the Water (spuy'alepabš) were connected to the land and sea, living by fishing, clamming, berry picking and trading.",
     story: "This marker celebrates the Coast Salish people, especially the Puyallup Tribe, whose lives were shaped by the bay. Generations of spuy'alepabš lived here by fishing, clamming and trading along the waterways. Later immigrants from Asia, Europe and elsewhere followed the same paths seeking better lives. Tacoma's identity remains tied to these waters, which continue to support local tribes and communities today.",
     sources: [
@@ -59,8 +59,8 @@ export const markers: Marker[] = [
     id: "marker-003",
     name: "Margaret Meeker Davis",
     address: "Old Tacoma",
-    lat: 47.2746833,
-    lng: -122.46515,
+    lat: 47.2730536,
+    lng: -122.4662634,
     summary: "Margaret Meeker Davis (1881–1960) was a Puyallup Indian who raised 14 children here at Old Tacoma. She rowed across Commencement Bay to dig clams and harvest shellfish to support her family.",
     story: "Margaret Meeker Davis, a Puyallup Indian woman, raised fourteen children while living near Old Tacoma. To feed her family she rowed across the bay to dig clams and gather shellfish. Her strength and determination illustrate the role of Puyallup women in sustaining their families despite colonial disruptions. The story of Margaret and her descendants is part of the larger narrative of Indigenous resilience along Commencement Bay.",
     sources: [
@@ -76,8 +76,8 @@ export const markers: Marker[] = [
     id: "marker-004",
     name: "Nettie Asberry",
     address: "South 13th Street, Tacoma",
-    lat: 47.2748667,
-    lng: -122.4651333,
+    lat: 47.2491773,
+    lng: -122.4748172,
     summary: "Nettie J. Asberry (1865–1968) earned a doctorate in music and became a pioneering civil rights leader. She organized the Clover Leaf Art Club and founded the Tacoma chapter of the NAACP in 1913.",
     story: "Born in Kansas in 1865, Nettie J. Asberry earned a doctorate in music and moved to Tacoma in 1888. She founded the Clover Leaf Art Club and helped establish the Tacoma branch of the NAACP in 1913, one of the first on the West Coast. Her home on South 13th Street became a gathering place for artists and civil rights activists. Asberry's life stands at the intersection of arts and social justice, reminding us of the leadership of Black women in Tacoma's history.",
     sources: [
@@ -93,8 +93,8 @@ export const markers: Marker[] = [
     id: "marker-005",
     name: "Browns Point Light Station — Puyallup Homeland",
     address: "Browns Point, Tacoma",
-    lat: 47.306024,
-    lng: -122.443729,
+    lat: 47.2999674,
+    lng: -122.4344489,
     summary: "For thousands of years, this area has been the traditional homeland of the Puyallup people. Browns Point was part of the Puyallup Tribal Reservation before federal appropriation for a lighthouse.",
     story: "Long before the federal government built a lighthouse at Browns Point, this headland belonged to the Puyallup people. In the late 19th century the land was deeded to tribal members Joe Douette and Jerry Meeker. The U.S. Lighthouse Service later appropriated the site for navigational purposes, erecting a light that guided ships into the bay. Today's marker acknowledges the site's tribal origin, the loss of Indigenous land, and the ongoing presence of the Puyallup Tribe in the region.",
     sources: [
@@ -110,8 +110,8 @@ export const markers: Marker[] = [
     id: "marker-006",
     name: "Our First Settlers — S'Puyalupubsh Camp",
     address: "Old Tacoma waterfront",
-    lat: 47.2746667,
-    lng: -122.46855,
+    lat: 47.2730536,
+    lng: -122.4662634,
     summary: "At this site on Commencement Bay, S'Puyalupubsh Indian fishermen camped to fish, dig clams and rest. Their visits gave this area the name 'Tacoma', meaning 'Mother of Waters'.",
     story: "Before Tacoma became a city, S'Puyalupubsh fishermen set up seasonal camps along this bay to fish, dig clams and gather shellfish. They called the area 'Tacoma,' meaning Mother of Waters. As settlers arrived and the shoreline filled with hotels and boathouses, Indigenous camps were erased. This marker reminds us that the city's name and prosperity are rooted in the Puyallup people's relationship to these waters.",
     sources: [
@@ -127,8 +127,8 @@ export const markers: Marker[] = [
     id: "marker-007",
     name: "Commemorating Nihongo Gakko (Japanese Language School)",
     address: "1702 Pacific Ave, Tacoma, WA (UWT)",
-    lat: 47.246856,
-    lng: -122.437602,
+    lat: 47.2467128,
+    lng: -122.437338,
     summary: "Opened in 1922, the Tacoma Japanese Language School served as the heart of Tacoma's Japanese American community. After Pearl Harbor, it was used to register residents for forced removal.",
     story: "The Tacoma Japanese Language School, or Nihongo Gakko, opened in 1922 to serve the growing Japanese American community. Students gathered after public school to study Japanese and maintain cultural traditions. After the Pearl Harbor attack in 1941, federal authorities used the school to register Tacoma's Japanese residents for forced removal to incarceration camps. Although the community reopened the school after World War II, the building was eventually demolished. This marker honors the Japanese American families who learned, taught and endured here.",
     sources: [
@@ -144,8 +144,8 @@ export const markers: Marker[] = [
     id: "marker-008",
     name: "Chinese Expulsion: Aftermath and Indictments",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.27495,
-    lng: -122.4605833,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "In 1885, U.S. Attorney W.H. White wired that evidence warranted arrests after Tacoma citizens forcibly expelled hundreds of Chinese residents. A grand jury indicted 27 civic leaders, but charges were dismissed.",
     story: "On November 3, 1885, more than 500 residents forcibly marched Tacoma's Chinese community to a train station and burned Chinatown. U.S. Attorney W.H. White wired that the evidence warranted arrests. A grand jury indicted 27 civic leaders for rioting and arson, but the cases were dismissed or never pursued. This marker highlights the failure of justice and notes that Chinese families did not return to Tacoma until decades later.",
     sources: [
@@ -161,8 +161,8 @@ export const markers: Marker[] = [
     id: "marker-009",
     name: "Chinese Expulsion: Climate of Exclusion",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.2750333,
-    lng: -122.4606833,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "Reverend W.D. McFarland preached anti-Chinese rhetoric in Tacoma's churches. Congress responded with the Chinese Exclusion Act of 1882. Tacoma's leaders echoed the cry 'The Chinese Must Go.'",
     story: "Decades of anti-Chinese agitation preceded the 1885 expulsion. Preachers like Reverend W.D. McFarland declared Chinese immigration a curse and warned congregations that 'hordes of Chinamen' threatened white livelihoods. Congress responded with the Chinese Exclusion Act of 1882. Tacoma's leaders echoed the cry 'The Chinese Must Go,' creating a climate that normalized violence. This marker documents the rhetoric that made the expulsion possible.",
     sources: [
@@ -178,8 +178,8 @@ export const markers: Marker[] = [
     id: "marker-010",
     name: "Chinese Expulsion: Planning of the Expulsion",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.2750333,
-    lng: -122.4606833,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "On October 31, 1885, Tacoma Mayor Jacob Weisback gave the city's Chinese residents three days to leave. On November 3 a mob of more than 500 forced families onto wagons. Their homes were burned — the 'Tacoma Method.'",
     story: "Tacoma's Chinese expulsion was carefully planned. On October 31, 1885, Mayor Jacob Weisback and a committee of prominent citizens gave the Chinese residents three days to leave. When the deadline passed, a mob rounded up families at gunpoint, loaded them onto wagons and marched them to the Lake View depot. Their homes and businesses were torched. The so-called 'Tacoma Method' became a model for similar actions across the West.",
     sources: [
@@ -195,8 +195,8 @@ export const markers: Marker[] = [
     id: "marker-011",
     name: "Journey to Gold Mountain",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.2750333,
-    lng: -122.4608,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "Chinese immigrants set sail for 'Gold Mountain' seeking opportunity and escape from poverty. Those who survived faced discrimination but forged tight-knit communities in Tacoma until the expulsion of 1885.",
     story: "During the 19th century, thousands of Chinese men and women embarked on perilous voyages to 'Gold Mountain' (America). Many sought fortune in the gold fields or on the railroads but faced discrimination and violence upon arrival. Those who settled in Tacoma built businesses along the waterfront. This vibrant community ended abruptly when city leaders expelled them in 1885. The marker honors their journey and contributions.",
     sources: [
@@ -212,8 +212,8 @@ export const markers: Marker[] = [
     id: "marker-012",
     name: "Welcome to the Tacoma Chinese Reconciliation Park",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.2750833,
-    lng: -122.4609333,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "The Tacoma Chinese Reconciliation Park honors the Chinese community expelled in 1885 and celebrates the city's commitment to healing and diversity.",
     story: "The Tacoma Chinese Reconciliation Park stands on the site where Chinese homes once stood. Created by the Chinese Reconciliation Project Foundation and the City of Tacoma, the park invites visitors to walk interpretive pathways that tell the story of the 1885 expulsion, acknowledge the harm done, and celebrate the resilience of Chinese Americans. This marker welcomes you to a space dedicated to healing and cultural understanding.",
     sources: [
@@ -229,8 +229,8 @@ export const markers: Marker[] = [
     id: "marker-013",
     name: "Journey to Reconciliation",
     address: "Old Town Dock area, Tacoma",
-    lat: 47.2746833,
-    lng: -122.4600833,
+    lat: 47.2768713,
+    lng: -122.4647428,
     summary: "Governor Gary Locke asked us to place ourselves in the shoes of the expelled Chinese. The Chinese Reconciliation Project Foundation was formed to heal this wound through education, art and dialogue.",
     story: "Governor Gary Locke asked us to imagine the fear and pain of Tacoma's Chinese residents as they were forced to march to the train station in 1885. In response, the Chinese Reconciliation Project Foundation formed to heal that trauma through education, art and dialogue. This marker reminds us that reconciliation is an ongoing journey—one that requires acknowledging past injustice and committing to a future where people of all backgrounds belong.",
     sources: [
@@ -246,8 +246,8 @@ export const markers: Marker[] = [
     id: "marker-014",
     name: "Dr. Maxine Mimms",
     address: "1210 6th Ave, Tacoma",
-    lat: 47.2564151,
-    lng: -122.454931,
+    lat: 47.2564046,
+    lng: -122.4545745,
     summary: "Dr. Maxine Mimms (1928–2024) founded Tacoma Evergreen, the only community owned Black college in the Pacific Northwest.",
     story: "Dr. Maxine Buie Mimms was a master architect of urban education who famously refused to use the word 'retirement,' preferring to call it 'reassignment.' Her journey began in Newport News, Virginia, fueled by her father's Marcus Garvey-inspired philosophy of self-actualization. After becoming Seattle's first contracted Black elementary teacher, she joined the faculty of Evergreen State College in 1972. Seeing the barriers facing Hilltop residents, she began holding classes at her kitchen table at 5:00 AM to accommodate working adults. This grassroots initiative blossomed into the Evergreen Tacoma campus.",
     sources: [
@@ -263,8 +263,8 @@ export const markers: Marker[] = [
     id: "marker-015",
     name: "The Evergreen State College – Tacoma Campus",
     address: "1210 6th Ave, Tacoma",
-    lat: 47.2564151,
-    lng: -122.454931,
+    lat: 47.2564046,
+    lng: -122.4545745,
     summary: "Emerging from community struggles for access to higher education in the 1970s and '80s, Evergreen-Tacoma is the only community-owned Black college in the Pacific Northwest.",
     story: "Evergreen-Tacoma represents a hard-won victory for educational equity. In the early 1970s, the Hilltop community was an 'educational desert,' lacking a four-year public institution. While the main campus in Olympia felt worlds away for working-class residents, local activists led by Dr. Maxine Mimms and Dr. Elizabeth Duncan Koontz fought to bring the classroom to the neighborhood. By 1982, the program transitioned from kitchen tables and storefronts into a formally accredited branch of the state college.",
     sources: [
@@ -282,8 +282,8 @@ export const markers: Marker[] = [
     // Note: Earnest S Brazil St is a short Hilltop street (renamed S 17th St segment).
     // Coordinates approximated to mid-block; no point-of-interest pin available.
     address: "Earnest S. Brazil St, Tacoma",
-    lat: 47.2520,
-    lng: -122.4497,
+    lat: 47.2507546,
+    lng: -122.4536382,
     summary: "Elmer 'E.S.' Brazil was a pioneering Tacoma businessman, civic activist, and a force for economic opportunity in the Black community during the mid-20th century.",
     story: "Elmer 'E.S.' Brazil was a pioneering Tacoma businessman, civic activist, and a force for economic opportunity in the Black community during the mid-20th century. His legacy helped shape the Hilltop neighborhood and the broader social fabric of Tacoma. A street in the Hilltop now bears his name.",
     sources: [],
@@ -296,8 +296,8 @@ export const markers: Marker[] = [
     id: "marker-017",
     name: "Shiloh Baptist Church",
     address: "1211 S I St, Tacoma",
-    lat: 47.250872,
-    lng: -122.4481676,
+    lat: 47.251027,
+    lng: -122.4481222,
     summary: "Shiloh Baptist Church, established in 1953, quickly became a spiritual and civic home for Black families in Tacoma.",
     story: "Founded in 1953, Shiloh Baptist Church quickly outgrew its humble beginnings, evolving into a central hub for social justice and community resilience. Under the long-standing leadership of Pastor Gregory Christopher and the late Pastor Dr. E.S. Brazill, the church has balanced spiritual guidance with radical community care. In 1999, it expanded its mission by establishing the Oasis of Hope Center, which provides youth mentoring, educational programs, and low-income housing.",
     sources: [
@@ -313,8 +313,8 @@ export const markers: Marker[] = [
     id: "marker-018",
     name: "USO Club #2",
     address: "713-715 Commerce St, Tacoma",
-    lat: 47.256681,
-    lng: -122.439958,
+    lat: 47.2567198,
+    lng: -122.4399661,
     summary: "The USO Club #2 was established in 1942 to serve Black military families during a time when the military was still segregated.",
     story: "Dedicated on September 4, 1942, USO Club #2 was more than just a recreational center; it was a 'home away from home' for nearly a million Black service members and war workers who were barred from Tacoma's white-only venues. One of its most legendary moments occurred in 1943 when Navy Cross recipient and Pearl Harbor hero Doris 'Dorie' Miller visited the club. Despite the era's segregation, the club became a vibrant hub of jazz and community.",
     sources: [
@@ -330,8 +330,8 @@ export const markers: Marker[] = [
     id: "marker-019",
     name: "Pythian Temple",
     address: "924 Broadway, Tacoma",
-    lat: 47.254336,
-    lng: -122.440599,
+    lat: 47.2543854,
+    lng: -122.4406929,
     summary: "The Pythian Temple was built in 1906 by the Knights of Pythias fraternal organization, designed by local architect Frederick Heath in the Beaux-Arts style.",
     story: "Designed by the same architect behind Stadium High School, the Pythian Temple is a 'hidden gem' of the Theater District. While the street-level facade is modest sandstone, the interior houses the magnificent Castle Hall—a soaring, two-story ceremonial chamber that remains virtually untouched since 1907. Complete with original Douglas fir paneling, ornate murals depicting the Greek legend of Damon and Pythias, and three massive art-glass skylights, the building serves as a rare time capsule of fraternal life in the early 20th century.",
     sources: [
@@ -347,8 +347,8 @@ export const markers: Marker[] = [
     id: "marker-020",
     name: "Elks Temple",
     address: "565 Broadway, Tacoma",
-    lat: 47.258048,
-    lng: -122.440909,
+    lat: 47.2580739,
+    lng: -122.4408877,
     summary: "The Elks Temple is a historic Beaux Arts building built in 1916 for the Fraternal Order of Elks. It now houses the McMenamins Elks Temple hotel, restaurant and event space.",
     story: "The Elks Temple was once the epicenter of Tacoma's social life, featuring a grand ballroom and a sprawling indoor pool. For decades, it stood as a symbol of the city's early 20th-century prosperity. However, as fraternal memberships declined, the building was vacated in the 1960s and fell into deep disrepair. After sitting derelict for over 40 years, it underwent a massive restoration by McMenamins and reopened in 2019.",
     sources: [
@@ -366,8 +366,8 @@ export const markers: Marker[] = [
     // Note: Point Defiance Park is ~760 acres. Pin set near park entrance / center;
     // no single canonical point exists for this marker.
     address: "5400 N Pearl St, Tacoma (Point Defiance Park)",
-    lat: 47.3078759,
-    lng: -122.5309605,
+    lat: 47.304934,
+    lng: -122.5213746,
     summary: "Point Defiance Park at the northern tip of Tacoma, where a 19th century military reservation stood before becoming one of the largest and oldest urban parks in the Pacific Northwest.",
     story: "The park owes its name to Captain Charles Wilkes, who in 1841 noted that the high bluffs could 'bid defiance to any attack' if fortified. While President Andrew Johnson set the land aside as a military reserve in 1866, no cannons were ever installed. Instead, Tacoma's civic leaders lobbied Congress to transform the wild peninsula into a public refuge. In 1888, President Grover Cleveland authorized its use as a park, and by 1905, President Theodore Roosevelt signed the land over to the city entirely.",
     sources: [
@@ -385,8 +385,8 @@ export const markers: Marker[] = [
     // Note: Marker references the historical Black community along Division St;
     // pin placed at S Division Ave & MLK Jr Way intersection.
     address: "S Division Ave & MLK Jr Way, Tacoma",
-    lat: 47.2610079,
-    lng: -122.4536839,
+    lat: 47.2639812,
+    lng: -122.4644583,
     summary: "In the 20th century, many African American families settled in the Hilltop neighborhood, especially after World War II, when they came to work in the shipyards and military bases.",
     story: "During World War II, Tacoma's population surged as thousands of African Americans migrated from the South to work at the Seattle-Tacoma Shipbuilding Corporation and nearby Fort Lewis. Despite facing systemic housing discrimination and 'Jim Crow' conditions in the shipyards, Black families established a vibrant community in the Hilltop neighborhood, centered around Division Street.",
     sources: [
@@ -404,8 +404,8 @@ export const markers: Marker[] = [
     // Note: Riley's specific Tacoma residence is undocumented in available sources;
     // pin placed in the Hilltop neighborhood where he was politically active.
     address: "Hilltop, Tacoma",
-    lat: 47.2509871,
-    lng: -122.4605348,
+    lat: 47.2452149,
+    lng: -122.4531393,
     summary: "George Putnam Riley (1833–1905) was a Black abolitionist, writer, and political leader who migrated to the Pacific Northwest after the Civil War.",
     story: "George Putnam Riley was a formidable orator and a pioneer of Black civil rights in the West. After moving to Tacoma, he became a central figure in the city's early political life, co-founding the Workingmen's Joint Stock Association and advocating for enfranchisement. His legacy serves as a reminder of the influential Black leaders who helped build the civic foundations of the Pacific Northwest.",
     sources: [
@@ -421,8 +421,8 @@ export const markers: Marker[] = [
     id: "marker-024",
     name: "Joye Hardiman Park",
     address: "1505 S 5th St, Tacoma",
-    lat: 47.257633,
-    lng: -122.459096,
+    lat: 47.2577333,
+    lng: -122.4592247,
     summary: "Named for Dr. Joye Hardiman, a longtime director of Evergreen-Tacoma. This site honors her pioneering contributions to education and community empowerment.",
     story: "Dr. Joye Hardiman served as a longtime director of Evergreen-Tacoma and dedicated her career to community education. The park named in her honor stands as a testament to her pioneering contributions to education and community empowerment in the Hilltop neighborhood.",
     sources: [
@@ -438,8 +438,8 @@ export const markers: Marker[] = [
     id: "marker-025",
     name: "Horace Lawhorn's House",
     address: "825 South State Street, Tacoma, WA",
-    lat: 47.2527572,
-    lng: -122.4653437,
+    lat: 47.2527574,
+    lng: -122.4653593,
     summary: "Horace Lawhorn was a longshoreman, labor activist, and respected community leader who fought for racial equity on Tacoma's docks and in its labor unions.",
     story: "Arriving in 1890, Horace Lawhorn initially worked as a police wagon driver before becoming the city's first Black police officer in 1899, a role that led the department to adopt a permanent policy of racial inclusion. Beyond the badge, Lawhorn was a key figure in the labor movement and real estate, physically constructing his family home in the Hilltop neighborhood.",
     sources: [
@@ -455,8 +455,8 @@ export const markers: Marker[] = [
     id: "marker-026",
     name: "Caballeros Club",
     address: "1516 S 28th St, Tacoma",
-    lat: 47.2349533,
-    lng: -122.4535541,
+    lat: 47.2349394,
+    lng: -122.4535576,
     summary: "Founded in 1957, the Caballeros Club was one of Tacoma's earliest Black-owned social organizations, offering a safe and welcoming space for Black residents to gather.",
     story: "At a time when many public and private venues in Tacoma remained informally segregated, the Caballeros Club emerged as a premier destination for Black social life. Founded in 1957, the club became Tacoma's oldest privately owned Black social club, a living testament to community resilience and self-determination.",
     sources: [
@@ -472,8 +472,8 @@ export const markers: Marker[] = [
     id: "marker-027",
     name: "Dr. Nettie Craig Asberry's House",
     address: "1219 S 13th St, Tacoma",
-    lat: 47.249870,
-    lng: -122.453893,
+    lat: 47.2498451,
+    lng: -122.4539241,
     summary: "Dr. Nettie Craig Asberry (1865–1968) was a classically trained musician, educator, and one of Tacoma's most influential civil rights leaders.",
     story: "In 1913, Dr. Nettie Asberry founded the Tacoma NAACP, one of the earliest branches in the nation, and hosted organizing meetings in her home. She championed women's suffrage, fought discrimination in schools, and nurtured the city's Black cultural life through her piano instruction and leadership in civic groups. Her Hilltop residence remains the cornerstone of Tacoma's civil rights legacy.",
     sources: [
@@ -489,8 +489,8 @@ export const markers: Marker[] = [
     id: "marker-028",
     name: "Bethlehem Baptist Church",
     address: "4818 E Portland Ave, Tacoma",
-    lat: 47.212726,
-    lng: -122.409152,
+    lat: 47.2131439,
+    lng: -122.4092153,
     summary: "Founded in 1890, Bethlehem Baptist Church is Tacoma's oldest Black Baptist congregation and one of the city's earliest Black institutions.",
     story: "Originally gathering in the home of its founders just one year after Washington achieved statehood, Bethlehem Baptist Church served as a vital anchor for Black families arriving in the Pacific Northwest. Under the early leadership of Rev. J.B. Beckly, the church quickly grew from a small prayer circle into a spiritual and social headquarters.",
     sources: [
