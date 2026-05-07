@@ -10,6 +10,7 @@ import ProgressPage from "@/pages/ProgressPage";
 import RequestPage from "@/pages/RequestPage";
 import SettingsPage from "@/pages/SettingsPage";
 import NotFound from "@/pages/NotFound";
+import SplashScreen from "@/components/SplashScreen";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <SplashScreen />
       <BrowserRouter>
         <div className="mx-auto min-h-screen max-w-lg">
           <Routes>
