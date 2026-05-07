@@ -6,7 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 // import StreetView from "@/components/StreetView"; // temporarily disabled
-import { getStaticMapUrl } from "@/lib/staticMap";
+import { getStreetViewImageUrl } from "@/lib/streetViewImage";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
@@ -52,8 +52,8 @@ const MarkerDetailPage = () => {
       {/* Hero */}
       <div className="relative h-60 bg-surface-variant">
         <img
-          src={getStaticMapUrl(marker.lat, marker.lng, { size: 600, zoom: 16 })}
-          alt={`Map of ${marker.name}`}
+          src={getStreetViewImageUrl(marker, { width: 800, height: 480 })}
+          alt={`Street View of ${marker.name}`}
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/50 via-transparent to-foreground/20" />
