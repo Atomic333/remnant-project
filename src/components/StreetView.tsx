@@ -11,10 +11,11 @@ interface StreetViewProps {
   panoId?: string;
   heading?: number;
   pitch?: number;
+  autoActivate?: boolean;
 }
 
-const StreetView = ({ lat, lng, name, panoId, heading, pitch }: StreetViewProps) => {
-  const [activated, setActivated] = useState(false);
+const StreetView = ({ lat, lng, name, panoId, heading, pitch, autoActivate = false }: StreetViewProps) => {
+  const [activated, setActivated] = useState(autoActivate);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     preventGoogleFontsLoading: true,
@@ -91,7 +92,7 @@ const StreetView = ({ lat, lng, name, panoId, heading, pitch }: StreetViewProps)
   }
 
   return (
-    <div className="relative h-56 w-full overflow-hidden rounded-xl elevation-1 bg-surface-variant">
+    <div className={`relative w-full overflow-hidden bg-surface-variant ${autoActivate ? "h-full" : "h-56 rounded-xl elevation-1"}`}>
       <div ref={containerRef} className="h-full w-full" />
       <span className="pointer-events-none absolute bottom-2 left-2 rounded-md bg-background/80 px-2 py-1 text-[10px] font-medium text-foreground backdrop-blur-sm">
         {name}

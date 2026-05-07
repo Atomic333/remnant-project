@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X } from "lucide-react";
 import { markers } from "@/data/markers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
+import { getStreetViewImageUrl } from "@/lib/streetViewImage";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const MarkerDetailPage = () => {
   const { isVisited, toggle: toggleVisited } = useVisited();
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
+  const [showStreetView, setShowStreetView] = useState(false);
 
   if (!marker) {
     return (
@@ -48,23 +50,59 @@ const MarkerDetailPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Hero - Interactive Street View */}
-      <div className="relative">
-        <StreetView
-          lat={marker.lat}
-          lng={marker.lng}
-          name={marker.name}
-          panoId={marker.streetView?.panoId}
-          heading={marker.streetView?.heading}
-          pitch={marker.streetView?.pitch}
+      {/* Hero - Static Street View image with overlay button */}
+      <div className="relative h-60 bg-surface-variant">
+        <img
+          src={getStreetViewImageUrl(marker, { width: 800, height: 480 })}
+          alt={`Street View of ${marker.name}`}
+          className="h-full w-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-foreground/30" />
         <button
           onClick={() => navigate(-1)}
           className="absolute left-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-card/80 backdrop-blur-sm"
         >
           <ArrowLeft className="h-5 w-5 text-foreground" />
         </button>
+        <button
+          onClick={() => setShowStreetView(true)}
+          className="absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full bg-card/90 px-4 py-2 font-display text-xs font-medium text-foreground elevation-1 backdrop-blur-sm active:scale-95 transition-transform"
+        >
+          <Eye className="h-4 w-4 text-primary" />
+          Show Street View
+        </button>
+        {marker.streetView?.copyright && (
+          <span className="absolute bottom-2 left-2 rounded-md bg-background/70 px-2 py-0.5 text-[10px] text-foreground backdrop-blur-sm">
+            {marker.streetView.copyright}
+          </span>
+        )}
       </div>
+
+      {/* Street View modal */}
+      {showStreetView && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-background">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+            <span className="font-display text-sm font-medium text-foreground">Street View</span>
+            <button
+              onClick={() => setShowStreetView(false)}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-variant"
+            >
+              <X className="h-5 w-5 text-foreground" />
+            </button>
+          </div>
+          <div className="flex-1">
+            <StreetView
+              lat={marker.lat}
+              lng={marker.lng}
+              name={marker.name}
+              panoId={marker.streetView?.panoId}
+              heading={marker.streetView?.heading}
+              pitch={marker.streetView?.pitch}
+              autoActivate
+            />
+          </div>
+        </div>
+      )}
 
       <div className="px-5 pt-4">
         <div className="mb-3">
