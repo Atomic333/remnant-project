@@ -98,6 +98,7 @@ const MarkerDetailPage = () => {
               panoId={marker.streetView?.panoId}
               heading={marker.streetView?.heading}
               pitch={marker.streetView?.pitch}
+              autoActivate
             />
           </div>
         </div>
