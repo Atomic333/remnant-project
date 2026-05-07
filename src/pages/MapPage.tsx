@@ -401,6 +401,23 @@ const MapPage = () => {
   const onMarkerClick = useCallback((m: Marker) => {
     setSelectedMarker(m);
     setShowList(false);
+    setActiveSheet(null);
+  }, []);
+
+  const openList = useCallback((next: boolean) => {
+    setShowList(next);
+    if (next) {
+      setActiveSheet(null);
+      setSelectedMarker(null);
+    }
+  }, []);
+
+  const openSheet = useCallback((sheet: Sheet) => {
+    setActiveSheet(sheet);
+    if (sheet) {
+      setShowList(false);
+      setSelectedMarker(null);
+    }
   }, []);
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
@@ -428,7 +445,7 @@ const MapPage = () => {
             </button>
           )}
           <button
-            onClick={() => setShowList(!showList)}
+            onClick={() => openList(!showList)}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground"
           >
             <List className="h-4 w-4" />
@@ -460,7 +477,7 @@ const MapPage = () => {
       {/* Floating action buttons — Scan + Locate */}
       <div className="absolute top-[148px] right-4 z-20 flex flex-col gap-2">
         <button
-          onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
+          onClick={() => openSheet(activeSheet === "scan" ? null : "scan")}
           className="flex h-11 items-center gap-2 rounded-full bg-background px-4 elevation-2 transition-all active:scale-95"
         >
           <QrCode className="h-5 w-5 text-primary" />
