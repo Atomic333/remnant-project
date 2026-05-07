@@ -477,7 +477,7 @@ const MapPage = () => {
       {/* Floating action buttons — Scan + Locate */}
       <div className="absolute top-[148px] right-4 z-20 flex flex-col gap-2">
         <button
-          onClick={() => setActiveSheet(activeSheet === "scan" ? null : "scan")}
+          onClick={() => openSheet(activeSheet === "scan" ? null : "scan")}
           className="flex h-11 items-center gap-2 rounded-full bg-background px-4 elevation-2 transition-all active:scale-95"
         >
           <QrCode className="h-5 w-5 text-primary" />
