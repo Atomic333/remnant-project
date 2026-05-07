@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X } from "lucide-react";
 import { markers } from "@/data/markers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
+import { getStreetViewImageUrl } from "@/lib/streetViewImage";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
