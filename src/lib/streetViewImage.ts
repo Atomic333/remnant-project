@@ -17,7 +17,6 @@ export function getStreetViewImageUrl(
     size: `${width}x${height}`,
     fov: String(fov),
     key: GOOGLE_MAPS_STATIC_KEY,
-    return_error_code: "true",
   });
 
   if (marker.streetView?.panoId) {
