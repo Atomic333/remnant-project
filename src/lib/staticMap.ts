@@ -1,4 +1,5 @@
-const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
+import { GOOGLE_MAPS_STATIC_KEY } from "./googleMapsKey";
+
 const BASE = "https://maps.googleapis.com/maps/api/staticmap";
 
 interface StaticMapOpts {
@@ -22,7 +23,7 @@ export function getStaticMapUrl(
     scale: String(scale),
     maptype: "roadmap",
     markers: `color:0x0d9488|${lat},${lng}`,
-    key: GOOGLE_MAPS_API_KEY,
+    key: GOOGLE_MAPS_STATIC_KEY,
   });
   return `${BASE}?${params.toString()}`;
 }
