@@ -533,7 +533,7 @@ const MapPage = () => {
         <div
           className="fixed inset-x-0 bottom-0 z-[500] flex flex-col overflow-hidden rounded-t-2xl bg-card elevation-3 animate-slide-up"
           style={{
-            maxHeight: "calc(70dvh + env(safe-area-inset-bottom, 0px))",
+            height: "calc(70dvh + env(safe-area-inset-bottom, 0px))",
           }}
         >
           {/* Header — sticky */}
