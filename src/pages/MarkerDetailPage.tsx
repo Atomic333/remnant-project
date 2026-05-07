@@ -6,7 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
-import { getStreetViewImageUrl } from "@/lib/streetViewImage";
+import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
   const { id } = useParams();
@@ -50,11 +50,11 @@ const MarkerDetailPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      {/* Hero - Static Street View image with overlay button */}
+      {/* Hero - Marker image with overlay button */}
       <div className="relative h-60 bg-surface-variant">
         <img
-          src={getStreetViewImageUrl(marker, { width: 800, height: 480 })}
-          alt={`Street View of ${marker.name}`}
+          src={getMarkerImage(marker.id, marker.image)}
+          alt={marker.name}
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-transparent to-foreground/30" />
@@ -71,11 +71,6 @@ const MarkerDetailPage = () => {
           <Eye className="h-4 w-4 text-primary" />
           Show Street View
         </button>
-        {marker.streetView?.copyright && (
-          <span className="absolute bottom-2 left-2 rounded-md bg-background/70 px-2 py-0.5 text-[10px] text-foreground backdrop-blur-sm">
-            {marker.streetView.copyright}
-          </span>
-        )}
       </div>
 
       {/* Street View modal */}
