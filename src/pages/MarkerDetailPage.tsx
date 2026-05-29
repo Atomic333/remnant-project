@@ -190,7 +190,7 @@ const MarkerDetailPage = () => {
           </span>
           <div className="rounded-xl bg-white p-3 elevation-1">
             <QRCodeSVG
-              value={marker.qrUrl || `https://remnant-project.lovable.app/marker/${marker.id}`}
+              value={marker.qrUrl || `https://markerquest.ai/marker/${marker.id}`}
               size={128}
               bgColor="#ffffff"
               fgColor="#1a1a1a"
