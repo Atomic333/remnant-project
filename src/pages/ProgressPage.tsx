@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
 import MarkerCard from "@/components/MarkerCard";
 import { useVisited } from "@/hooks/useVisited";

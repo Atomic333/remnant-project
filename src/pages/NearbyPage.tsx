@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { MapPin, LocateFixed } from "lucide-react";
-import { markers, categories } from "@/data/markers";
+import { categories } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";

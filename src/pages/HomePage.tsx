@@ -1,6 +1,6 @@
 import { Compass, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import tacomaHero from "@/assets/tacoma-hero.jpg";
 import logo from "@/assets/logo.png";
 import { useVisited } from "@/hooks/useVisited";
