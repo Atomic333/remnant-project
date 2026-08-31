@@ -9,6 +9,7 @@ import StreetView from "@/components/StreetView";
 import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
+  const markers = useAllMarkers();
   const { id } = useParams();
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);

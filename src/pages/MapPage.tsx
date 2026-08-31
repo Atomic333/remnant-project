@@ -33,6 +33,7 @@ const mapOptions: google.maps.MapOptions = {
 const progressTabs = ["All", "Visited", "To See"];
 
 const ProgressPanel = () => {
+  const markers = useAllMarkers();
   const { visited: visitedSet } = useVisited();
   const [activeTab, setActiveTab] = useState("All");
   const navigate = useNavigate();
@@ -103,6 +104,7 @@ const isIOS = typeof navigator !== "undefined" &&
     (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPanel = ({ onClose }: { onClose: () => void }) => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
@@ -360,6 +362,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 type Sheet = "scan" | "progress" | null;
 
 const MapPage = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isVisited } = useVisited();

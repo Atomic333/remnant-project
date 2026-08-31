@@ -27,6 +27,7 @@ function formatDistance(miles: number): string {
 }
 
 const NearbyPage = () => {
+  const markers = useAllMarkers();
   const [activeFilter, setActiveFilter] = useState("All");
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
   const [locationDenied, setLocationDenied] = useState(false);

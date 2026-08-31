@@ -7,6 +7,7 @@ import { useVisited } from "@/hooks/useVisited";
 const tabs = ["All", "Visited", "To See"];
 
 const ProgressPage = () => {
+  const markers = useAllMarkers();
   const [activeTab, setActiveTab] = useState("All");
   const { visited: visitedSet } = useVisited();
 

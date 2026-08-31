@@ -18,6 +18,7 @@ const links = [
 ];
 
 const HamburgerMenu = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);

@@ -13,6 +13,7 @@ const isIOS = typeof navigator !== "undefined" &&
     (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPage = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);

@@ -17,6 +17,7 @@ const cities = [
 
 
 const HomePage = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const { visited } = useVisited();
   const visitedCount = visited.size;
