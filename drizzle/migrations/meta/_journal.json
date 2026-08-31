@@ -8,6 +8,13 @@
       "when": 1788217502578,
       "tag": "0000_admin_markers_and_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788217531078,
+      "tag": "0001_marker_photos_storage_policies",
+      "breakpoints": true
     }
   ]
 }
