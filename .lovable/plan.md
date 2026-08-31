@@ -1,39 +1,35 @@
+# Admin Flow for Adding Marker Sites
 
+Today the 28 markers are hardcoded in `src/data/markers.ts`, so every new site needs a code change. This adds an in-app admin page where you create markers through a form, with an AI-drafted summary/story you can edit, optional photo upload, and automatic Street View / static map fallback when no photo is provided.
 
-## Problem
+The existing 28 markers stay in code. New markers live in the database and are merged with them at runtime, so Home, Map, Nearby, marker detail, and QR routing all pick them up with no further work.
 
-All 28 printed QR codes will point to the **wrong domain** (`remnant-pathfinder.lovable.app`). Your actual published site is `remnant-project.lovable.app`. This means:
+## What you get
 
-- Scanning with a phone camera (Safari/Chrome) opens a broken link
-- The in-app scanner happens to work because it only checks the `/marker/{id}` path, but that only helps users already in the app
-- The fallback URL uses yet another nonexistent domain (`markerquest.app`)
+1. **Sign-in + admin access**
+   - Email/password sign-in plus Google sign-in on a new `/auth` page.
+   - Admin rights are stored server-side in a roles table (not on the user record), so they can't be faked from the browser.
+   - `/admin` is only reachable by an admin; visitors never see it. The first admin is granted directly in the database.
 
-## Plan
+2. **Add / edit marker form (`/admin`)**
+   - Fields: name, address, category, latitude, longitude, summary, story, sources (name + URL, repeatable), optional Street View pano ID + heading.
+   - **"Draft with AI"** button: given name + address, AI writes a suggested summary and story; both land in editable text fields so you always have the final say. Nothing is saved until you press Save.
+   - **Photo**: optional upload. If you skip it, the marker hero and list thumbnail fall back to Street View (when a pano ID exists) and then to a static map of the coordinates.
+   - List of existing database markers with edit and delete.
+   - QR URL is generated automatically as `https://markerquest.ai/marker/{id}` and the marker detail page keeps rendering its scannable QR code.
 
-### Step 1 — Update all 28 QR URLs to the correct published domain
+3. **Promote a user request (optional shortcut)**
+   - From the admin list you can open a submitted request from the Request-a-Marker form and prefill the add-marker form with its name, address, and notes.
 
-In `src/data/mockData.ts`, replace every instance of `remnant-pathfinder.lovable.app` with `remnant-project.lovable.app`.
+## Technical notes
 
-### Step 2 — Fix the fallback URL in MarkerDetailPage
+- **Database**: new `markers` table (id, slug, name, address, lat, lng, category, summary, story, sources JSONB, image_path, street_view JSONB, published flag, timestamps). Public read of published rows; insert/update/delete restricted to admins via a `has_role` security-definer function. Grants issued in the same migration. New `user_roles` table + `app_role` enum, and a `profiles` table for the signed-in user.
+- **Storage**: `marker-photos` bucket, public read, admin-only writes.
+- **AI drafting**: new edge function `draft-marker` calling the Lovable AI Gateway, admin-JWT-validated, returning `{ summary, story }`. Input validated with Zod.
+- **Data access**: `src/data/markers.ts` keeps its array and exports it as the static source; a new `useMarkers()` hook (react-query) fetches database markers, maps them to the existing `Marker` shape, and returns the merged list. Pages that read `markers` directly switch to the hook.
+- **Image resolution**: `src/lib/markerImages.ts` gains a database branch — uploaded photo URL, else `streetViewImage`, else `staticMap`.
+- **Reads stay cheap**: no Geocoding/Places calls; you enter coordinates manually as today.
 
-In `src/pages/MarkerDetailPage.tsx`, change the fallback from `https://markerquest.app/m/tacoma_wa/${marker.id}` to `https://remnant-project.lovable.app/marker/${marker.id}`.
+## Out of scope
 
-### Step 3 — Make the scanner domain-agnostic
-
-The scanner in `ScanPage.tsx` already extracts marker IDs from any URL path containing `/marker/`. No changes needed here — it will work regardless of domain.
-
----
-
-## Important consideration for permanence
-
-Since you are printing physical QR codes, the domain baked into them can never change. If you ever rename or move your Lovable project, those printed codes will break. Two options to future-proof:
-
-- **Option A (recommended)**: Buy a custom domain (e.g., `remnantproject.org`) and connect it in Project Settings → Domains. Then use that domain in all QR codes. You own the domain forever and can point it anywhere.
-- **Option B**: Use the current `remnant-project.lovable.app` domain and accept that it is tied to this Lovable project permanently.
-
-## Technical details
-
-- **Files changed**: `src/data/mockData.ts` (28 URL replacements), `src/pages/MarkerDetailPage.tsx` (1 fallback URL)
-- **No scanner changes needed** — it already parses `/marker/{id}` from any domain
-- **QR codes auto-update** in the app since they are generated from the `qrUrl` field at render time
-
+- Bulk CSV import, marker reordering, desktop-specific admin layout, and public user editing.
