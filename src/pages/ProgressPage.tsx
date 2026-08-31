@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
 import MarkerCard from "@/components/MarkerCard";
 import { useVisited } from "@/hooks/useVisited";
@@ -7,6 +7,7 @@ import { useVisited } from "@/hooks/useVisited";
 const tabs = ["All", "Visited", "To See"];
 
 const ProgressPage = () => {
+  const markers = useAllMarkers();
   const [activeTab, setActiveTab] = useState("All");
   const { visited: visitedSet } = useVisited();
 

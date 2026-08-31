@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X } from "lucide-react";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import MarkerChat from "@/components/MarkerChat";
@@ -9,6 +9,7 @@ import StreetView from "@/components/StreetView";
 import { getMarkerImage } from "@/lib/markerImages";
 
 const MarkerDetailPage = () => {
+  const markers = useAllMarkers();
   const { id } = useParams();
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);

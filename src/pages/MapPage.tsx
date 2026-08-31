@@ -2,7 +2,8 @@ import { useState, useCallback, useEffect, useRef } from "react";
 
 import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { markers, categories } from "@/data/markers";
+import { categories } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import type { Marker } from "@/data/markers";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
@@ -32,6 +33,7 @@ const mapOptions: google.maps.MapOptions = {
 const progressTabs = ["All", "Visited", "To See"];
 
 const ProgressPanel = () => {
+  const markers = useAllMarkers();
   const { visited: visitedSet } = useVisited();
   const [activeTab, setActiveTab] = useState("All");
   const navigate = useNavigate();
@@ -102,6 +104,7 @@ const isIOS = typeof navigator !== "undefined" &&
     (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPanel = ({ onClose }: { onClose: () => void }) => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
@@ -359,6 +362,7 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 type Sheet = "scan" | "progress" | null;
 
 const MapPage = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isVisited } = useVisited();

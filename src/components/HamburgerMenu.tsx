@@ -8,7 +8,7 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { useVisited } from "@/hooks/useVisited";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 
 const links = [
   { icon: Home, label: "Home", path: "/" },
@@ -18,6 +18,7 @@ const links = [
 ];
 
 const HamburgerMenu = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const location = useLocation();
   const [open, setOpen] = useState(false);

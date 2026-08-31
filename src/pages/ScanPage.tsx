@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { QrCode, CheckCircle, CameraOff, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { markers } from "@/data/markers";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
 
@@ -13,6 +13,7 @@ const isIOS = typeof navigator !== "undefined" &&
     (navigator.platform === "MacIntel" && (navigator as any).maxTouchPoints > 1));
 
 const ScanPage = () => {
+  const markers = useAllMarkers();
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);

@@ -98,7 +98,7 @@ supabase/
 
 ## 5. Data Model: Markers
 
-All marker data is **hardcoded** in `src/data/markers.ts` as a single `markers: Marker[]`. There is **no database table** for markers — this is deliberate to keep Google API costs at $0 (no Geocoding / Places calls).
+The original 28 markers are **hardcoded** in `src/data/markers.ts` as a single `markers: Marker[]`. Additional markers live in the `markers` table in Lovable Cloud and are added through the in-app admin screen at `/admin`. The `useAllMarkers()` hook (`src/hooks/useAllMarkers.ts`) merges both sources, so every screen sees one list. No runtime Geocoding / Places calls are made — coordinates are always entered by hand.
 
 Each marker has:
 
@@ -209,7 +209,9 @@ The app expects `.env` to be auto-populated by Lovable Cloud (`VITE_SUPABASE_URL
 
 ## 14. Common Tasks — Quick Recipes
 
-**Add a new marker:** §5 above.
+**Add a new marker (recommended):** sign in at `/auth`, then use `/admin` — name, address, category, coordinates, optional AI-drafted summary/story, optional photo upload, optional Street View pano ID. The first account that signs up automatically becomes the admin; later accounts get the plain `user` role and admins can grant roles in the `user_roles` table.
+
+**Add a new marker in code:** §5 above.
 
 **Change the favicon:** Replace `public/favicon.png` (square, transparent PNG, ideally 512×512). Referenced from `index.html` via `<link rel="icon">` and `<link rel="apple-touch-icon">`.
 
