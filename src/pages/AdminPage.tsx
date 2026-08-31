@@ -128,7 +128,7 @@ const AdminPage = () => {
     }
     const sv = (data.street_view ?? {}) as { panoId?: string; heading?: number };
     const sources = Array.isArray(data.sources)
-      ? (data.sources as SourceInput[]).map((s) => ({ name: s?.name ?? "", url: s?.url ?? "" }))
+      ? (data.sources as unknown as SourceInput[]).map((s) => ({ name: s?.name ?? "", url: s?.url ?? "" }))
       : [];
     setForm({
       id: data.id,
