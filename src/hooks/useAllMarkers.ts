@@ -10,7 +10,7 @@ interface DbSource {
 }
 
 /** Map a database row into the Marker shape used across the app. */
-function toMarker(row: Record<string, unknown>): Marker {
+async function toMarker(row: Record<string, unknown>): Promise<Marker> {
   const slug = String(row.slug);
   const lat = Number(row.lat);
   const lng = Number(row.lng);
@@ -38,12 +38,16 @@ function toMarker(row: Record<string, unknown>): Marker {
 
   const imagePath = row.image_path ? String(row.image_path) : "";
   if (imagePath) {
-    const { data } = supabase.storage.from("marker-photos").getPublicUrl(imagePath);
-    base.image = data.publicUrl;
-  } else if (base.streetView?.panoId) {
-    base.image = getStreetViewImageUrl(base);
-  } else {
-    base.image = getStaticMapUrl(lat, lng, { size: 600, zoom: 17 });
+    const { data } = await supabase.storage
+      .from("marker-photos")
+      .createSignedUrl(imagePath, 60 * 60 * 24 * 7);
+    if (data?.signedUrl) base.image = data.signedUrl;
+  }
+
+  if (!base.image) {
+    base.image = base.streetView?.panoId
+      ? getStreetViewImageUrl(base)
+      : getStaticMapUrl(lat, lng, { size: 600, zoom: 17 });
   }
 
   return base;
@@ -58,11 +62,12 @@ export function useDbMarkers() {
         .select("*")
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return (data ?? []).map((row) => toMarker(row as Record<string, unknown>));
+      return Promise.all((data ?? []).map((row) => toMarker(row as Record<string, unknown>)));
     },
     staleTime: 5 * 60 * 1000,
   });
 }
+
 
 /** The 28 curated markers in code, merged with markers added through /admin. */
 export function useAllMarkers(): Marker[] {
