@@ -38,8 +38,9 @@ const App = () => (
             {/* Account required */}
             <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
             <Route path="/map" element={<RequireAuth><MapPage /></RequireAuth>} />
-            <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
+            <Route path="/dashboard" element={<RequireAuth allowGuest={false}><DashboardPage /></RequireAuth>} />
             <Route path="/progress" element={<RequireAuth><ProgressPage /></RequireAuth>} />
+
             <Route path="/request" element={<RequireAuth><RequestPage /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
