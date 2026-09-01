@@ -34,6 +34,8 @@ interface FormState {
   panoId: string;
   heading: string;
   published: boolean;
+  artifactName: string;
+  artifactAttribution: string;
 }
 
 const emptyForm: FormState = {
@@ -53,6 +55,8 @@ const emptyForm: FormState = {
   panoId: "",
   heading: "",
   published: true,
+  artifactName: "",
+  artifactAttribution: "",
 };
 
 type SourceFilter = "all" | "edited" | "original" | "added";
@@ -628,6 +632,35 @@ const AdminPage = () => {
             {existingImagePath && !photo && (
               <p className="mt-1 text-[11px] text-on-surface-variant">Current photo: {existingImagePath}</p>
             )}
+          </div>
+
+          <div className="rounded-lg border border-border p-3">
+            <label className="text-xs font-medium text-on-surface-variant">
+              3D AR artifact (.glb — optional, overrides the curated artifact)
+            </label>
+            <input
+              type="file"
+              accept=".glb,model/gltf-binary"
+              onChange={(e) => setModelFile(e.target.files?.[0] ?? null)}
+              className="mt-1 w-full text-xs text-on-surface-variant"
+            />
+            {existingModelPath && !modelFile && (
+              <p className="mt-1 text-[11px] text-on-surface-variant">
+                Current model: {existingModelPath}
+              </p>
+            )}
+            <input
+              value={form.artifactName}
+              onChange={(e) => set("artifactName", e.target.value)}
+              placeholder="Artifact name"
+              className={inputClass}
+            />
+            <input
+              value={form.artifactAttribution}
+              onChange={(e) => set("artifactAttribution", e.target.value)}
+              placeholder="Model credit (optional)"
+              className={inputClass}
+            />
           </div>
 
           <div className="flex gap-3">
