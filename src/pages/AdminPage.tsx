@@ -302,12 +302,13 @@ const AdminPage = () => {
         ? { panoId: form.panoId.trim(), heading: Number.isFinite(heading) ? heading : 0 }
         : null,
       published: form.published,
+      rarity: form.rarity,
       created_by: user?.id ?? null,
     };
 
     const { error } = form.id
       ? await supabase.from("markers").update(payload).eq("id", form.id)
-      : await supabase.from("markers").insert(payload);
+      : await supabase.from("markers").upsert(payload, { onConflict: "slug" });
 
     setSaving(false);
 
@@ -317,8 +318,11 @@ const AdminPage = () => {
     }
 
     queryClient.invalidateQueries({ queryKey: ["db-markers"] });
-    toast({ title: form.id ? "Marker updated." : "Marker added." });
+    toast({
+      title: form.id || form.lockSlug ? "Marker updated." : "Marker added.",
+    });
     resetForm();
+
   };
 
   if (loading) {
