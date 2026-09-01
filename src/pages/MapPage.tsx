@@ -35,7 +35,7 @@ const mapOptions: google.maps.MapOptions = {
 const progressTabs = ["All", "Visited", "To See"];
 
 const ProgressPanel = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
   const { visited: visitedSet } = useVisited();
   const [activeTab, setActiveTab] = useState("All");
   const navigate = useNavigate();
