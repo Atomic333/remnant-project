@@ -310,7 +310,7 @@ const RewardsPage = () => {
                       : "border-border bg-surface-variant/40 text-on-surface-variant"
                   }`}
                 >
-                  <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-current/10">
+                  <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-quest-gold/10">
                     {unlocked ? (
                       <Sparkles className="h-5 w-5" />
                     ) : (
