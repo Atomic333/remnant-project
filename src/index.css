@@ -94,6 +94,21 @@
     --surface-variant: 180 10% 14%;
     --on-surface-variant: 180 8% 60%;
   }
+
+  /* === QUEST economy tokens (shared by both schemes) === */
+  :root, .dark {
+    --quest-navy: 224 64% 8%;
+    --quest-navy-soft: 224 45% 14%;
+    --quest-purple: 263 85% 62%;
+    --quest-cyan: 187 92% 52%;
+    --quest-gold: 43 96% 56%;
+    --quest-gold-deep: 33 92% 46%;
+
+    --artifact-glow: 0 0 0 1px hsl(var(--quest-gold) / 0.35), 0 0 24px hsl(var(--quest-gold) / 0.35);
+    --artifact-glow-strong: 0 0 0 1px hsl(var(--quest-gold) / 0.6), 0 0 60px hsl(var(--quest-gold) / 0.55);
+    --relic-gradient: linear-gradient(135deg, hsl(var(--quest-navy)) 0%, hsl(var(--quest-navy-soft)) 55%, hsl(263 55% 22%) 100%);
+    --gold-sheen: linear-gradient(100deg, hsl(var(--quest-gold-deep)) 0%, hsl(var(--quest-gold)) 40%, hsl(48 100% 82%) 50%, hsl(var(--quest-gold)) 60%, hsl(var(--quest-gold-deep)) 100%);
+  }
 }
 
 @layer base {
