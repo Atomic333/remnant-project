@@ -232,6 +232,20 @@ const ProfilePage = () => {
           </div>
         </div>
 
+        {/* Dashboard link */}
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="flex w-full items-center gap-3 rounded-xl bg-card p-4 text-left elevation-1"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-secondary">
+            <Trophy className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1">
+            <p className="font-display text-sm font-medium text-card-foreground">View my dashboard</p>
+            <p className="text-xs text-on-surface-variant">Progress by city and share your history</p>
+          </div>
+        </button>
+
         {/* Visited sites */}
         <div className="rounded-xl bg-card p-4 elevation-1">
           <div className="flex items-baseline justify-between">
