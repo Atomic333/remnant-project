@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Mail, Bell, Megaphone, LogOut, Camera, Shield, MapPin } from "lucide-react";
+import { Loader2, Mail, Bell, Megaphone, LogOut, Camera, Shield, MapPin, Trophy } from "lucide-react";
 import { z } from "zod";
 import PageHeader from "@/components/PageHeader";
 import BottomNav from "@/components/BottomNav";
