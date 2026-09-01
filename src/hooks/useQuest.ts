@@ -205,6 +205,26 @@ export function useVerifiedDiscoveryCount() {
   });
 }
 
+/** Has this explorer verifiably scanned this marker's QR code on site? */
+export function useMarkerDiscovered(markerId: string) {
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  return useQuery({
+    queryKey: ["quest-marker-discovered", userId, markerId],
+    enabled: Boolean(userId && markerId),
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("reward_events")
+        .select("id", { count: "exact", head: true })
+        .eq("event_type", "marker_discovery")
+        .eq("source_id", markerId);
+      if (error) throw error;
+      return (count ?? 0) > 0;
+    },
+  });
+}
+
+
 // ---- Server calls: the only way QUEST ever moves ----
 
 async function invokeQuest<T>(fn: string, body: Record<string, unknown>): Promise<T> {
