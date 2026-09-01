@@ -11,6 +11,8 @@ export interface Marker {
   image: string;
   visited: boolean;
   category: string;
+  /** City id from src/data/cities.ts. Defaults to Tacoma when absent. */
+  city?: string;
   qrUrl?: string;
   streetView?: {
     panoId: string;
