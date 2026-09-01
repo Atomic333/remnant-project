@@ -223,8 +223,12 @@ const AdminPage = () => {
       panoId: marker.streetView?.panoId ?? "",
       heading: marker.streetView?.heading != null ? String(marker.streetView.heading) : "",
       published: true,
+      artifactName: "",
+      artifactAttribution: "",
     });
     setExistingImagePath(null);
+    setExistingModelPath(null);
+    setModelFile(null);
     setPhoto(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -310,6 +314,9 @@ const AdminPage = () => {
         url: s.url.trim(),
       })),
       image_path: imagePath,
+      artifact_model_url: modelPath,
+      artifact_name: form.artifactName.trim() || null,
+      artifact_attribution: form.artifactAttribution.trim() || null,
       street_view: form.panoId.trim()
         ? { panoId: form.panoId.trim(), heading: Number.isFinite(heading) ? heading : 0 }
         : null,
