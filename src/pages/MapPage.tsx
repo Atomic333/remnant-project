@@ -396,14 +396,24 @@ const MapPage = () => {
   const { city } = useSelectedCity();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isVisited } = useVisited();
+  const { isVisited, recordsChronological } = useVisited();
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
+  const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
   const [showList, setShowList] = useState(false);
   const [activeSheet, setActiveSheet] = useState<Sheet>(null);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [showTrail, setShowTrail] = useState(false);
+  const [pulseTick, setPulseTick] = useState(0);
+  const [droppingMarkers, setDroppingMarkers] = useState<Set<string>>(new Set());
+  const [droppedMarkers, setDroppedMarkers] = useState<Set<string>>(new Set());
   const mapRef = useRef<google.maps.Map | null>(null);
+  const dropTimeoutsRef = useRef<number[]>([]);
+  const bounceTimeoutRef = useRef<number | null>(null);
+  const pulseIntervalRef = useRef<number | null>(null);
+  const trailIntervalRef = useRef<number | null>(null);
+  const [trailOffset, setTrailOffset] = useState(0);
 
   const { isLoaded } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_API_KEY });
 
@@ -427,23 +437,152 @@ const MapPage = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  const filtered = markers.filter((m) => {
-    const matchCat = activeFilter === "All" || m.category === activeFilter;
-    const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  // Smoothly move the map when the selected city changes.
+  useEffect(() => {
+    if (!mapRef.current) return;
+    mapRef.current.panTo(city.center);
+    const t = window.setTimeout(() => mapRef.current?.setZoom(city.zoom), 300);
+    return () => window.clearTimeout(t);
+  }, [city.id, city.center, city.zoom]);
 
-  const onMarkerClick = useCallback((m: Marker) => {
-    setSelectedMarker(m);
-    setShowList(false);
-    setActiveSheet(null);
-  }, []);
+  // Staggered drop animation for markers on first city load.
+  useEffect(() => {
+    dropTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
+    dropTimeoutsRef.current = [];
+    setDroppingMarkers(new Set());
+    setDroppedMarkers(new Set());
+
+    markers.forEach((m, i) => {
+      const start = window.setTimeout(() => {
+        setDroppingMarkers((prev) => new Set(prev).add(m.id));
+        const finish = window.setTimeout(() => {
+          setDroppedMarkers((prev) => new Set(prev).add(m.id));
+          setDroppingMarkers((prev) => {
+            const next = new Set(prev);
+            next.delete(m.id);
+            return next;
+          });
+        }, 800);
+        dropTimeoutsRef.current.push(finish);
+      }, i * 60);
+      dropTimeoutsRef.current.push(start);
+    });
+
+    return () => {
+      dropTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      dropTimeoutsRef.current = [];
+    };
+  }, [city.id, markers]);
+
+  // Pulsing accuracy ring around user location.
+  useEffect(() => {
+    if (!userLocation) return;
+    pulseIntervalRef.current = window.setInterval(() => {
+      setPulseTick((t) => t + 1);
+    }, 33);
+    return () => {
+      if (pulseIntervalRef.current) window.clearInterval(pulseIntervalRef.current);
+    };
+  }, [userLocation]);
+
+  const pulseRadius = 30 + Math.abs(Math.sin(pulseTick * 0.05)) * 50;
+  const pulseOpacity = 0.1 + Math.abs(Math.cos(pulseTick * 0.05)) * 0.2;
+
+  // Trail: straight-line path through chronologically visited markers.
+  const visitedPath = useMemo(() => {
+    if (!showTrail) return [];
+    return recordsChronological
+      .filter((r) => isVisited(r.marker_id))
+      .map((r) => {
+        const marker = markers.find((m) => m.id === r.marker_id);
+        return marker ? { lat: marker.lat, lng: marker.lng } : null;
+      })
+      .filter(Boolean) as google.maps.LatLngLiteral[];
+  }, [showTrail, recordsChronological, isVisited, markers]);
+
+  // Optional dashed line from user to nearest unvisited marker.
+  const nearestUnvisitedPath = useMemo(() => {
+    if (!showTrail || !userLocation) return [];
+    const unvisited = markers.filter((m) => !isVisited(m.id));
+    if (unvisited.length === 0) return [];
+    const nearest = unvisited.reduce(
+      (best, m) => {
+        const d = haversineKm(userLocation, m);
+        return d < best.d ? { m, d } : best;
+      },
+      { m: unvisited[0], d: Infinity }
+    );
+    return [userLocation, { lat: nearest.m.lat, lng: nearest.m.lng }];
+  }, [showTrail, userLocation, markers, isVisited]);
+
+  // Animate a dot along the visited trail.
+  useEffect(() => {
+    if (!showTrail || visitedPath.length < 2) {
+      if (trailIntervalRef.current) window.clearInterval(trailIntervalRef.current);
+      return;
+    }
+    trailIntervalRef.current = window.setInterval(() => {
+      setTrailOffset((o) => (o + 1) % 100);
+    }, 50);
+    return () => {
+      if (trailIntervalRef.current) window.clearInterval(trailIntervalRef.current);
+    };
+  }, [showTrail, visitedPath.length]);
+
+  const matchesFilter = useCallback(
+    (m: Marker) => {
+      const matchCat = activeFilter === "All" || m.category === activeFilter;
+      const matchSearch = m.name.toLowerCase().includes(search.toLowerCase());
+      return matchCat && matchSearch;
+    },
+    [activeFilter, search]
+  );
+
+  const filtered = markers.filter(matchesFilter);
+
+  const getMarkerIcon = useCallback(
+    (markerId: string) => {
+      const visited = isVisited(markerId);
+      return {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: visited ? 11 : 10,
+        fillColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
+        fillOpacity: visited ? 0.25 : 1,
+        strokeColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
+        strokeWeight: visited ? 3 : 2,
+      };
+    },
+    [isVisited]
+  );
+
+  const onMarkerClick = useCallback(
+    (m: Marker) => {
+      setSelectedMarker(m);
+      setSelectedMarkerId(m.id);
+      setShowList(false);
+      setActiveSheet(null);
+
+      // Smoothly center and zoom on the selected marker.
+      if (mapRef.current) {
+        mapRef.current.panTo({ lat: m.lat, lng: m.lng });
+        window.setTimeout(() => mapRef.current?.setZoom(17), 250);
+      }
+
+      // Bounce for 1.4 s, then stop.
+      if (bounceTimeoutRef.current) window.clearTimeout(bounceTimeoutRef.current);
+      bounceTimeoutRef.current = window.setTimeout(() => {
+        setSelectedMarkerId(null);
+      }, 1400);
+    },
+    []
+  );
 
   const openList = useCallback((next: boolean) => {
     setShowList(next);
     if (next) {
       setActiveSheet(null);
       setSelectedMarker(null);
+      setSelectedMarkerId(null);
     }
   }, []);
 
@@ -452,11 +591,22 @@ const MapPage = () => {
     if (sheet) {
       setShowList(false);
       setSelectedMarker(null);
+      setSelectedMarkerId(null);
     }
   }, []);
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
+  }, []);
+
+  // Cleanup timers on unmount.
+  useEffect(() => {
+    return () => {
+      dropTimeoutsRef.current.forEach((id) => window.clearTimeout(id));
+      if (bounceTimeoutRef.current) window.clearTimeout(bounceTimeoutRef.current);
+      if (pulseIntervalRef.current) window.clearInterval(pulseIntervalRef.current);
+      if (trailIntervalRef.current) window.clearInterval(trailIntervalRef.current);
+    };
   }, []);
 
   return (
@@ -509,7 +659,7 @@ const MapPage = () => {
         )}
       </div>
 
-      {/* Floating action buttons — Scan + Locate */}
+      {/* Floating action buttons — Scan + Locate + Trail */}
       <div className="absolute top-[148px] right-4 z-20 flex flex-col gap-2">
         <button
           onClick={() => openSheet(activeSheet === "scan" ? null : "scan")}
@@ -519,9 +669,24 @@ const MapPage = () => {
           <span className="text-xs font-medium text-primary">Scan</span>
         </button>
 
+        <button
+          onClick={() => setShowTrail((s) => !s)}
+          className={`flex h-11 w-11 items-center justify-center self-end rounded-full elevation-2 transition-all active:scale-95 ${
+            showTrail ? "bg-primary text-primary-foreground" : "bg-background text-on-surface-variant"
+          }`}
+          title={showTrail ? "Hide my trail" : "Show my trail"}
+        >
+          <Route className="h-5 w-5" />
+        </button>
+
         {userLocation && (
           <button
-            onClick={() => mapRef.current?.panTo(userLocation)}
+            onClick={() => {
+              if (mapRef.current && userLocation) {
+                mapRef.current.panTo(userLocation);
+                window.setTimeout(() => mapRef.current?.setZoom(16), 250);
+              }
+            }}
             className="flex h-11 w-11 items-center justify-center self-end rounded-full bg-background elevation-2 transition-all active:scale-95"
             title="Centre on my location"
           >
@@ -540,37 +705,98 @@ const MapPage = () => {
             options={mapOptions}
             onLoad={onMapLoad}
           >
-            {/* Historical markers */}
-            {filtered.map((m) => (
-              <GMarker
-                key={m.id}
-                position={{ lat: m.lat, lng: m.lng }}
-                onClick={() => onMarkerClick(m)}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: isVisited(m.id) ? "#22c55e" : "#ef4444",
-                  fillOpacity: 1,
-                  strokeColor: "#ffffff",
-                  strokeWeight: 2,
+            {/* Historical markers — render all city markers and fade by filter match */}
+            {markers.map((m) => {
+              const isDropping = droppingMarkers.has(m.id) && !droppedMarkers.has(m.id);
+              const isSelected = selectedMarkerId === m.id;
+              return (
+                <GMarker
+                  key={m.id}
+                  position={{ lat: m.lat, lng: m.lng }}
+                  onClick={() => onMarkerClick(m)}
+                  animation={
+                    isDropping
+                      ? google.maps.Animation.DROP
+                      : isSelected
+                      ? google.maps.Animation.BOUNCE
+                      : undefined
+                  }
+                  icon={getMarkerIcon(m.id)}
+                  opacity={matchesFilter(m) ? 1 : 0.25}
+                  title={m.name}
+                />
+              );
+            })}
+
+            {/* Visited trail */}
+            {showTrail && visitedPath.length >= 2 && (
+              <Polyline
+                path={visitedPath}
+                options={{
+                  strokeColor: PRIMARY_COLOR,
+                  strokeOpacity: 0.5,
+                  strokeWeight: 3,
+                  icons: [
+                    {
+                      icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 4,
+                        fillColor: PRIMARY_COLOR,
+                        fillOpacity: 1,
+                        strokeColor: "#ffffff",
+                        strokeWeight: 2,
+                      },
+                      offset: `${trailOffset}%`,
+                    },
+                  ],
                 }}
               />
-            ))}
+            )}
+
+            {/* Nearest unvisited suggestion */}
+            {showTrail && nearestUnvisitedPath.length === 2 && (
+              <Polyline
+                path={nearestUnvisitedPath}
+                options={{
+                  strokeColor: USER_LOCATION_COLOR,
+                  strokeOpacity: 0.35,
+                  strokeWeight: 2,
+                  strokePattern: [
+                    { icon: { path: google.maps.SymbolPath.CIRCLE, scale: 1, strokeOpacity: 0 }, length: 8 },
+                    { icon: { path: google.maps.SymbolPath.CIRCLE, scale: 1, strokeOpacity: 0 }, length: 8 },
+                  ],
+                }}
+              />
+            )}
+
             {/* User location — blue pulsing dot */}
             {userLocation && (
-              <GMarker
-                position={userLocation}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: "#3b82f6",
-                  fillOpacity: 1,
-                  strokeColor: "#ffffff",
-                  strokeWeight: 3,
-                }}
-                title="Your location"
-                zIndex={1000}
-              />
+              <>
+                <Circle
+                  center={userLocation}
+                  radius={pulseRadius}
+                  options={{
+                    fillColor: USER_LOCATION_COLOR,
+                    fillOpacity: pulseOpacity * 0.3,
+                    strokeColor: USER_LOCATION_COLOR,
+                    strokeOpacity: pulseOpacity,
+                    strokeWeight: 1,
+                  }}
+                />
+                <GMarker
+                  position={userLocation}
+                  icon={{
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 8,
+                    fillColor: USER_LOCATION_COLOR,
+                    fillOpacity: 1,
+                    strokeColor: "#ffffff",
+                    strokeWeight: 3,
+                  }}
+                  title="Your location"
+                  zIndex={1000}
+                />
+              </>
             )}
           </GoogleMap>
         ) : (
