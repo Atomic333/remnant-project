@@ -11,6 +11,7 @@ import RequestPage from "@/pages/RequestPage";
 import SettingsPage from "@/pages/SettingsPage";
 import AuthPage from "@/pages/AuthPage";
 import AdminPage from "@/pages/AdminPage";
+import QrSheetPage from "@/pages/QrSheetPage";
 import NotFound from "@/pages/NotFound";
 import SplashScreen from "@/components/SplashScreen";
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin/qr-codes" element={<QrSheetPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
