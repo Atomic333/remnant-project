@@ -10,10 +10,12 @@ import ProgressPage from "@/pages/ProgressPage";
 import RequestPage from "@/pages/RequestPage";
 import SettingsPage from "@/pages/SettingsPage";
 import AuthPage from "@/pages/AuthPage";
+import ProfilePage from "@/pages/ProfilePage";
 import AdminPage from "@/pages/AdminPage";
 import QrSheetPage from "@/pages/QrSheetPage";
 import NotFound from "@/pages/NotFound";
 import SplashScreen from "@/components/SplashScreen";
+import RequireAuth from "@/components/RequireAuth";
 
 const queryClient = new QueryClient();
 
@@ -26,15 +28,19 @@ const App = () => (
       <BrowserRouter>
         <div className="mx-auto min-h-screen max-w-lg">
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/map" element={<MapPage />} />
+            {/* Public: marker pages opened from QR codes */}
             <Route path="/marker/:id" element={<MarkerDetailPage />} />
-            <Route path="/progress" element={<ProgressPage />} />
-            <Route path="/request" element={<RequestPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/admin/qr-codes" element={<QrSheetPage />} />
+
+            {/* Account required */}
+            <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
+            <Route path="/map" element={<RequireAuth><MapPage /></RequireAuth>} />
+            <Route path="/progress" element={<RequireAuth><ProgressPage /></RequireAuth>} />
+            <Route path="/request" element={<RequireAuth><RequestPage /></RequireAuth>} />
+            <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
+            <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
+            <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
