@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X } from "lucide-react";
+import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import MarkerQrCard from "@/components/MarkerQrCard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -565,7 +566,7 @@ const AdminPage = () => {
           <ul className="mt-2 space-y-2">
             {dbRows.map((m) => (
               <li key={m.id} className="flex items-center gap-3 rounded-lg bg-surface-variant p-3">
-                <img src={m.image} alt={m.name} className="h-10 w-10 rounded-lg object-cover" />
+                <MarkerQrCard marker={m} size={56} showCaption={false} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-display text-sm font-medium text-foreground">{m.name}</p>
                   <p className="truncate text-xs text-on-surface-variant">{m.address || m.id}</p>
@@ -580,6 +581,15 @@ const AdminPage = () => {
             ))}
           </ul>
         </div>
+
+        {/* All markers QR sheet */}
+        <button
+          onClick={() => navigate("/admin/qr-codes")}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 font-display text-sm font-medium text-card-foreground elevation-1"
+        >
+          <QrCode className="h-4 w-4 text-primary" />
+          QR codes for all markers
+        </button>
       </div>
     </div>
   );
