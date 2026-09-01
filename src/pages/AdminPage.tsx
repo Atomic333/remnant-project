@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode } from "lucide-react";
+import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo2, Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useDbMarkers } from "@/hooks/useAllMarkers";
+import { useDbMarkers, useAllMarkers } from "@/hooks/useAllMarkers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cities, DEFAULT_CITY_ID } from "@/data/cities";
-import { categories } from "@/data/markers";
+import { categories, markers as staticMarkers, type Marker } from "@/data/markers";
 
 interface SourceInput {
   name: string;
@@ -19,10 +19,13 @@ interface SourceInput {
 interface FormState {
   id: string | null;
   slug: string;
+  /** True when editing a curated (code-based) marker, so the slug must stay fixed. */
+  lockSlug: boolean;
   name: string;
   address: string;
   category: string;
   city: string;
+  rarity: "common" | "rare";
   lat: string;
   lng: string;
   summary: string;
@@ -36,10 +39,12 @@ interface FormState {
 const emptyForm: FormState = {
   id: null,
   slug: "",
+  lockSlug: false,
   name: "",
   address: "",
   category: "Architecture",
   city: DEFAULT_CITY_ID,
+  rarity: "common",
   lat: "",
   lng: "",
   summary: "",
@@ -50,12 +55,15 @@ const emptyForm: FormState = {
   published: true,
 };
 
+type SourceFilter = "all" | "edited" | "original" | "added";
+
 const slugify = (value: string) =>
   value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
+
 
 const inputClass =
   "mt-1 w-full rounded-lg bg-surface-variant px-3 py-2.5 text-sm text-foreground outline-none";
@@ -72,6 +80,8 @@ const AdminPage = () => {
   const [saving, setSaving] = useState(false);
   const [drafting, setDrafting] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
+  const [filter, setFilter] = useState<SourceFilter>("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -91,6 +101,29 @@ const AdminPage = () => {
   });
 
   const dbRows = useMemo(() => dbMarkers ?? [], [dbMarkers]);
+  const allMarkers = useAllMarkers();
+  const staticIds = useMemo(() => new Set(staticMarkers.map((m) => m.id)), []);
+  const dbSlugs = useMemo(() => new Set(dbRows.map((m) => m.id)), [dbRows]);
+
+  /** Every site, tagged with where its current content comes from. */
+  const listed = useMemo(() => {
+    const rows = allMarkers.map((m) => {
+      const inDb = dbSlugs.has(m.id);
+      const curated = staticIds.has(m.id);
+      const origin: SourceFilter = curated ? (inDb ? "edited" : "original") : "added";
+      return { marker: m, origin, inDb, curated };
+    });
+    const q = search.trim().toLowerCase();
+    return rows.filter(
+      (r) =>
+        (filter === "all" || r.origin === filter) &&
+        (!q ||
+          r.marker.name.toLowerCase().includes(q) ||
+          (r.marker.address ?? "").toLowerCase().includes(q) ||
+          r.marker.id.toLowerCase().includes(q)),
+    );
+  }, [allMarkers, dbSlugs, staticIds, filter, search]);
+
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -137,10 +170,12 @@ const AdminPage = () => {
     setForm({
       id: data.id,
       slug: data.slug,
+      lockSlug: staticIds.has(data.slug),
       name: data.name,
       address: data.address ?? "",
       category: data.category ?? "Architecture",
       city: data.city ?? DEFAULT_CITY_ID,
+      rarity: data.rarity === "rare" ? "rare" : "common",
       lat: String(data.lat),
       lng: String(data.lng),
       summary: data.summary ?? "",
@@ -155,17 +190,49 @@ const AdminPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /** Prefill the form from a curated marker that lives in app code. */
+  const editStaticMarker = (marker: Marker) => {
+    setForm({
+      id: null,
+      slug: marker.id,
+      lockSlug: true,
+      name: marker.name,
+      address: marker.address ?? "",
+      category: marker.category ?? "Architecture",
+      city: marker.city ?? DEFAULT_CITY_ID,
+      rarity: marker.rarity === "rare" ? "rare" : "common",
+      lat: String(marker.lat),
+      lng: String(marker.lng),
+      summary: marker.summary ?? "",
+      story: marker.story ?? "",
+      sources: marker.sources?.length
+        ? marker.sources.map((s) => ({ name: s.name, url: s.url }))
+        : [{ name: "", url: "" }],
+      panoId: marker.streetView?.panoId ?? "",
+      heading: marker.streetView?.heading != null ? String(marker.streetView.heading) : "",
+      published: true,
+    });
+    setExistingImagePath(null);
+    setPhoto(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const deleteMarker = async (slug: string) => {
-    if (!window.confirm("Delete this marker? This can't be undone.")) return;
+    const isCurated = staticIds.has(slug);
+    const message = isCurated
+      ? "Revert this marker to its original built-in version? Your edits will be discarded."
+      : "Delete this marker? This can't be undone.";
+    if (!window.confirm(message)) return;
     const { error } = await supabase.from("markers").delete().eq("slug", slug);
     if (error) {
-      toast({ title: "Couldn't delete marker", description: error.message, variant: "destructive" });
+      toast({ title: "Couldn't save change", description: error.message, variant: "destructive" });
       return;
     }
     queryClient.invalidateQueries({ queryKey: ["db-markers"] });
     if (form.slug === slug) resetForm();
-    toast({ title: "Marker deleted." });
+    toast({ title: isCurated ? "Reverted to the original." : "Marker deleted." });
   };
+
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -235,12 +302,13 @@ const AdminPage = () => {
         ? { panoId: form.panoId.trim(), heading: Number.isFinite(heading) ? heading : 0 }
         : null,
       published: form.published,
+      rarity: form.rarity,
       created_by: user?.id ?? null,
     };
 
     const { error } = form.id
       ? await supabase.from("markers").update(payload).eq("id", form.id)
-      : await supabase.from("markers").insert(payload);
+      : await supabase.from("markers").upsert(payload, { onConflict: "slug" });
 
     setSaving(false);
 
@@ -250,8 +318,11 @@ const AdminPage = () => {
     }
 
     queryClient.invalidateQueries({ queryKey: ["db-markers"] });
-    toast({ title: form.id ? "Marker updated." : "Marker added." });
+    toast({
+      title: form.id || form.lockSlug ? "Marker updated." : "Marker added.",
+    });
     resetForm();
+
   };
 
   if (loading) {
@@ -349,14 +420,21 @@ const AdminPage = () => {
         <form onSubmit={save} className="space-y-3 rounded-xl bg-card p-4 elevation-1">
           <div className="flex items-center justify-between">
             <span className="font-display font-medium text-card-foreground">
-              {form.id ? "Edit marker" : "Add a marker"}
+              {form.id || form.lockSlug ? "Edit marker" : "Add a marker"}
             </span>
-            {form.id && (
+            {(form.id || form.lockSlug) && (
               <button type="button" onClick={resetForm} className="text-xs text-primary underline">
                 New instead
               </button>
             )}
           </div>
+
+          {form.lockSlug && !form.id && (
+            <p className="rounded-lg bg-surface-variant px-3 py-2 text-[11px] text-on-surface-variant">
+              This is one of the built-in curated sites. Saving stores your edited version and it
+              replaces the original everywhere — the marker id and printed QR codes stay the same.
+            </p>
+          )}
 
           <div>
             <label className="text-xs font-medium text-on-surface-variant">Name</label>
@@ -376,12 +454,14 @@ const AdminPage = () => {
               value={form.slug}
               onChange={(e) => set("slug", slugify(e.target.value))}
               placeholder={slugify(form.name) || "e.g. old-city-hall"}
-              className={inputClass}
+              readOnly={form.lockSlug}
+              className={`${inputClass} ${form.lockSlug ? "opacity-60" : ""}`}
             />
             <p className="mt-1 text-[11px] text-on-surface-variant">
               https://markerquest.ai/marker/{form.slug || slugify(form.name) || "…"}
             </p>
           </div>
+
 
           <div>
             <label className="text-xs font-medium text-on-surface-variant">Address</label>
@@ -425,6 +505,19 @@ const AdminPage = () => {
               ))}
             </select>
           </div>
+
+          <div>
+            <label className="text-xs font-medium text-on-surface-variant">Rarity</label>
+            <select
+              value={form.rarity}
+              onChange={(e) => set("rarity", e.target.value as "common" | "rare")}
+              className={inputClass}
+            >
+              <option value="common">Common</option>
+              <option value="rare">Rare</option>
+            </select>
+          </div>
+
 
 
 
@@ -572,37 +665,98 @@ const AdminPage = () => {
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground elevation-1 disabled:opacity-60"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {form.id ? "Save changes" : "Add marker"}
+            {form.id || form.lockSlug ? "Save changes" : "Add marker"}
           </button>
         </form>
 
-        {/* Existing DB markers */}
+        {/* Every site — curated and database */}
         <div className="rounded-xl bg-card p-4 elevation-1">
-          <span className="font-display font-medium text-card-foreground">Markers you've added</span>
+          <span className="font-display font-medium text-card-foreground">All sites</span>
+
+          <div className="mt-3 flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
+            <Search className="h-4 w-4 shrink-0 text-on-surface-variant" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search name, address or id"
+              className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-on-surface-variant"
+            />
+          </div>
+
+          <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1">
+            {(
+              [
+                ["all", "All"],
+                ["edited", "Edited"],
+                ["original", "Original"],
+                ["added", "Added"],
+              ] as [SourceFilter, string][]
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                onClick={() => setFilter(value)}
+                className={`shrink-0 rounded-full px-3 py-1.5 font-display text-xs font-medium ${
+                  filter === value
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-surface-variant text-on-surface-variant"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           {markersLoading && <Loader2 className="mt-3 h-4 w-4 animate-spin text-primary" />}
-          {!markersLoading && !dbRows.length && (
-            <p className="mt-2 text-sm text-on-surface-variant">
-              None yet — the 28 curated markers live in the app code.
-            </p>
+          {!listed.length && (
+            <p className="mt-3 text-sm text-on-surface-variant">No sites match this view.</p>
           )}
+
           <ul className="mt-2 space-y-2">
-            {dbRows.map((m) => (
+            {listed.map(({ marker: m, origin, inDb }) => (
               <li key={m.id} className="flex items-center gap-3 rounded-lg bg-surface-variant p-3">
                 <MarkerQrCard marker={m} size={56} showCaption={false} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-display text-sm font-medium text-foreground">{m.name}</p>
                   <p className="truncate text-xs text-on-surface-variant">{m.address || m.id}</p>
+                  <span
+                    className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                      origin === "edited"
+                        ? "bg-primary/15 text-primary"
+                        : origin === "added"
+                          ? "bg-secondary text-secondary-foreground"
+                          : "bg-card text-on-surface-variant"
+                    }`}
+                  >
+                    {origin === "edited" ? "Edited" : origin === "added" ? "Added" : "Original"}
+                  </span>
                 </div>
-                <button onClick={() => editMarker(m.id)} aria-label={`Edit ${m.name}`}>
+                <button
+                  onClick={() => (inDb ? editMarker(m.id) : editStaticMarker(m))}
+                  aria-label={`Edit ${m.name}`}
+                >
                   <Pencil className="h-4 w-4 text-primary" />
                 </button>
-                <button onClick={() => deleteMarker(m.id)} aria-label={`Delete ${m.name}`}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </button>
+                {inDb ? (
+                  <button
+                    onClick={() => deleteMarker(m.id)}
+                    aria-label={
+                      origin === "edited" ? `Revert ${m.name}` : `Delete ${m.name}`
+                    }
+                  >
+                    {origin === "edited" ? (
+                      <Undo2 className="h-4 w-4 text-on-surface-variant" />
+                    ) : (
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    )}
+                  </button>
+                ) : (
+                  <span className="w-4" />
+                )}
               </li>
             ))}
           </ul>
         </div>
+
 
         {/* All markers QR sheet */}
         <button
