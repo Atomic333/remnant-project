@@ -5,6 +5,8 @@ import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useGuest } from "@/hooks/useGuest";
+
 
 const AuthPage = () => {
   const navigate = useNavigate();
