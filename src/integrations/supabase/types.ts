@@ -14,6 +14,66 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          active: boolean
+          code: string
+          criteria: Json
+          description: string
+          icon: string
+          name: string
+          quest_reward: number
+          sort_order: number
+          tier: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          name: string
+          quest_reward?: number
+          sort_order?: number
+          tier?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          criteria?: Json
+          description?: string
+          icon?: string
+          name?: string
+          quest_reward?: number
+          sort_order?: number
+          tier?: string
+        }
+        Relationships: []
+      }
+      explorer_balances: {
+        Row: {
+          balance: number
+          lifetime_earned: number
+          lifetime_spent: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          lifetime_earned?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          lifetime_earned?: number
+          lifetime_spent?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       marker_requests: {
         Row: {
           address: string | null
@@ -41,6 +101,27 @@ export type Database = {
           status?: string
           submitter_email?: string | null
           why_it_matters?: string
+        }
+        Relationships: []
+      }
+      marker_trivia: {
+        Row: {
+          created_at: string
+          id: string
+          marker_id: string
+          questions: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          marker_id: string
+          questions?: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          marker_id?: string
+          questions?: Json
         }
         Relationships: []
       }
@@ -78,6 +159,7 @@ export type Database = {
           lng: number
           name: string
           published: boolean
+          rarity: string
           slug: string
           sources: Json
           story: string
@@ -97,6 +179,7 @@ export type Database = {
           lng: number
           name: string
           published?: boolean
+          rarity?: string
           slug: string
           sources?: Json
           story?: string
@@ -116,6 +199,7 @@ export type Database = {
           lng?: number
           name?: string
           published?: boolean
+          rarity?: string
           slug?: string
           sources?: Json
           story?: string
@@ -166,6 +250,217 @@ export type Database = {
           share_enabled?: boolean
         }
         Relationships: []
+      }
+      quest_completions: {
+        Row: {
+          completed_at: string
+          completion_type: string
+          id: string
+          max_score: number
+          score: number
+          target_id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          completion_type: string
+          id?: string
+          max_score?: number
+          score?: number
+          target_id: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          completion_type?: string
+          id?: string
+          max_score?: number
+          score?: number
+          target_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      redemptions: {
+        Row: {
+          created_at: string
+          id: string
+          quest_spent: number
+          redemption_code: string | null
+          reward_code: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          quest_spent: number
+          redemption_code?: string | null
+          reward_code: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          quest_spent?: number
+          redemption_code?: string | null
+          reward_code?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "redemptions_reward_code_fkey"
+            columns: ["reward_code"]
+            isOneToOne: false
+            referencedRelation: "rewards_catalog"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      reward_events: {
+        Row: {
+          chain_id: string | null
+          chain_tx_hash: string | null
+          created_at: string
+          event_type: string
+          id: string
+          metadata: Json
+          quest_amount: number
+          settled_at: string | null
+          settlement_status: string
+          source_id: string | null
+          source_type: string | null
+          title: string
+          user_id: string
+          wallet_address: string | null
+        }
+        Insert: {
+          chain_id?: string | null
+          chain_tx_hash?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          metadata?: Json
+          quest_amount: number
+          settled_at?: string | null
+          settlement_status?: string
+          source_id?: string | null
+          source_type?: string | null
+          title?: string
+          user_id: string
+          wallet_address?: string | null
+        }
+        Update: {
+          chain_id?: string | null
+          chain_tx_hash?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          metadata?: Json
+          quest_amount?: number
+          settled_at?: string | null
+          settlement_status?: string
+          source_id?: string | null
+          source_type?: string | null
+          title?: string
+          user_id?: string
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
+      rewards_catalog: {
+        Row: {
+          active: boolean
+          code: string
+          cost: number
+          description: string
+          icon: string
+          kind: string
+          name: string
+          partner_name: string | null
+          sort_order: number
+          unlock_criteria: Json
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          cost?: number
+          description?: string
+          icon?: string
+          kind?: string
+          name: string
+          partner_name?: string | null
+          sort_order?: number
+          unlock_criteria?: Json
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          cost?: number
+          description?: string
+          icon?: string
+          kind?: string
+          name?: string
+          partner_name?: string | null
+          sort_order?: number
+          unlock_criteria?: Json
+        }
+        Relationships: []
+      }
+      scan_tokens: {
+        Row: {
+          consumed_at: string | null
+          created_at: string
+          marker_id: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          consumed_at?: string | null
+          created_at?: string
+          marker_id: string
+          token?: string
+          user_id: string
+        }
+        Update: {
+          consumed_at?: string | null
+          created_at?: string
+          marker_id?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_achievements: {
+        Row: {
+          achievement_code: string
+          id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_code: string
+          id?: string
+          unlocked_at?: string
+          user_id: string
+        }
+        Update: {
+          achievement_code?: string
+          id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_code_fkey"
+            columns: ["achievement_code"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       user_roles: {
         Row: {

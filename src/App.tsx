@@ -17,7 +17,9 @@ import AdminPage from "@/pages/AdminPage";
 import QrSheetPage from "@/pages/QrSheetPage";
 import NotFound from "@/pages/NotFound";
 import SplashScreen from "@/components/SplashScreen";
+import RewardsPage from "@/pages/RewardsPage";
 import RequireAuth from "@/components/RequireAuth";
+import QuestRewardProvider from "@/components/QuestRewardProvider";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,7 @@ const App = () => (
       <Sonner />
       <SplashScreen />
       <BrowserRouter>
+        <QuestRewardProvider>
         <div className="mx-auto min-h-screen max-w-lg">
           <Routes>
             {/* Public: marker pages opened from QR codes */}
@@ -43,12 +46,14 @@ const App = () => (
 
             <Route path="/request" element={<RequireAuth><RequestPage /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
+            <Route path="/rewards" element={<RequireAuth allowGuest={false}><RewardsPage /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth allowGuest={false}><ProfilePage /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
+        </QuestRewardProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

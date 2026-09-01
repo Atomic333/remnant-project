@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import HamburgerMenu from "@/components/HamburgerMenu";
+import QuestChip from "@/components/QuestChip";
 
 interface PageHeaderProps {
   title: string;
@@ -23,6 +24,7 @@ const PageHeader = ({ title, back, right }: PageHeaderProps) => {
       )}
       <h1 className="flex-1 font-display text-xl font-medium text-foreground">{title}</h1>
       {right}
+      <QuestChip />
       <HamburgerMenu />
     </header>
   );

@@ -64,6 +64,14 @@ export default {
           variant: "hsl(var(--surface-variant))",
         },
         "on-surface-variant": "hsl(var(--on-surface-variant))",
+        quest: {
+          navy: "hsl(var(--quest-navy))",
+          "navy-soft": "hsl(var(--quest-navy-soft))",
+          purple: "hsl(var(--quest-purple))",
+          cyan: "hsl(var(--quest-cyan))",
+          gold: "hsl(var(--quest-gold))",
+          "gold-deep": "hsl(var(--quest-gold-deep))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -141,6 +149,37 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.6" },
         },
+        /* === QUEST artifact reveal === */
+        "seal-crack": {
+          "0%": { transform: "scale(0.5) rotate(-12deg)", opacity: "0" },
+          "45%": { transform: "scale(1.12) rotate(3deg)", opacity: "1" },
+          "60%": { transform: "scale(0.96) rotate(-2deg)" },
+          "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
+        "artifact-rise": {
+          "0%": { transform: "translateY(24px) scale(0.9)", opacity: "0" },
+          "100%": { transform: "translateY(0) scale(1)", opacity: "1" },
+        },
+        "relic-ring": {
+          "0%": { transform: "scale(0.6)", opacity: "0.9" },
+          "100%": { transform: "scale(2.2)", opacity: "0" },
+        },
+        "ring-spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "dust-drift": {
+          "0%": { transform: "translate(0, 0) scale(1)", opacity: "0.9" },
+          "100%": { transform: "translate(var(--dx, 0), var(--dy, -60px)) scale(0.3)", opacity: "0" },
+        },
+        "gold-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 hsl(var(--quest-gold) / 0)" },
+          "35%": { boxShadow: "0 0 18px 4px hsl(var(--quest-gold) / 0.55)" },
+        },
+        "halo-pulse": {
+          "0%, 100%": { transform: "scale(1)", opacity: "0.55" },
+          "50%": { transform: "scale(1.35)", opacity: "0.15" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 280ms cubic-bezier(0.2, 0, 0, 1)",
@@ -155,6 +194,13 @@ export default {
         "ripple": "ripple 600ms cubic-bezier(0.2, 0, 0, 1)",
         "pulse-soft": "pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "enter": "fade-in 320ms cubic-bezier(0.2, 0, 0, 1), scale-in 240ms cubic-bezier(0.2, 0, 0, 1)",
+        "seal-crack": "seal-crack 900ms cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "artifact-rise": "artifact-rise 520ms cubic-bezier(0.05, 0.7, 0.1, 1) both",
+        "relic-ring": "relic-ring 1400ms cubic-bezier(0.2, 0, 0, 1) infinite",
+        "ring-spin": "ring-spin 9s linear infinite",
+        "dust-drift": "dust-drift 1600ms cubic-bezier(0.2, 0, 0, 1) forwards",
+        "gold-pulse": "gold-pulse 1200ms cubic-bezier(0.2, 0, 0, 1)",
+        "halo-pulse": "halo-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
     },
   },

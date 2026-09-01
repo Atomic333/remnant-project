@@ -13,6 +13,8 @@ export interface Marker {
   category: string;
   /** City id from src/data/cities.ts. Defaults to Tacoma when absent. */
   city?: string;
+  /** Discovery weighting used by the QUEST economy and the map marker states. */
+  rarity?: "common" | "rare";
   qrUrl?: string;
   streetView?: {
     panoId: string;
