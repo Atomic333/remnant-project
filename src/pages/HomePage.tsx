@@ -81,7 +81,7 @@ const HomePage = () => {
             </div>
             <span className="text-xs font-medium text-primary">{pct}%</span>
             <button
-              onClick={() => navigate("/progress")}
+              onClick={() => navigate("/dashboard")}
               className="ml-1 rounded-lg bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/20 active:scale-95">
               View
             </button>

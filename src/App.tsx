@@ -7,6 +7,8 @@ import HomePage from "@/pages/HomePage";
 import MapPage from "@/pages/MapPage";
 import MarkerDetailPage from "@/pages/MarkerDetailPage";
 import ProgressPage from "@/pages/ProgressPage";
+import DashboardPage from "@/pages/DashboardPage";
+import SharedVisitsPage from "@/pages/SharedVisitsPage";
 import RequestPage from "@/pages/RequestPage";
 import SettingsPage from "@/pages/SettingsPage";
 import AuthPage from "@/pages/AuthPage";
@@ -30,11 +32,13 @@ const App = () => (
           <Routes>
             {/* Public: marker pages opened from QR codes */}
             <Route path="/marker/:id" element={<MarkerDetailPage />} />
+            <Route path="/u/:code" element={<SharedVisitsPage />} />
             <Route path="/auth" element={<AuthPage />} />
 
             {/* Account required */}
             <Route path="/" element={<RequireAuth><HomePage /></RequireAuth>} />
             <Route path="/map" element={<RequireAuth><MapPage /></RequireAuth>} />
+            <Route path="/dashboard" element={<RequireAuth><DashboardPage /></RequireAuth>} />
             <Route path="/progress" element={<RequireAuth><ProgressPage /></RequireAuth>} />
             <Route path="/request" element={<RequireAuth><RequestPage /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
