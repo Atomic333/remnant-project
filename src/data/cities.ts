@@ -1,5 +1,5 @@
 import tacomaHero from "@/assets/tacoma-hero.jpg";
-import bremertonAsset from "@/assets/bremerton-hero.jpg.asset.json";
+import bremertonHero from "@/assets/bremerton-hero.jpg";
 
 export interface City {
   /** Stable id, also stored on markers as `city`. */
