@@ -32,8 +32,8 @@ export const cities: City[] = [
     image: bremertonHero,
     center: { lat: 47.5673, lng: -122.6329 },
     zoom: 14,
-    comingSoon: true,
   },
+
 ];
 
 export const DEFAULT_CITY_ID = "Tacoma";
