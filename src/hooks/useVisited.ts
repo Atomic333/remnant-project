@@ -106,5 +106,12 @@ export function useVisited() {
 
   const isVisited = (id: string) => visited.has(id);
 
-  return { visited, records, toggle, isVisited, loading: Boolean(userId) && query.isLoading };
+  // Oldest-first, for drawing a visited trail on the map.
+  const recordsChronological = [...records].sort((a, b) => {
+    if (!a.visited_at) return 1;
+    if (!b.visited_at) return -1;
+    return new Date(a.visited_at).getTime() - new Date(b.visited_at).getTime();
+  });
+
+  return { visited, records, recordsChronological, toggle, isVisited, loading: Boolean(userId) && query.isLoading };
 }
