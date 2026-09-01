@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { markers as staticMarkers, type Marker } from "@/data/markers";
@@ -75,12 +76,15 @@ export function useDbMarkers() {
 /** The 28 curated markers in code, merged with markers added through /admin. */
 export function useAllMarkers(): Marker[] {
   const { data } = useDbMarkers();
-  return data && data.length ? [...staticMarkers, ...data] : staticMarkers;
+  return useMemo(
+    () => (data && data.length ? [...staticMarkers, ...data] : staticMarkers),
+    [data]
+  );
 }
 
 /** Markers belonging to the city the user is currently exploring. */
 export function useCityMarkers(): Marker[] {
   const all = useAllMarkers();
   const { cityId } = useSelectedCity();
-  return all.filter((m) => (m.city ?? DEFAULT_CITY_ID) === cityId);
+  return useMemo(() => all.filter((m) => (m.city ?? DEFAULT_CITY_ID) === cityId), [all, cityId]);
 }
