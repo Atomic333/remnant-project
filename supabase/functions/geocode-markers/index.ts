@@ -7,6 +7,7 @@ const corsHeaders = {
 
 const TACOMA_BOUNDS = "47.18,-122.60|47.35,-122.32";
 
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
