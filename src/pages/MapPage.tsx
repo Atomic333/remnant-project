@@ -543,17 +543,17 @@ const MapPage = () => {
   const getMarkerIcon = useCallback(
     (markerId: string) => {
       const visited = isVisited(markerId);
+      const w = visited ? 36 : 40;
+      const h = Math.round(w * 1.3);
       return {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: visited ? 11 : 10,
-        fillColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
-        fillOpacity: visited ? 0.25 : 1,
-        strokeColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
-        strokeWeight: visited ? 3 : 2,
-      };
+        url: markerIconAsset.url,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h),
+      } as google.maps.Icon;
     },
     [isVisited]
   );
+
 
   const onMarkerClick = useCallback(
     (m: Marker) => {
