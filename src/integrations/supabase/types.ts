@@ -44,6 +44,27 @@ export type Database = {
         }
         Relationships: []
       }
+      marker_visits: {
+        Row: {
+          id: string
+          marker_id: string
+          user_id: string
+          visited_at: string
+        }
+        Insert: {
+          id?: string
+          marker_id: string
+          user_id: string
+          visited_at?: string
+        }
+        Update: {
+          id?: string
+          marker_id?: string
+          user_id?: string
+          visited_at?: string
+        }
+        Relationships: []
+      }
       markers: {
         Row: {
           address: string
@@ -103,22 +124,37 @@ export type Database = {
       }
       profiles: {
         Row: {
+          ads_opt_in: boolean
+          avatar_url: string | null
           created_at: string
           display_name: string | null
           email: string | null
+          email_opt_in: boolean
           id: string
+          notifications_opt_in: boolean
+          onboarded_at: string | null
         }
         Insert: {
+          ads_opt_in?: boolean
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
+          email_opt_in?: boolean
           id: string
+          notifications_opt_in?: boolean
+          onboarded_at?: string | null
         }
         Update: {
+          ads_opt_in?: boolean
+          avatar_url?: string | null
           created_at?: string
           display_name?: string | null
           email?: string | null
+          email_opt_in?: boolean
           id?: string
+          notifications_opt_in?: boolean
+          onboarded_at?: string | null
         }
         Relationships: []
       }

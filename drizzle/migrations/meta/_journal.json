@@ -29,6 +29,13 @@
       "when": 1788217828039,
       "tag": "0003_restrict_definer_function_execute",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788224426800,
+      "tag": "0004_add_profile_prefs_and_visits",
+      "breakpoints": true
     }
   ]
 }
