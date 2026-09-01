@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X } f
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
+import { useAuth } from "@/hooks/useAuth";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
 import { getMarkerImage } from "@/lib/markerImages";
@@ -14,6 +15,7 @@ const MarkerDetailPage = () => {
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);
   const { isVisited, toggle: toggleVisited } = useVisited();
+  const { user } = useAuth();
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
   const [showStreetView, setShowStreetView] = useState(false);
@@ -125,6 +127,20 @@ const MarkerDetailPage = () => {
             {visited ? <Check className="h-4 w-4" /> : null}
             {visited ? "Visited" : "Mark as Visited"}
           </button>
+
+          {!user && (
+            <button
+              onClick={() => navigate(`/auth?from=${encodeURIComponent(`/marker/${id}`)}`)}
+              className="w-full rounded-xl border border-border px-4 py-3 text-left"
+            >
+              <span className="block text-sm font-medium text-foreground">
+                Create an account to save this visit
+              </span>
+              <span className="mt-0.5 block text-xs text-on-surface-variant">
+                Keep your progress in sync across devices and explore the full map.
+              </span>
+            </button>
+          )}
 
           {/* Accordion */}
           {sections.map(({ key, icon: Icon, label }) => {
