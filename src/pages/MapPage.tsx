@@ -292,6 +292,13 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="flex flex-col items-center pb-6">
       <div className="relative mb-6 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
+        <button
+          onClick={() => { void stopScanner(); onClose(); }}
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-surface/80 text-on-surface-variant backdrop-blur-sm transition-colors hover:bg-surface"
+          aria-label="Close scanner"
+        >
+          <X className="h-5 w-5" />
+        </button>
         {cameraError ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 px-4 text-center">
             <CameraOff className="h-12 w-12 text-on-surface-variant" />
