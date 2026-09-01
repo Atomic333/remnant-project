@@ -64,6 +64,14 @@ export default {
           variant: "hsl(var(--surface-variant))",
         },
         "on-surface-variant": "hsl(var(--on-surface-variant))",
+        quest: {
+          navy: "hsl(var(--quest-navy))",
+          "navy-soft": "hsl(var(--quest-navy-soft))",
+          purple: "hsl(var(--quest-purple))",
+          cyan: "hsl(var(--quest-cyan))",
+          gold: "hsl(var(--quest-gold))",
+          "gold-deep": "hsl(var(--quest-gold-deep))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
