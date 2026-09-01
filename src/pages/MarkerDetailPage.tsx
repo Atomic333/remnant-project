@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
 import MarkerTrivia from "@/components/MarkerTrivia";
+import MarkerArtifactCard from "@/components/MarkerArtifactCard";
 import { getMarkerImage } from "@/lib/markerImages";
 import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
 import { useQuestReward } from "@/components/QuestRewardProvider";
@@ -213,6 +214,9 @@ const MarkerDetailPage = () => {
               </div>
             );
           })}
+
+          {/* 3D / AR artifact */}
+          <MarkerArtifactCard marker={marker} />
 
           {/* Trivia */}
           <div className="rounded-xl bg-card p-4 elevation-1">

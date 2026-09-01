@@ -149,6 +149,9 @@ export type Database = {
       markers: {
         Row: {
           address: string
+          artifact_attribution: string | null
+          artifact_model_url: string | null
+          artifact_name: string | null
           category: string
           city: string
           created_at: string
@@ -169,6 +172,9 @@ export type Database = {
         }
         Insert: {
           address?: string
+          artifact_attribution?: string | null
+          artifact_model_url?: string | null
+          artifact_name?: string | null
           category?: string
           city?: string
           created_at?: string
@@ -189,6 +195,9 @@ export type Database = {
         }
         Update: {
           address?: string
+          artifact_attribution?: string | null
+          artifact_model_url?: string | null
+          artifact_name?: string | null
           category?: string
           city?: string
           created_at?: string

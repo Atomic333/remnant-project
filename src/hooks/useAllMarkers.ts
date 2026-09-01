@@ -40,7 +40,21 @@ async function toMarker(row: Record<string, unknown>): Promise<Marker> {
     rarity: row.rarity === "rare" ? "rare" : "common",
     qrUrl: `https://markerquest.ai/marker/${slug}`,
     streetView: streetView?.panoId ? streetView : undefined,
+    artifactName: row.artifact_name ? String(row.artifact_name) : undefined,
+    artifactAttribution: row.artifact_attribution ? String(row.artifact_attribution) : undefined,
   };
+
+  const modelPath = row.artifact_model_url ? String(row.artifact_model_url) : "";
+  if (modelPath) {
+    if (/^https?:\/\//.test(modelPath) || modelPath.startsWith("/")) {
+      base.artifactModelUrl = modelPath;
+    } else {
+      const { data } = await supabase.storage
+        .from("marker-models")
+        .createSignedUrl(modelPath, 60 * 60 * 24 * 7);
+      if (data?.signedUrl) base.artifactModelUrl = data.signedUrl;
+    }
+  }
 
   const imagePath = row.image_path ? String(row.image_path) : "";
   if (imagePath) {

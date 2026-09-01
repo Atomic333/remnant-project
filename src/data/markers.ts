@@ -16,6 +16,10 @@ export interface Marker {
   /** Discovery weighting used by the QUEST economy and the map marker states. */
   rarity?: "common" | "rare";
   qrUrl?: string;
+  /** Admin-uploaded 3D artifact (GLB) shown in the AR viewer, overriding the curated one. */
+  artifactModelUrl?: string;
+  artifactName?: string;
+  artifactAttribution?: string;
   streetView?: {
     panoId: string;
     heading: number;

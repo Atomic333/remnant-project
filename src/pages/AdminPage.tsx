@@ -34,6 +34,8 @@ interface FormState {
   panoId: string;
   heading: string;
   published: boolean;
+  artifactName: string;
+  artifactAttribution: string;
 }
 
 const emptyForm: FormState = {
@@ -53,6 +55,8 @@ const emptyForm: FormState = {
   panoId: "",
   heading: "",
   published: true,
+  artifactName: "",
+  artifactAttribution: "",
 };
 
 type SourceFilter = "all" | "edited" | "original" | "added";
@@ -77,6 +81,8 @@ const AdminPage = () => {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [photo, setPhoto] = useState<File | null>(null);
   const [existingImagePath, setExistingImagePath] = useState<string | null>(null);
+  const [modelFile, setModelFile] = useState<File | null>(null);
+  const [existingModelPath, setExistingModelPath] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [drafting, setDrafting] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
@@ -132,6 +138,8 @@ const AdminPage = () => {
     setForm(emptyForm);
     setPhoto(null);
     setExistingImagePath(null);
+    setModelFile(null);
+    setExistingModelPath(null);
   };
 
   const draftWithAi = async () => {
@@ -184,8 +192,12 @@ const AdminPage = () => {
       panoId: sv.panoId ?? "",
       heading: sv.heading != null ? String(sv.heading) : "",
       published: data.published,
+      artifactName: data.artifact_name ?? "",
+      artifactAttribution: data.artifact_attribution ?? "",
     });
     setExistingImagePath(data.image_path ?? null);
+    setExistingModelPath(data.artifact_model_url ?? null);
+    setModelFile(null);
     setPhoto(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -211,8 +223,12 @@ const AdminPage = () => {
       panoId: marker.streetView?.panoId ?? "",
       heading: marker.streetView?.heading != null ? String(marker.streetView.heading) : "",
       published: true,
+      artifactName: "",
+      artifactAttribution: "",
     });
     setExistingImagePath(null);
+    setExistingModelPath(null);
+    setModelFile(null);
     setPhoto(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -282,6 +298,30 @@ const AdminPage = () => {
       imagePath = path;
     }
 
+    let modelPath = existingModelPath;
+    if (modelFile) {
+      if (!modelFile.name.toLowerCase().endsWith(".glb")) {
+        setSaving(false);
+        toast({ title: "The artifact must be a .glb file.", variant: "destructive" });
+        return;
+      }
+      if (modelFile.size > 20 * 1024 * 1024) {
+        setSaving(false);
+        toast({ title: "The artifact model must be under 20MB.", variant: "destructive" });
+        return;
+      }
+      const path = `${slug}/${Date.now()}.glb`;
+      const { error: modelError } = await supabase.storage
+        .from("marker-models")
+        .upload(path, modelFile, { upsert: true, contentType: "model/gltf-binary" });
+      if (modelError) {
+        setSaving(false);
+        toast({ title: "Artifact upload failed", description: modelError.message, variant: "destructive" });
+        return;
+      }
+      modelPath = path;
+    }
+
     const heading = Number(form.heading);
     const payload = {
       slug,
@@ -298,6 +338,9 @@ const AdminPage = () => {
         url: s.url.trim(),
       })),
       image_path: imagePath,
+      artifact_model_url: modelPath,
+      artifact_name: form.artifactName.trim() || null,
+      artifact_attribution: form.artifactAttribution.trim() || null,
       street_view: form.panoId.trim()
         ? { panoId: form.panoId.trim(), heading: Number.isFinite(heading) ? heading : 0 }
         : null,
@@ -628,6 +671,35 @@ const AdminPage = () => {
             {existingImagePath && !photo && (
               <p className="mt-1 text-[11px] text-on-surface-variant">Current photo: {existingImagePath}</p>
             )}
+          </div>
+
+          <div className="rounded-lg border border-border p-3">
+            <label className="text-xs font-medium text-on-surface-variant">
+              3D AR artifact (.glb — optional, overrides the curated artifact)
+            </label>
+            <input
+              type="file"
+              accept=".glb,model/gltf-binary"
+              onChange={(e) => setModelFile(e.target.files?.[0] ?? null)}
+              className="mt-1 w-full text-xs text-on-surface-variant"
+            />
+            {existingModelPath && !modelFile && (
+              <p className="mt-1 text-[11px] text-on-surface-variant">
+                Current model: {existingModelPath}
+              </p>
+            )}
+            <input
+              value={form.artifactName}
+              onChange={(e) => set("artifactName", e.target.value)}
+              placeholder="Artifact name"
+              className={inputClass}
+            />
+            <input
+              value={form.artifactAttribution}
+              onChange={(e) => set("artifactAttribution", e.target.value)}
+              placeholder="Model credit (optional)"
+              className={inputClass}
+            />
           </div>
 
           <div className="flex gap-3">
