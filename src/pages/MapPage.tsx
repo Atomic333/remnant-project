@@ -16,6 +16,8 @@ import { useVisited } from "@/hooks/useVisited";
 import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
+import markerIconAsset from "@/assets/marker-icon.png.asset.json";
+
 
 // Theme hex values matching CSS variables
 const PRIMARY_COLOR = "#7c3aed";
