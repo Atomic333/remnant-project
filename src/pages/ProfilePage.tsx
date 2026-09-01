@@ -197,12 +197,12 @@ const ProfilePage = () => {
               value={name}
               maxLength={60}
               onChange={(e) => setName(e.target.value)}
-              className="flex-1 rounded-lg bg-surface-variant px-3 py-2.5 text-sm text-foreground outline-none"
+              className="min-w-0 flex-1 rounded-lg bg-surface-variant px-3 py-2.5 text-sm text-foreground outline-none"
             />
             <button
               onClick={saveName}
               disabled={savingName}
-              className="flex items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground disabled:opacity-60"
+              className="flex shrink-0 items-center gap-2 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground disabled:opacity-60"
             >
               {savingName && <Loader2 className="h-4 w-4 animate-spin" />}
               Save
