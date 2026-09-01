@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { QrCode, CheckCircle, CameraOff, XCircle } from "lucide-react";
+import { QrCode, CheckCircle, CameraOff, XCircle, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
@@ -259,9 +259,25 @@ const ScanPage = () => {
   }
 
   // ── Main scanner UI ─────────────────────────────────────────────────────────
+  const handleExit = () => {
+    void stopScanner();
+    navigate(-1);
+  };
+
   return (
     <div className="flex min-h-screen flex-col pb-20">
-      <PageHeader title="Scan" />
+      <PageHeader
+        title="Scan"
+        right={
+          <button
+            onClick={handleExit}
+            className="flex h-10 w-10 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:bg-surface-variant"
+            aria-label="Close scanner"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        }
+      />
 
       <div className="flex flex-1 flex-col items-center justify-center">
         <div className="relative mb-8 aspect-square w-full overflow-hidden bg-surface-variant elevation-1">
