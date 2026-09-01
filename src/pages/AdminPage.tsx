@@ -298,6 +298,30 @@ const AdminPage = () => {
       imagePath = path;
     }
 
+    let modelPath = existingModelPath;
+    if (modelFile) {
+      if (!modelFile.name.toLowerCase().endsWith(".glb")) {
+        setSaving(false);
+        toast({ title: "The artifact must be a .glb file.", variant: "destructive" });
+        return;
+      }
+      if (modelFile.size > 20 * 1024 * 1024) {
+        setSaving(false);
+        toast({ title: "The artifact model must be under 20MB.", variant: "destructive" });
+        return;
+      }
+      const path = `${slug}/${Date.now()}.glb`;
+      const { error: modelError } = await supabase.storage
+        .from("marker-models")
+        .upload(path, modelFile, { upsert: true, contentType: "model/gltf-binary" });
+      if (modelError) {
+        setSaving(false);
+        toast({ title: "Artifact upload failed", description: modelError.message, variant: "destructive" });
+        return;
+      }
+      modelPath = path;
+    }
+
     const heading = Number(form.heading);
     const payload = {
       slug,
