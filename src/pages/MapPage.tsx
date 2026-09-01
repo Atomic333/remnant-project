@@ -16,6 +16,8 @@ import { useVisited } from "@/hooks/useVisited";
 import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
+import markerIconAsset from "@/assets/marker-icon.png.asset.json";
+
 
 // Theme hex values matching CSS variables
 const PRIMARY_COLOR = "#7c3aed";
@@ -543,17 +545,17 @@ const MapPage = () => {
   const getMarkerIcon = useCallback(
     (markerId: string) => {
       const visited = isVisited(markerId);
+      const w = visited ? 36 : 40;
+      const h = Math.round(w * 1.3);
       return {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: visited ? 11 : 10,
-        fillColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
-        fillOpacity: visited ? 0.25 : 1,
-        strokeColor: visited ? SUCCESS_COLOR : PRIMARY_COLOR,
-        strokeWeight: visited ? 3 : 2,
-      };
+        url: markerIconAsset.url,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h),
+      } as google.maps.Icon;
     },
     [isVisited]
   );
+
 
   const onMarkerClick = useCallback(
     (m: Marker) => {
@@ -722,7 +724,7 @@ const MapPage = () => {
                       : undefined
                   }
                   icon={getMarkerIcon(m.id)}
-                  opacity={matchesFilter(m) ? 1 : 0.25}
+                  opacity={matchesFilter(m) ? (isVisited(m.id) ? 0.45 : 1) : 0.25}
                   title={m.name}
                 />
               );
