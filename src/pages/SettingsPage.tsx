@@ -1,4 +1,4 @@
-import { Sparkles, Shield, MapPin, ChevronRight, Users } from "lucide-react";
+import { Sparkles, Shield, MapPin, ChevronRight, Users, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
@@ -47,6 +47,25 @@ const SettingsPage = () => {
       <PageHeader title="Settings" />
 
       <div className="px-5 pt-4">
+
+        {/* Account */}
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+          Account
+        </h3>
+        <button
+          onClick={() => navigate("/profile")}
+          className="mb-6 flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <span className="text-sm font-medium text-card-foreground">
+              Profile &amp; message preferences
+            </span>
+          </div>
+          <ChevronRight className="h-5 w-5 text-on-surface-variant" />
+        </button>
 
         {/* About */}
         <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
