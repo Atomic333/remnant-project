@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode } from "lucide-react";
+import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo2, Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useDbMarkers } from "@/hooks/useAllMarkers";
+import { useDbMarkers, useAllMarkers } from "@/hooks/useAllMarkers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cities, DEFAULT_CITY_ID } from "@/data/cities";
-import { categories } from "@/data/markers";
+import { categories, markers as staticMarkers, type Marker } from "@/data/markers";
 
 interface SourceInput {
   name: string;
@@ -19,10 +19,13 @@ interface SourceInput {
 interface FormState {
   id: string | null;
   slug: string;
+  /** True when editing a curated (code-based) marker, so the slug must stay fixed. */
+  lockSlug: boolean;
   name: string;
   address: string;
   category: string;
   city: string;
+  rarity: "common" | "rare";
   lat: string;
   lng: string;
   summary: string;
@@ -36,10 +39,12 @@ interface FormState {
 const emptyForm: FormState = {
   id: null,
   slug: "",
+  lockSlug: false,
   name: "",
   address: "",
   category: "Architecture",
   city: DEFAULT_CITY_ID,
+  rarity: "common",
   lat: "",
   lng: "",
   summary: "",
@@ -50,12 +55,15 @@ const emptyForm: FormState = {
   published: true,
 };
 
+type SourceFilter = "all" | "edited" | "original" | "added";
+
 const slugify = (value: string) =>
   value
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
+
 
 const inputClass =
   "mt-1 w-full rounded-lg bg-surface-variant px-3 py-2.5 text-sm text-foreground outline-none";
