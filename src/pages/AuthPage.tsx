@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +8,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 const AuthPage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const from = searchParams.get("from") || "/";
   const { user, loading } = useAuth();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
@@ -15,8 +17,8 @@ const AuthPage = () => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) navigate("/admin", { replace: true });
-  }, [loading, user, navigate]);
+    if (!loading && user) navigate(from, { replace: true });
+  }, [loading, user, navigate, from]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,25 +45,29 @@ const AuthPage = () => {
     setBusy(false);
 
     if (error) {
-      toast({ title: "Couldn't sign in", description: error.message, variant: "destructive" });
+      toast({
+        title: mode === "signin" ? "Couldn't sign in" : "Couldn't create your account",
+        description: error.message,
+        variant: "destructive",
+      });
       return;
     }
     if (mode === "signup") {
-      toast({ title: "Check your email to confirm your account." });
+      toast({ title: "Welcome to MarkerQuest!" });
     }
   };
 
   const googleSignIn = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth` },
+      options: { redirectTo: `${window.location.origin}/auth?from=${encodeURIComponent(from)}` },
     });
     if (error) toast({ title: "Google sign-in failed", description: error.message, variant: "destructive" });
   };
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader title="Admin Sign In" />
+      <PageHeader title={mode === "signin" ? "Sign In" : "Create Account"} />
       <div className="px-5 pt-4">
         <form onSubmit={handleSubmit} className="space-y-3 rounded-xl bg-card p-4 elevation-1">
           <div>
@@ -116,8 +122,8 @@ const AuthPage = () => {
           </button>
         </form>
         <p className="mt-4 text-xs text-on-surface-variant">
-          Admin access is granted separately. After signing up, an existing admin must grant your
-          account the admin role before /admin unlocks.
+          An account keeps your visited sites in sync across devices and lets you choose which
+          messages you receive. Marker pages opened from a QR code stay readable without signing in.
         </p>
       </div>
     </div>
