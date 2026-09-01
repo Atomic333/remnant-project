@@ -411,6 +411,23 @@ const AdminPage = () => {
             </select>
           </div>
 
+          <div>
+            <label className="text-xs font-medium text-on-surface-variant">City</label>
+            <select
+              value={form.city}
+              onChange={(e) => set("city", e.target.value)}
+              className={inputClass}
+            >
+              {cities.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}, {c.state}
+                </option>
+              ))}
+            </select>
+          </div>
+
+
+
           <div className="flex gap-3">
             <div className="flex-1">
               <label className="text-xs font-medium text-on-surface-variant">Latitude</label>
