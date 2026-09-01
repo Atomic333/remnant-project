@@ -18,9 +18,10 @@ Deno.serve(async (req) => {
     });
   }
 
-  let body: { items?: { id: string; query: string }[] };
+  let body: { items?: { id: string; query: string }[]; bounds?: string };
   try { body = await req.json(); } catch { body = {}; }
   const items = Array.isArray(body.items) ? body.items : [];
+  const bounds = typeof body.bounds === "string" && body.bounds ? body.bounds : TACOMA_BOUNDS;
   if (items.length === 0) {
     return new Response(JSON.stringify({ error: "items array required" }), {
       status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -29,7 +30,7 @@ Deno.serve(async (req) => {
 
   const results: any[] = [];
   for (const it of items) {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(it.query)}&bounds=${encodeURIComponent(TACOMA_BOUNDS)}&region=us&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(it.query)}&bounds=${encodeURIComponent(bounds)}&region=us&key=${apiKey}`;
     try {
       const r = await fetch(url);
       const d = await r.json();
