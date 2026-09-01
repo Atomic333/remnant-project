@@ -56,3 +56,14 @@ export function getMarkerImage(id: string, fallbackKey?: string): string {
   if (fallbackKey && /^https?:\/\//.test(fallbackKey)) return fallbackKey;
   return (fallbackKey && byKey[fallbackKey]) || unionStation;
 }
+
+/** True when a bundled photo asset exists for this marker id. */
+export function hasLocalMarkerImage(id: string): boolean {
+  return Boolean(byId[id]);
+}
+
+/** The bundled asset for this marker id, if any. */
+export function getLocalMarkerImage(id: string): string | undefined {
+  return byId[id];
+}
+
