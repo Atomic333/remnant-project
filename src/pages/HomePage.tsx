@@ -1,28 +1,25 @@
 import { Compass, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useAllMarkers } from "@/hooks/useAllMarkers";
-import tacomaHero from "@/assets/tacoma-hero.jpg";
+import { useCityMarkers } from "@/hooks/useAllMarkers";
+import { cities, COMING_SOON_TEXT } from "@/data/cities";
+import { useSelectedCity } from "@/hooks/useSelectedCity";
 import logo from "@/assets/logo.png";
 import { useVisited } from "@/hooks/useVisited";
 import HamburgerMenu from "@/components/HamburgerMenu";
 
-const cities = [
-{
-  id: "tacoma",
-  name: "Tacoma",
-  state: "WA",
-  image: tacomaHero,
-  active: true
-}];
-
-
 const HomePage = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
   const navigate = useNavigate();
   const { visited } = useVisited();
-  const visitedCount = visited.size;
+  const { city, cityId, setCityId } = useSelectedCity();
   const total = markers.length;
+  const visitedCount = markers.filter((m) => visited.has(m.id)).length;
   const pct = total > 0 ? Math.round(visitedCount / total * 100) : 0;
+
+  const openCity = (id: string) => {
+    setCityId(id);
+    navigate("/map");
+  };
 
   return (
     <div className="flex h-[100dvh] flex-col bg-background">
