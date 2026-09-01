@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 
-import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
+import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed, ArrowLeft } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { categories } from "@/data/markers";
 import { useAllMarkers } from "@/hooks/useAllMarkers";

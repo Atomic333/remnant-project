@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { QrCode, CheckCircle, CameraOff, XCircle } from "lucide-react";
+import { QrCode, CheckCircle, CameraOff, XCircle, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
