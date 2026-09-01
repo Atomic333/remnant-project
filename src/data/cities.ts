@@ -29,7 +29,7 @@ export const cities: City[] = [
     id: "Bremerton",
     name: "Bremerton",
     state: "WA",
-    image: bremertonAsset.url,
+    image: bremertonHero,
     center: { lat: 47.5673, lng: -122.6329 },
     zoom: 14,
     comingSoon: true,
