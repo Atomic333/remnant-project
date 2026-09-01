@@ -11,6 +11,8 @@ export interface Profile {
   notifications_opt_in: boolean;
   ads_opt_in: boolean;
   onboarded_at: string | null;
+  share_code: string | null;
+  share_enabled: boolean;
 }
 
 export interface ProfilePrefs {
@@ -31,7 +33,7 @@ export function useProfile() {
       if (!userId) return null;
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, display_name, avatar_url, email_opt_in, notifications_opt_in, ads_opt_in, onboarded_at")
+        .select("id, email, display_name, avatar_url, email_opt_in, notifications_opt_in, ads_opt_in, onboarded_at, share_code, share_enabled")
         .eq("id", userId)
         .maybeSingle();
       if (error) throw error;
@@ -41,7 +43,7 @@ export function useProfile() {
       const { data: created, error: insertError } = await supabase
         .from("profiles")
         .insert({ id: userId, email: user?.email ?? null })
-        .select("id, email, display_name, avatar_url, email_opt_in, notifications_opt_in, ads_opt_in, onboarded_at")
+        .select("id, email, display_name, avatar_url, email_opt_in, notifications_opt_in, ads_opt_in, onboarded_at, share_code, share_enabled")
         .maybeSingle();
       if (insertError) throw insertError;
       return (created as Profile) ?? null;

@@ -136,6 +136,8 @@ export type Database = {
           id: string
           notifications_opt_in: boolean
           onboarded_at: string | null
+          share_code: string | null
+          share_enabled: boolean
         }
         Insert: {
           ads_opt_in?: boolean
@@ -147,6 +149,8 @@ export type Database = {
           id: string
           notifications_opt_in?: boolean
           onboarded_at?: string | null
+          share_code?: string | null
+          share_enabled?: boolean
         }
         Update: {
           ads_opt_in?: boolean
@@ -158,6 +162,8 @@ export type Database = {
           id?: string
           notifications_opt_in?: boolean
           onboarded_at?: string | null
+          share_code?: string | null
+          share_enabled?: boolean
         }
         Relationships: []
       }
@@ -187,6 +193,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_shared_visits: {
+        Args: { _code: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          marker_id: string
+          visited_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
