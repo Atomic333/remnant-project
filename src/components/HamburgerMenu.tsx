@@ -99,17 +99,26 @@ const HamburgerMenu = () => {
           })}
         </nav>
 
-        {/* Close button */}
+        {/* Guest chip / close button */}
         <div
-          className="px-6 pt-2"
+          className="space-y-2 px-6 pt-2"
           style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
         >
+          {isGuest && (
+            <button
+              onClick={() => go("/auth")}
+              className="interactive flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 font-display text-xs font-medium text-on-surface-variant"
+            >
+              Guest mode — Sign in
+            </button>
+          )}
           <SheetClose asChild>
             <button className="interactive flex w-full items-center justify-center rounded-lg bg-primary px-4 py-3 text-primary-foreground font-display text-sm font-medium hover:bg-primary/90 hover:elevation-2">
               Close
             </button>
           </SheetClose>
         </div>
+
       </SheetContent>
     </Sheet>
   );
