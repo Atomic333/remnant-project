@@ -665,37 +665,98 @@ const AdminPage = () => {
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-display text-sm font-medium text-primary-foreground elevation-1 disabled:opacity-60"
           >
             {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            {form.id ? "Save changes" : "Add marker"}
+            {form.id || form.lockSlug ? "Save changes" : "Add marker"}
           </button>
         </form>
 
-        {/* Existing DB markers */}
+        {/* Every site — curated and database */}
         <div className="rounded-xl bg-card p-4 elevation-1">
-          <span className="font-display font-medium text-card-foreground">Markers you've added</span>
+          <span className="font-display font-medium text-card-foreground">All sites</span>
+
+          <div className="mt-3 flex items-center gap-2 rounded-lg bg-surface-variant px-3 py-2">
+            <Search className="h-4 w-4 shrink-0 text-on-surface-variant" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search name, address or id"
+              className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-on-surface-variant"
+            />
+          </div>
+
+          <div className="mt-2 flex gap-1.5 overflow-x-auto pb-1">
+            {(
+              [
+                ["all", "All"],
+                ["edited", "Edited"],
+                ["original", "Original"],
+                ["added", "Added"],
+              ] as [SourceFilter, string][]
+            ).map(([value, label]) => (
+              <button
+                key={value}
+                onClick={() => setFilter(value)}
+                className={`shrink-0 rounded-full px-3 py-1.5 font-display text-xs font-medium ${
+                  filter === value
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-surface-variant text-on-surface-variant"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+
           {markersLoading && <Loader2 className="mt-3 h-4 w-4 animate-spin text-primary" />}
-          {!markersLoading && !dbRows.length && (
-            <p className="mt-2 text-sm text-on-surface-variant">
-              None yet — the 28 curated markers live in the app code.
-            </p>
+          {!listed.length && (
+            <p className="mt-3 text-sm text-on-surface-variant">No sites match this view.</p>
           )}
+
           <ul className="mt-2 space-y-2">
-            {dbRows.map((m) => (
+            {listed.map(({ marker: m, origin, inDb }) => (
               <li key={m.id} className="flex items-center gap-3 rounded-lg bg-surface-variant p-3">
                 <MarkerQrCard marker={m} size={56} showCaption={false} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-display text-sm font-medium text-foreground">{m.name}</p>
                   <p className="truncate text-xs text-on-surface-variant">{m.address || m.id}</p>
+                  <span
+                    className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${
+                      origin === "edited"
+                        ? "bg-primary/15 text-primary"
+                        : origin === "added"
+                          ? "bg-secondary text-secondary-foreground"
+                          : "bg-card text-on-surface-variant"
+                    }`}
+                  >
+                    {origin === "edited" ? "Edited" : origin === "added" ? "Added" : "Original"}
+                  </span>
                 </div>
-                <button onClick={() => editMarker(m.id)} aria-label={`Edit ${m.name}`}>
+                <button
+                  onClick={() => (inDb ? editMarker(m.id) : editStaticMarker(m))}
+                  aria-label={`Edit ${m.name}`}
+                >
                   <Pencil className="h-4 w-4 text-primary" />
                 </button>
-                <button onClick={() => deleteMarker(m.id)} aria-label={`Delete ${m.name}`}>
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </button>
+                {inDb ? (
+                  <button
+                    onClick={() => deleteMarker(m.id)}
+                    aria-label={
+                      origin === "edited" ? `Revert ${m.name}` : `Delete ${m.name}`
+                    }
+                  >
+                    {origin === "edited" ? (
+                      <Undo2 className="h-4 w-4 text-on-surface-variant" />
+                    ) : (
+                      <Trash2 className="h-4 w-4 text-destructive" />
+                    )}
+                  </button>
+                ) : (
+                  <span className="w-4" />
+                )}
               </li>
             ))}
           </ul>
         </div>
+
 
         {/* All markers QR sheet */}
         <button
