@@ -99,6 +99,29 @@ const AdminPage = () => {
   });
 
   const dbRows = useMemo(() => dbMarkers ?? [], [dbMarkers]);
+  const allMarkers = useAllMarkers();
+  const staticIds = useMemo(() => new Set(staticMarkers.map((m) => m.id)), []);
+  const dbSlugs = useMemo(() => new Set(dbRows.map((m) => m.id)), [dbRows]);
+
+  /** Every site, tagged with where its current content comes from. */
+  const listed = useMemo(() => {
+    const rows = allMarkers.map((m) => {
+      const inDb = dbSlugs.has(m.id);
+      const curated = staticIds.has(m.id);
+      const origin: SourceFilter = curated ? (inDb ? "edited" : "original") : "added";
+      return { marker: m, origin, inDb, curated };
+    });
+    const q = search.trim().toLowerCase();
+    return rows.filter(
+      (r) =>
+        (filter === "all" || r.origin === filter) &&
+        (!q ||
+          r.marker.name.toLowerCase().includes(q) ||
+          (r.marker.address ?? "").toLowerCase().includes(q) ||
+          r.marker.id.toLowerCase().includes(q)),
+    );
+  }, [allMarkers, dbSlugs, staticIds, filter, search]);
+
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
