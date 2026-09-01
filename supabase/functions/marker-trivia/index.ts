@@ -118,8 +118,29 @@ Deno.serve(async (req) => {
     const markerId = String(body?.marker_id ?? "").slice(0, 120);
     if (!markerId) return json({ error: "marker_id required" }, 400);
 
+    // QUEST is earned on location: only a verified QR-scan discovery unlocks trivia.
+    const { data: discovery } = await admin
+      .from("reward_events")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("event_type", "marker_discovery")
+      .eq("source_id", markerId)
+      .maybeSingle();
+
+    if (!discovery) {
+      return json({
+        locked: true,
+        questions: [],
+        already_completed: false,
+        previous_score: null,
+        max_score: 0,
+        error: "Visit this marker and scan its QR code to unlock trivia.",
+      }, action === "grade" ? 403 : 200);
+    }
+
     // ---- Serve the question set, generating and caching it on first request ----
     if (action === "get") {
+
       const { data: cached } = await admin
         .from("marker_trivia")
         .select("questions")
