@@ -93,8 +93,10 @@ const HomePage = () => {
               <Compass className="h-6 w-6 text-primary-foreground" />
             </div>
             <div className="text-left">
-              <p className="font-display text-base font-semibold text-primary-foreground">Explore Tacoma</p>
-              <p className="text-xs text-primary-foreground/70">Browse all markers</p>
+              <p className="font-display text-base font-semibold text-primary-foreground">Explore {city.name}</p>
+              <p className="text-xs text-primary-foreground/70">
+                {total > 0 ? "Browse all markers" : COMING_SOON_TEXT}
+              </p>
             </div>
           </button>
         </div>
