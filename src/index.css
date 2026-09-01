@@ -231,3 +231,36 @@
     scroll-behavior: auto !important;
   }
 }
+
+@layer utilities {
+  /* === QUEST / artifact language === */
+  .relic-surface {
+    background: var(--relic-gradient);
+  }
+
+  .artifact-glow {
+    box-shadow: var(--artifact-glow);
+  }
+  .artifact-glow-strong {
+    box-shadow: var(--artifact-glow-strong);
+  }
+
+  /* Gold leaf text, used for QUEST amounts only */
+  .quest-gold-text {
+    background: var(--gold-sheen);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gold-sheen 3.5s linear infinite;
+  }
+
+  .quest-engraved {
+    text-shadow: 0 1px 0 hsl(var(--quest-navy) / 0.8);
+  }
+}
+
+@keyframes gold-sheen {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
