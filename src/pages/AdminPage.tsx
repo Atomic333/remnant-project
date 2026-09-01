@@ -420,14 +420,21 @@ const AdminPage = () => {
         <form onSubmit={save} className="space-y-3 rounded-xl bg-card p-4 elevation-1">
           <div className="flex items-center justify-between">
             <span className="font-display font-medium text-card-foreground">
-              {form.id ? "Edit marker" : "Add a marker"}
+              {form.id || form.lockSlug ? "Edit marker" : "Add a marker"}
             </span>
-            {form.id && (
+            {(form.id || form.lockSlug) && (
               <button type="button" onClick={resetForm} className="text-xs text-primary underline">
                 New instead
               </button>
             )}
           </div>
+
+          {form.lockSlug && !form.id && (
+            <p className="rounded-lg bg-surface-variant px-3 py-2 text-[11px] text-on-surface-variant">
+              This is one of the built-in curated sites. Saving stores your edited version and it
+              replaces the original everywhere — the marker id and printed QR codes stay the same.
+            </p>
+          )}
 
           <div>
             <label className="text-xs font-medium text-on-surface-variant">Name</label>
@@ -447,12 +454,14 @@ const AdminPage = () => {
               value={form.slug}
               onChange={(e) => set("slug", slugify(e.target.value))}
               placeholder={slugify(form.name) || "e.g. old-city-hall"}
-              className={inputClass}
+              readOnly={form.lockSlug}
+              className={`${inputClass} ${form.lockSlug ? "opacity-60" : ""}`}
             />
             <p className="mt-1 text-[11px] text-on-surface-variant">
               https://markerquest.ai/marker/{form.slug || slugify(form.name) || "…"}
             </p>
           </div>
+
 
           <div>
             <label className="text-xs font-medium text-on-surface-variant">Address</label>
