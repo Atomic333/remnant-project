@@ -145,10 +145,12 @@ const AdminPage = () => {
     setForm({
       id: data.id,
       slug: data.slug,
+      lockSlug: staticIds.has(data.slug),
       name: data.name,
       address: data.address ?? "",
       category: data.category ?? "Architecture",
       city: data.city ?? DEFAULT_CITY_ID,
+      rarity: data.rarity === "rare" ? "rare" : "common",
       lat: String(data.lat),
       lng: String(data.lng),
       summary: data.summary ?? "",
@@ -163,17 +165,49 @@ const AdminPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  /** Prefill the form from a curated marker that lives in app code. */
+  const editStaticMarker = (marker: Marker) => {
+    setForm({
+      id: null,
+      slug: marker.id,
+      lockSlug: true,
+      name: marker.name,
+      address: marker.address ?? "",
+      category: marker.category ?? "Architecture",
+      city: marker.city ?? DEFAULT_CITY_ID,
+      rarity: marker.rarity === "rare" ? "rare" : "common",
+      lat: String(marker.lat),
+      lng: String(marker.lng),
+      summary: marker.summary ?? "",
+      story: marker.story ?? "",
+      sources: marker.sources?.length
+        ? marker.sources.map((s) => ({ name: s.name, url: s.url }))
+        : [{ name: "", url: "" }],
+      panoId: marker.streetView?.panoId ?? "",
+      heading: marker.streetView?.heading != null ? String(marker.streetView.heading) : "",
+      published: true,
+    });
+    setExistingImagePath(null);
+    setPhoto(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const deleteMarker = async (slug: string) => {
-    if (!window.confirm("Delete this marker? This can't be undone.")) return;
+    const isCurated = staticIds.has(slug);
+    const message = isCurated
+      ? "Revert this marker to its original built-in version? Your edits will be discarded."
+      : "Delete this marker? This can't be undone.";
+    if (!window.confirm(message)) return;
     const { error } = await supabase.from("markers").delete().eq("slug", slug);
     if (error) {
-      toast({ title: "Couldn't delete marker", description: error.message, variant: "destructive" });
+      toast({ title: "Couldn't save change", description: error.message, variant: "destructive" });
       return;
     }
     queryClient.invalidateQueries({ queryKey: ["db-markers"] });
     if (form.slug === slug) resetForm();
-    toast({ title: "Marker deleted." });
+    toast({ title: isCurated ? "Reverted to the original." : "Marker deleted." });
   };
+
 
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
