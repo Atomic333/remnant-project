@@ -42,8 +42,9 @@ export const QUEST_RANKS = [
 ] as const;
 
 export function questRank(lifetimeEarned: number) {
-  let current = QUEST_RANKS[0];
-  let next: (typeof QUEST_RANKS)[number] | null = null;
+  type Rank = { min: number; title: string };
+  let current: Rank = QUEST_RANKS[0];
+  let next: Rank | null = null;
   for (const rank of QUEST_RANKS) {
     if (lifetimeEarned >= rank.min) current = rank;
     else if (!next) next = rank;
