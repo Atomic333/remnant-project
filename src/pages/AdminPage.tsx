@@ -506,6 +506,19 @@ const AdminPage = () => {
             </select>
           </div>
 
+          <div>
+            <label className="text-xs font-medium text-on-surface-variant">Rarity</label>
+            <select
+              value={form.rarity}
+              onChange={(e) => set("rarity", e.target.value as "common" | "rare")}
+              className={inputClass}
+            >
+              <option value="common">Common</option>
+              <option value="rare">Rare</option>
+            </select>
+          </div>
+
+
 
 
           <div className="flex gap-3">
