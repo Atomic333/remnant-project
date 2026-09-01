@@ -36,6 +36,13 @@
       "when": 1788224426800,
       "tag": "0004_add_profile_prefs_and_visits",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1788224448272,
+      "tag": "0005_avatar_storage_policies",
+      "breakpoints": true
     }
   ]
 }
