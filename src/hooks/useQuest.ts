@@ -225,6 +225,28 @@ async function invokeQuest<T>(fn: string, body: Record<string, unknown>): Promis
   return data as T;
 }
 
+const SCAN_TOKEN_PREFIX = "markerquest_scan_token_";
+
+/** Hand a freshly minted scan token to the marker page the scanner navigates to. */
+export function stashScanToken(markerId: string, token: string) {
+  try {
+    sessionStorage.setItem(SCAN_TOKEN_PREFIX + markerId, token);
+  } catch {
+    /* ignore */
+  }
+}
+
+export function consumeScanToken(markerId: string): string | null {
+  try {
+    const key = SCAN_TOKEN_PREFIX + markerId;
+    const token = sessionStorage.getItem(key);
+    if (token) sessionStorage.removeItem(key);
+    return token;
+  } catch {
+    return null;
+  }
+}
+
 export function mintScanToken(markerId: string) {
   return invokeQuest<{ token: string }>("award-quest", { action: "mint_scan_token", marker_id: markerId });
 }
