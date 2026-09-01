@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 
-import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
+import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed, Route } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { categories } from "@/data/markers";
 import { useAllMarkers, useCityMarkers } from "@/hooks/useAllMarkers";
@@ -11,11 +11,32 @@ import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import { GoogleMap, useJsApiLoader, Marker as GMarker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, Marker as GMarker, Circle, Polyline } from "@react-google-maps/api";
 import { useVisited } from "@/hooks/useVisited";
 import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
+
+// Theme hex values matching CSS variables
+const PRIMARY_COLOR = "#7c3aed";
+const SUCCESS_COLOR = "#22c55e";
+const USER_LOCATION_COLOR = "#3b82f6";
+
+function toRad(deg: number) {
+  return (deg * Math.PI) / 180;
+}
+
+function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+  const R = 6371;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const lat1 = toRad(a.lat);
+  const lat2 = toRad(b.lat);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyDnJ44MU2ZSj15ZBllE9qQpM6njANa-HCY";
 
