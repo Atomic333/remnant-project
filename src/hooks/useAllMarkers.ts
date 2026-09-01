@@ -76,7 +76,10 @@ export function useDbMarkers() {
 /** The 28 curated markers in code, merged with markers added through /admin. */
 export function useAllMarkers(): Marker[] {
   const { data } = useDbMarkers();
-  return data && data.length ? [...staticMarkers, ...data] : staticMarkers;
+  return useMemo(
+    () => (data && data.length ? [...staticMarkers, ...data] : staticMarkers),
+    [data]
+  );
 }
 
 /** Markers belonging to the city the user is currently exploring. */
