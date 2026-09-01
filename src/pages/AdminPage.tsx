@@ -80,6 +80,8 @@ const AdminPage = () => {
   const [saving, setSaving] = useState(false);
   const [drafting, setDrafting] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
+  const [filter, setFilter] = useState<SourceFilter>("all");
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
