@@ -28,6 +28,20 @@ function toRad(deg: number) {
   return (deg * Math.PI) / 180;
 }
 
+/** Undiscovered → rare: each state gets its own weight, halo and glow on the map. */
+type MarkerState = "undiscovered" | "nearby" | "available" | "discovered" | "rare";
+
+const MARKER_STATE_STYLE: Record<
+  MarkerState,
+  { size: number; opacity: number; halo: string | null; haloRadius: number }
+> = {
+  undiscovered: { size: 34, opacity: 0.55, halo: null, haloRadius: 0 },
+  nearby: { size: 38, opacity: 0.85, halo: "#22D3EE", haloRadius: 60 },
+  available: { size: 44, opacity: 1, halo: "#8B5CF6", haloRadius: 45 },
+  discovered: { size: 36, opacity: 0.5, halo: "#FBBF24", haloRadius: 26 },
+  rare: { size: 44, opacity: 1, halo: "#FBBF24", haloRadius: 55 },
+};
+
 function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
   const R = 6371;
   const dLat = toRad(b.lat - a.lat);
@@ -542,10 +556,24 @@ const MapPage = () => {
 
   const filtered = markers.filter(matchesFilter);
 
+  /** Progressive discovery states, in priority order. */
+  const markerState = useCallback(
+    (m: Marker): MarkerState => {
+      if (isVisited(m.id)) return "discovered";
+      if (m.rarity === "rare") return "rare";
+      if (userLocation) {
+        const d = haversineKm(userLocation, m);
+        if (d <= 0.08) return "available";
+        if (d <= 0.5) return "nearby";
+      }
+      return "undiscovered";
+    },
+    [isVisited, userLocation]
+  );
+
   const getMarkerIcon = useCallback(
-    (markerId: string) => {
-      const visited = isVisited(markerId);
-      const w = visited ? 36 : 40;
+    (state: MarkerState) => {
+      const w = MARKER_STATE_STYLE[state].size;
       const h = Math.round(w * 1.3);
       return {
         url: markerIconAsset.url,
@@ -553,7 +581,7 @@ const MapPage = () => {
         anchor: new google.maps.Point(w / 2, h),
       } as google.maps.Icon;
     },
-    [isVisited]
+    []
   );
 
 
@@ -711,22 +739,42 @@ const MapPage = () => {
             {markers.map((m) => {
               const isDropping = droppingMarkers.has(m.id) && !droppedMarkers.has(m.id);
               const isSelected = selectedMarkerId === m.id;
+              const state = markerState(m);
+              const style = MARKER_STATE_STYLE[state];
+              const dimmed = !matchesFilter(m);
               return (
-                <GMarker
-                  key={m.id}
-                  position={{ lat: m.lat, lng: m.lng }}
-                  onClick={() => onMarkerClick(m)}
-                  animation={
-                    isDropping
-                      ? google.maps.Animation.DROP
-                      : isSelected
-                      ? google.maps.Animation.BOUNCE
-                      : undefined
-                  }
-                  icon={getMarkerIcon(m.id)}
-                  opacity={matchesFilter(m) ? (isVisited(m.id) ? 0.45 : 1) : 0.25}
-                  title={m.name}
-                />
+                <Fragment key={m.id}>
+                  {style.halo && !dimmed && (
+                    <Circle
+                      center={{ lat: m.lat, lng: m.lng }}
+                      radius={style.haloRadius}
+                      options={{
+                        strokeColor: style.halo,
+                        strokeOpacity: state === "discovered" ? 0.5 : 0.8,
+                        strokeWeight: state === "rare" ? 2 : 1.5,
+                        fillColor: style.halo,
+                        fillOpacity: state === "discovered" ? 0.06 : 0.14,
+                        clickable: false,
+                        zIndex: 1,
+                      }}
+                    />
+                  )}
+                  <GMarker
+                    position={{ lat: m.lat, lng: m.lng }}
+                    onClick={() => onMarkerClick(m)}
+                    animation={
+                      isDropping
+                        ? google.maps.Animation.DROP
+                        : isSelected
+                        ? google.maps.Animation.BOUNCE
+                        : undefined
+                    }
+                    icon={getMarkerIcon(state)}
+                    opacity={dimmed ? 0.25 : style.opacity}
+                    zIndex={state === "rare" || state === "available" ? 3 : 2}
+                    title={m.name}
+                  />
+                </Fragment>
               );
             })}
 
