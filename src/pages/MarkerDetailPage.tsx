@@ -1,13 +1,17 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X } from "lucide-react";
+import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X, Brain } from "lucide-react";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import { QRCodeSVG } from "qrcode.react";
 import { useVisited } from "@/hooks/useVisited";
 import { useAuth } from "@/hooks/useAuth";
 import MarkerChat from "@/components/MarkerChat";
 import StreetView from "@/components/StreetView";
+import MarkerTrivia from "@/components/MarkerTrivia";
 import { getMarkerImage } from "@/lib/markerImages";
+import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
+import { useQuestReward } from "@/components/QuestRewardProvider";
+import { useCityMarkers } from "@/hooks/useAllMarkers";
 
 const MarkerDetailPage = () => {
   const markers = useAllMarkers();
@@ -19,6 +23,29 @@ const MarkerDetailPage = () => {
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
   const [showStreetView, setShowStreetView] = useState(false);
+  const { celebrate } = useQuestReward();
+  const cityMarkers = useCityMarkers();
+  const awardedRef = useRef(false);
+
+  // A QR scan in the app leaves a one-time token behind; the server verifies it
+  // and decides the reward. Nothing about the amount is computed here.
+  useEffect(() => {
+    if (!id || !user || awardedRef.current) return;
+    const token = consumeScanToken(id);
+    if (!token) return;
+    awardedRef.current = true;
+    awardDiscovery({
+      markerId: id,
+      markerName: marker?.name ?? id,
+      scanToken: token,
+      city: marker?.city,
+      cityTotal: cityMarkers.length || undefined,
+    })
+      .then(celebrate)
+      .catch(() => {
+        /* unverified scans simply award nothing */
+      });
+  }, [id, user, marker?.name, marker?.city, cityMarkers.length, celebrate]);
 
   if (!marker) {
     return (
@@ -186,6 +213,17 @@ const MarkerDetailPage = () => {
               </div>
             );
           })}
+
+          {/* Trivia */}
+          <div className="rounded-xl bg-card p-4 elevation-1">
+            <div className="mb-3 flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-quest-navy text-quest-gold">
+                <Brain className="h-4 w-4" />
+              </div>
+              <span className="font-display font-medium text-card-foreground">Earn QUEST</span>
+            </div>
+            <MarkerTrivia marker={marker} />
+          </div>
 
           {/* Chat - always expanded */}
           <div className="rounded-xl bg-card p-4 elevation-1">
