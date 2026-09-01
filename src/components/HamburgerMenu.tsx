@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/sheet";
 import { useVisited } from "@/hooks/useVisited";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
+import { useGuest } from "@/hooks/useGuest";
+
 
 const links = [
   { icon: Home, label: "Home", path: "/" },
