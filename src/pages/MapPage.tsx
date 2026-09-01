@@ -724,7 +724,7 @@ const MapPage = () => {
                       : undefined
                   }
                   icon={getMarkerIcon(m.id)}
-                  opacity={matchesFilter(m) ? 1 : 0.25}
+                  opacity={matchesFilter(m) ? (isVisited(m.id) ? 0.45 : 1) : 0.25}
                   title={m.name}
                 />
               );
