@@ -51,9 +51,10 @@ const byKey: Record<string, string> = {
 };
 
 export function getMarkerImage(id: string, fallbackKey?: string): string {
-  if (byId[id]) return byId[id];
-  // Markers added through /admin carry a resolved URL (uploaded photo, Street View, or static map).
+  // Markers edited or added through /admin carry a resolved URL (uploaded photo,
+  // Street View, or static map) and take precedence over any bundled asset.
   if (fallbackKey && /^https?:\/\//.test(fallbackKey)) return fallbackKey;
+  if (byId[id]) return byId[id];
   return (fallbackKey && byKey[fallbackKey]) || unionStation;
 }
 
