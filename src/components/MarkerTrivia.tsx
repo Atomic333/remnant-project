@@ -82,7 +82,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
       <div className="mt-3 flex flex-wrap gap-2">
         {signedIn ? (
           <Link
-            to="/scan"
+            to="/map"
             className="interactive flex items-center gap-2 rounded-full bg-quest-navy px-4 py-2 font-display text-xs font-medium text-quest-gold"
           >
             <QrCode className="h-3.5 w-3.5" />
