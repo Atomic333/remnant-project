@@ -43,6 +43,13 @@
       "when": 1788224448272,
       "tag": "0005_avatar_storage_policies",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788227239556,
+      "tag": "0006_add_city_to_markers",
+      "breakpoints": true
     }
   ]
 }
