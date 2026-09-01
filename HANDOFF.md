@@ -211,6 +211,8 @@ The app expects `.env` to be auto-populated by Lovable Cloud (`VITE_SUPABASE_URL
 
 **Add a new marker (recommended):** sign in at `/auth`, then use `/admin` — name, address, category, coordinates, optional AI-drafted summary/story, optional photo upload, optional Street View pano ID. The first account that signs up automatically becomes the admin; later accounts get the plain `user` role and admins can grant roles in the `user_roles` table.
 
+**Edit an existing marker:** `/admin` lists **every** site (curated + database) with an `Original` / `Edited` / `Added` badge. Editing a curated marker saves a database row reusing its id as the slug, and `useAllMarkers()` layers database rows over code entries with the same id — so printed QR codes keep working. `Revert` deletes that row and restores the code version.
+
 **Add a new marker in code:** §5 above.
 
 **Print QR codes:** every marker (code-based or added via `/admin`) encodes `https://markerquest.ai/marker/{id}`.
