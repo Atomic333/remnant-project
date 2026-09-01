@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { markers as staticMarkers, type Marker } from "@/data/markers";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getStreetViewImageUrl } from "@/lib/streetViewImage";
+import { getLocalMarkerImage } from "@/lib/markerImages";
 import { DEFAULT_CITY_ID } from "@/data/cities";
 import { useSelectedCity } from "@/hooks/useSelectedCity";
 
