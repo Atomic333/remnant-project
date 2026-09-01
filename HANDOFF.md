@@ -213,6 +213,11 @@ The app expects `.env` to be auto-populated by Lovable Cloud (`VITE_SUPABASE_URL
 
 **Add a new marker in code:** §5 above.
 
+**Print QR codes:** every marker (code-based or added via `/admin`) encodes `https://markerquest.ai/marker/{id}`.
+- Single code: in `/admin`, each marker row has a QR thumbnail and a **PNG** button — downloads a ~1200x1400 print-ready PNG with the marker name and ID captioned underneath.
+- All codes: `/admin/qr-codes` shows a grid of every marker's QR with **Print / PDF** (browser print dialog; nav and buttons are hidden in print). New markers appear automatically via `useAllMarkers()`.
+- Implementation: `src/components/MarkerQrCard.tsx` + `src/lib/qrDownload.ts` (SVG → canvas, no extra dependencies).
+
 **Change the favicon:** Replace `public/favicon.png` (square, transparent PNG, ideally 512×512). Referenced from `index.html` via `<link rel="icon">` and `<link rel="apple-touch-icon">`.
 
 **Update AI behavior:** Edit the system prompt in `supabase/functions/marker-chat/index.ts`. Save → auto-deploys.
