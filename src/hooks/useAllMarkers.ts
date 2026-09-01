@@ -82,5 +82,5 @@ export function useAllMarkers(): Marker[] {
 export function useCityMarkers(): Marker[] {
   const all = useAllMarkers();
   const { cityId } = useSelectedCity();
-  return all.filter((m) => (m.city ?? DEFAULT_CITY_ID) === cityId);
+  return useMemo(() => all.filter((m) => (m.city ?? DEFAULT_CITY_ID) === cityId), [all, cityId]);
 }
