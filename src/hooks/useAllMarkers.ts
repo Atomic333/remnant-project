@@ -50,9 +50,13 @@ async function toMarker(row: Record<string, unknown>): Promise<Marker> {
   }
 
   if (!base.image) {
-    base.image = base.streetView?.panoId
-      ? getStreetViewImageUrl(base)
-      : getStaticMapUrl(lat, lng, { size: 600, zoom: 17 });
+    // Curated markers adopted into the database keep their bundled asset.
+    const local = getLocalMarkerImage(slug);
+    base.image =
+      local ??
+      (base.streetView?.panoId
+        ? getStreetViewImageUrl(base)
+        : getStaticMapUrl(lat, lng, { size: 600, zoom: 17 }));
   }
 
   return base;
@@ -74,14 +78,21 @@ export function useDbMarkers() {
 }
 
 
-/** The 28 curated markers in code, merged with markers added through /admin. */
+/**
+ * The curated markers in code, with database rows layered on top: a database
+ * marker whose slug matches a curated id replaces it, everything else is added.
+ */
 export function useAllMarkers(): Marker[] {
   const { data } = useDbMarkers();
-  return useMemo(
-    () => (data && data.length ? [...staticMarkers, ...data] : staticMarkers),
-    [data]
-  );
+  return useMemo(() => {
+    if (!data || !data.length) return staticMarkers;
+    const overrides = new Map(data.map((m) => [m.id, m]));
+    const merged = staticMarkers.map((m) => overrides.get(m.id) ?? m);
+    const staticIds = new Set(staticMarkers.map((m) => m.id));
+    return [...merged, ...data.filter((m) => !staticIds.has(m.id))];
+  }, [data]);
 }
+
 
 /** Markers belonging to the city the user is currently exploring. */
 export function useCityMarkers(): Marker[] {
