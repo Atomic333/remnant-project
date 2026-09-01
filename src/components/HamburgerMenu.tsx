@@ -27,6 +27,8 @@ const HamburgerMenu = () => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const { visited } = useVisited();
+  const { isGuest } = useGuest();
+
 
   const visitedCount = visited.size;
   const total = markers.length;
