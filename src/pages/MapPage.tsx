@@ -3,7 +3,9 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { Search, List, X, QrCode, CheckCircle, CameraOff, LocateFixed } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { categories } from "@/data/markers";
-import { useAllMarkers } from "@/hooks/useAllMarkers";
+import { useAllMarkers, useCityMarkers } from "@/hooks/useAllMarkers";
+import { COMING_SOON_TEXT } from "@/data/cities";
+import { useSelectedCity } from "@/hooks/useSelectedCity";
 import type { Marker } from "@/data/markers";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
@@ -33,7 +35,7 @@ const mapOptions: google.maps.MapOptions = {
 const progressTabs = ["All", "Visited", "To See"];
 
 const ProgressPanel = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
   const { visited: visitedSet } = useVisited();
   const [activeTab, setActiveTab] = useState("All");
   const navigate = useNavigate();
@@ -369,7 +371,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 type Sheet = "scan" | "progress" | null;
 
 const MapPage = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
+  const { city } = useSelectedCity();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isVisited } = useVisited();
@@ -437,7 +440,7 @@ const MapPage = () => {
 
   return (
     <div className="relative flex h-screen flex-col pb-16">
-      <PageHeader title="Map" />
+      <PageHeader title={`${city.name} Map`} />
 
       {/* Search bar */}
       <div className="absolute left-0 right-0 top-[80px] z-30 px-4">
@@ -511,8 +514,8 @@ const MapPage = () => {
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
-            center={TACOMA_CENTER}
-            zoom={14}
+            center={city.center}
+            zoom={city.zoom}
             options={mapOptions}
             onLoad={onMapLoad}
           >
@@ -588,7 +591,7 @@ const MapPage = () => {
                 <MarkerCard key={m.id} marker={m} showDistance />
               ))}
               {filtered.length === 0 && (
-                <p className="py-8 text-center text-sm text-on-surface-variant">No markers found.</p>
+                <p className="py-8 text-center text-sm text-on-surface-variant">{markers.length === 0 ? COMING_SOON_TEXT : "No markers found."}</p>
               )}
             </div>
           </div>

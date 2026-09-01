@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useDbMarkers } from "@/hooks/useAllMarkers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { cities, DEFAULT_CITY_ID } from "@/data/cities";
 import { categories } from "@/data/markers";
 
 interface SourceInput {
@@ -21,6 +22,7 @@ interface FormState {
   name: string;
   address: string;
   category: string;
+  city: string;
   lat: string;
   lng: string;
   summary: string;
@@ -37,6 +39,7 @@ const emptyForm: FormState = {
   name: "",
   address: "",
   category: "Architecture",
+  city: DEFAULT_CITY_ID,
   lat: "",
   lng: "",
   summary: "",
@@ -137,6 +140,7 @@ const AdminPage = () => {
       name: data.name,
       address: data.address ?? "",
       category: data.category ?? "Architecture",
+      city: data.city ?? DEFAULT_CITY_ID,
       lat: String(data.lat),
       lng: String(data.lng),
       summary: data.summary ?? "",
@@ -217,6 +221,7 @@ const AdminPage = () => {
       name,
       address: form.address.trim(),
       category: form.category,
+      city: form.city,
       lat,
       lng,
       summary: form.summary.trim(),
@@ -405,6 +410,23 @@ const AdminPage = () => {
               <option value="Other">Other</option>
             </select>
           </div>
+
+          <div>
+            <label className="text-xs font-medium text-on-surface-variant">City</label>
+            <select
+              value={form.city}
+              onChange={(e) => set("city", e.target.value)}
+              className={inputClass}
+            >
+              {cities.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}, {c.state}
+                </option>
+              ))}
+            </select>
+          </div>
+
+
 
           <div className="flex gap-3">
             <div className="flex-1">

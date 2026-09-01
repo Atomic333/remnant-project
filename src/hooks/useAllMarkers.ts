@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { markers as staticMarkers, type Marker } from "@/data/markers";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getStreetViewImageUrl } from "@/lib/streetViewImage";
+import { DEFAULT_CITY_ID } from "@/data/cities";
+import { useSelectedCity } from "@/hooks/useSelectedCity";
 
 interface DbSource {
   name?: string;
@@ -32,6 +34,7 @@ async function toMarker(row: Record<string, unknown>): Promise<Marker> {
     image: "",
     visited: false,
     category: String(row.category ?? "Other"),
+    city: String(row.city ?? DEFAULT_CITY_ID),
     qrUrl: `https://markerquest.ai/marker/${slug}`,
     streetView: streetView?.panoId ? streetView : undefined,
   };
@@ -73,4 +76,11 @@ export function useDbMarkers() {
 export function useAllMarkers(): Marker[] {
   const { data } = useDbMarkers();
   return data && data.length ? [...staticMarkers, ...data] : staticMarkers;
+}
+
+/** Markers belonging to the city the user is currently exploring. */
+export function useCityMarkers(): Marker[] {
+  const all = useAllMarkers();
+  const { cityId } = useSelectedCity();
+  return all.filter((m) => (m.city ?? DEFAULT_CITY_ID) === cityId);
 }

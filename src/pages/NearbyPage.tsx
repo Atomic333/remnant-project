@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { MapPin, LocateFixed } from "lucide-react";
 import { categories } from "@/data/markers";
-import { useAllMarkers } from "@/hooks/useAllMarkers";
+import { useCityMarkers } from "@/hooks/useAllMarkers";
+import { COMING_SOON_TEXT } from "@/data/cities";
+import { useSelectedCity } from "@/hooks/useSelectedCity";
 import FilterChips from "@/components/FilterChips";
 import MarkerCard from "@/components/MarkerCard";
 import PageHeader from "@/components/PageHeader";
@@ -27,7 +29,8 @@ function formatDistance(miles: number): string {
 }
 
 const NearbyPage = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
+  const { city } = useSelectedCity();
   const [activeFilter, setActiveFilter] = useState("All");
   const [userLocation, setUserLocation] = useState<UserLocation>(null);
   const [locationDenied, setLocationDenied] = useState(false);
@@ -61,7 +64,7 @@ const NearbyPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <PageHeader title="Tacoma Markers" />
+      <PageHeader title={`${city.name} Markers`} />
 
       {/* Location status banner */}
       <div className="flex items-center gap-2 px-4 py-2">
@@ -91,6 +94,9 @@ const NearbyPage = () => {
         {filtered.map((m) => (
           <MarkerCard key={m.id} marker={m} distanceLabel={m._distanceLabel ?? undefined} showDistance />
         ))}
+        {filtered.length === 0 && (
+          <p className="py-12 text-center text-sm text-on-surface-variant">{COMING_SOON_TEXT}</p>
+        )}
       </div>
     </div>
   );

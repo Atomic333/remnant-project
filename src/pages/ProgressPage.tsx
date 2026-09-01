@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useAllMarkers } from "@/hooks/useAllMarkers";
+import { useCityMarkers } from "@/hooks/useAllMarkers";
+import { COMING_SOON_TEXT } from "@/data/cities";
 import PageHeader from "@/components/PageHeader";
 import MarkerCard from "@/components/MarkerCard";
 import { useVisited } from "@/hooks/useVisited";
@@ -7,12 +8,12 @@ import { useVisited } from "@/hooks/useVisited";
 const tabs = ["All", "Visited", "To See"];
 
 const ProgressPage = () => {
-  const markers = useAllMarkers();
+  const markers = useCityMarkers();
   const [activeTab, setActiveTab] = useState("All");
   const { visited: visitedSet } = useVisited();
 
   const visitedCount = markers.filter((m) => visitedSet.has(m.id)).length;
-  const pct = Math.round((visitedCount / markers.length) * 100);
+  const pct = markers.length > 0 ? Math.round((visitedCount / markers.length) * 100) : 0;
 
   const filtered = markers.filter((m) => {
     if (activeTab === "Visited") return visitedSet.has(m.id);
@@ -69,7 +70,7 @@ const ProgressPage = () => {
           ))}
           {filtered.length === 0 && (
             <div className="py-12 text-center text-on-surface-variant">
-              No markers in this category yet.
+              {markers.length === 0 ? COMING_SOON_TEXT : "No markers in this category yet."}
             </div>
           )}
         </div>
