@@ -81,6 +81,8 @@ const AdminPage = () => {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [photo, setPhoto] = useState<File | null>(null);
   const [existingImagePath, setExistingImagePath] = useState<string | null>(null);
+  const [modelFile, setModelFile] = useState<File | null>(null);
+  const [existingModelPath, setExistingModelPath] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [drafting, setDrafting] = useState(false);
   const [showRequests, setShowRequests] = useState(false);
@@ -136,6 +138,8 @@ const AdminPage = () => {
     setForm(emptyForm);
     setPhoto(null);
     setExistingImagePath(null);
+    setModelFile(null);
+    setExistingModelPath(null);
   };
 
   const draftWithAi = async () => {
@@ -188,8 +192,12 @@ const AdminPage = () => {
       panoId: sv.panoId ?? "",
       heading: sv.heading != null ? String(sv.heading) : "",
       published: data.published,
+      artifactName: data.artifact_name ?? "",
+      artifactAttribution: data.artifact_attribution ?? "",
     });
     setExistingImagePath(data.image_path ?? null);
+    setExistingModelPath(data.artifact_model_url ?? null);
+    setModelFile(null);
     setPhoto(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
