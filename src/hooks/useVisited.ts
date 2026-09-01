@@ -47,6 +47,14 @@ export function useVisited() {
   const userId = user?.id ?? null;
   const queryClient = useQueryClient();
 
+  const [, bump] = useState(0);
+
+  useEffect(() => {
+    const onChange = () => bump((n) => n + 1);
+    window.addEventListener("markerquest:visited-changed", onChange);
+    return () => window.removeEventListener("markerquest:visited-changed", onChange);
+  }, []);
+
   const query = useQuery({
     queryKey: ["visits", userId],
     enabled: Boolean(userId),
