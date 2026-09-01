@@ -123,10 +123,10 @@ const SettingsPage = () => {
                 <DialogTitle className="font-display">Privacy Policy</DialogTitle>
               </DialogHeader>
               <div className="space-y-3 text-sm text-on-surface-variant">
-                <p>Your privacy matters to us. The Remnant Project is designed to be used without creating an account.</p>
+                <p>Your privacy matters to us. MarkerQuest.ai requires an account so your visited sites and message preferences stay with you.</p>
                 <p><strong className="text-foreground">Data we collect:</strong></p>
                 <ul className="list-disc space-y-1 pl-4">
-                  <li>Visited marker progress (stored locally on your device)</li>
+                  <li>Your email, display name, optional profile image, and visited marker progress</li>
                   <li>Optional email if you submit a marker request</li>
                 </ul>
                 <p><strong className="text-foreground">Data we do NOT collect:</strong></p>
@@ -135,7 +135,7 @@ const SettingsPage = () => {
                   <li>Personal identifying information</li>
                   <li>Browsing history or third-party tracking</li>
                 </ul>
-                <p>All progress data is stored locally and never leaves your device unless you choose to create an account in the future.</p>
+                <p>You choose whether we send email messages, notifications, or advertisements, and you can change those choices any time on your profile.</p>
               </div>
             </DialogContent>
           </Dialog>
