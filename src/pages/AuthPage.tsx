@@ -5,12 +5,16 @@ import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useGuest } from "@/hooks/useGuest";
+
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const from = searchParams.get("from") || "/";
   const { user, loading } = useAuth();
+  const { enableGuest } = useGuest();
+
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -115,6 +119,16 @@ const AuthPage = () => {
           </button>
           <button
             type="button"
+            onClick={() => {
+              enableGuest();
+              navigate(from === "/profile" || from === "/dashboard" ? "/" : from, { replace: true });
+            }}
+            className="w-full rounded-xl bg-surface-variant py-3 font-display text-sm font-medium text-foreground"
+          >
+            Continue as guest
+          </button>
+          <button
+            type="button"
             onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
             className="w-full text-center text-xs text-on-surface-variant underline"
           >
@@ -122,9 +136,12 @@ const AuthPage = () => {
           </button>
         </form>
         <p className="mt-4 text-xs text-on-surface-variant">
-          An account keeps your visited sites in sync across devices and lets you choose which
-          messages you receive. Marker pages opened from a QR code stay readable without signing in.
+          As a guest you can explore every city, map and marker — your visited sites stay on this
+          device and carry over if you create an account later. An account keeps visits synced across
+          devices, unlocks your profile and shareable visit history, and lets you choose which
+          messages you receive.
         </p>
+
       </div>
     </div>
   );
