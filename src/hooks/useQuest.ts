@@ -282,7 +282,10 @@ export interface TriviaSet {
   already_completed: boolean;
   previous_score: number | null;
   max_score: number;
+  /** True when the user has not scanned this marker's QR code on site. */
+  locked?: boolean;
 }
+
 
 export function fetchTrivia(markerId: string, context: {
   name: string;
