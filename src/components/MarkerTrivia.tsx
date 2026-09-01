@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { Brain, Check, Loader2, X } from "lucide-react";
+import { Brain, Check, Loader2, Lock, Navigation, QrCode, X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import type { Marker } from "@/data/markers";
-import { fetchTrivia, gradeTrivia, type TriviaResult, type TriviaSet } from "@/hooks/useQuest";
+import {
+  fetchTrivia,
+  gradeTrivia,
+  useMarkerDiscovered,
+  type TriviaResult,
+  type TriviaSet,
+} from "@/hooks/useQuest";
 import { useQuestReward } from "@/components/QuestRewardProvider";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -10,6 +17,7 @@ import { useAuth } from "@/hooks/useAuth";
 const MarkerTrivia = ({ marker }: { marker: Marker }) => {
   const { user } = useAuth();
   const { celebrate } = useQuestReward();
+  const { data: discovered, isLoading: checkingDiscovery } = useMarkerDiscovered(marker.id);
   const [set, setSet] = useState<TriviaSet | null>(null);
   const [answers, setAnswers] = useState<number[]>([]);
   const [loading, setLoading] = useState(false);
@@ -25,6 +33,10 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
         story: marker.story,
         sources: marker.sources.map((s) => s.name).join(", "),
       });
+      if (data.locked) {
+        toast.error("Scan this marker's QR code on site to unlock trivia.");
+        return;
+      }
       setSet(data);
       setAnswers(new Array(data.questions.length).fill(-1));
     } catch (e) {
@@ -48,19 +60,74 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
     }
   };
 
-  if (!user) {
+  /** On-site earning gate — shown to guests and to anyone who hasn't scanned here. */
+  const LockedPanel = ({ signedIn }: { signedIn: boolean }) => (
+    <div>
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-quest-navy text-quest-gold">
+          <Lock className="h-4 w-4" />
+        </div>
+        <div>
+          <p className="font-display text-sm font-medium text-card-foreground">
+            Earned on location
+          </p>
+          <p className="mt-1 text-sm text-on-surface-variant">
+            QUEST is only awarded to explorers who stand at the site and scan the plaque's QR code.
+            {signedIn
+              ? " Visit this marker, scan its code, and the trivia set unlocks here."
+              : " Create a free account, then scan the plaque's code to start earning."}
+          </p>
+        </div>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {signedIn ? (
+          <Link
+            to="/map"
+            className="interactive flex items-center gap-2 rounded-full bg-quest-navy px-4 py-2 font-display text-xs font-medium text-quest-gold"
+          >
+            <QrCode className="h-3.5 w-3.5" />
+            Scan QR code
+          </Link>
+        ) : (
+          <Link
+            to="/auth"
+            className="interactive flex items-center gap-2 rounded-full bg-quest-navy px-4 py-2 font-display text-xs font-medium text-quest-gold"
+          >
+            <QrCode className="h-3.5 w-3.5" />
+            Sign in to earn
+          </Link>
+        )}
+        <a
+          href={`https://www.google.com/maps/dir/?api=1&destination=${marker.lat},${marker.lng}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="interactive flex items-center gap-2 rounded-full border border-border px-4 py-2 font-display text-xs font-medium text-on-surface-variant"
+        >
+          <Navigation className="h-3.5 w-3.5" />
+          Directions
+        </a>
+      </div>
+    </div>
+  );
+
+  if (!user) return <LockedPanel signedIn={false} />;
+
+  if (checkingDiscovery) {
     return (
-      <p className="text-sm text-on-surface-variant">
-        Sign in to test your knowledge of this site and earn QUEST.
-      </p>
+      <div className="flex items-center gap-2 text-sm text-on-surface-variant">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        Checking your discoveries…
+      </div>
     );
   }
+
+  if (!discovered) return <LockedPanel signedIn />;
 
   if (!set) {
     return (
       <div>
         <p className="text-sm text-on-surface-variant">
-          Answer three questions about this site to earn QUEST.
+          You scanned this plaque — answer three questions about the site to earn QUEST.
         </p>
         <button
           onClick={start}
@@ -73,6 +140,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
       </div>
     );
   }
+
 
   const allAnswered = answers.every((a) => a >= 0);
 
