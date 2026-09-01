@@ -64,6 +64,13 @@
       "when": 1788235017982,
       "tag": "0008_create_quest_economy",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1788242868095,
+      "tag": "0009_add_marker_artifacts",
+      "breakpoints": true
     }
   ]
 }
