@@ -1,4 +1,4 @@
-import { Sparkles, Shield, MapPin, ChevronRight, Users } from "lucide-react";
+import { Sparkles, Shield, MapPin, ChevronRight, Users, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
 import PageHeader from "@/components/PageHeader";
@@ -47,6 +47,25 @@ const SettingsPage = () => {
       <PageHeader title="Settings" />
 
       <div className="px-5 pt-4">
+
+        {/* Account */}
+        <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
+          Account
+        </h3>
+        <button
+          onClick={() => navigate("/profile")}
+          className="mb-6 flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1"
+        >
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <span className="text-sm font-medium text-card-foreground">
+              Profile &amp; message preferences
+            </span>
+          </div>
+          <ChevronRight className="h-5 w-5 text-on-surface-variant" />
+        </button>
 
         {/* About */}
         <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
@@ -104,10 +123,10 @@ const SettingsPage = () => {
                 <DialogTitle className="font-display">Privacy Policy</DialogTitle>
               </DialogHeader>
               <div className="space-y-3 text-sm text-on-surface-variant">
-                <p>Your privacy matters to us. The Remnant Project is designed to be used without creating an account.</p>
+                <p>Your privacy matters to us. MarkerQuest.ai requires an account so your visited sites and message preferences stay with you.</p>
                 <p><strong className="text-foreground">Data we collect:</strong></p>
                 <ul className="list-disc space-y-1 pl-4">
-                  <li>Visited marker progress (stored locally on your device)</li>
+                  <li>Your email, display name, optional profile image, and visited marker progress</li>
                   <li>Optional email if you submit a marker request</li>
                 </ul>
                 <p><strong className="text-foreground">Data we do NOT collect:</strong></p>
@@ -116,7 +135,7 @@ const SettingsPage = () => {
                   <li>Personal identifying information</li>
                   <li>Browsing history or third-party tracking</li>
                 </ul>
-                <p>All progress data is stored locally and never leaves your device unless you choose to create an account in the future.</p>
+                <p>You choose whether we send email messages, notifications, or advertisements, and you can change those choices any time on your profile.</p>
               </div>
             </DialogContent>
           </Dialog>
