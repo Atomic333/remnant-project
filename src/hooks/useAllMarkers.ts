@@ -36,6 +36,7 @@ async function toMarker(row: Record<string, unknown>): Promise<Marker> {
     visited: false,
     category: String(row.category ?? "Other"),
     city: String(row.city ?? DEFAULT_CITY_ID),
+    rarity: row.rarity === "rare" ? "rare" : "common",
     qrUrl: `https://markerquest.ai/marker/${slug}`,
     streetView: streetView?.panoId ? streetView : undefined,
   };
