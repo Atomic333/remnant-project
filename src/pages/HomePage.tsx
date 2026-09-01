@@ -39,28 +39,34 @@ const HomePage = () => {
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-on-surface-variant">Cities</p>
         </div>
 
-        {cities.map((city) =>
-        <div
-          key={city.id}
-          className={`relative flex-1 overflow-hidden rounded-2xl elevation-2 ${city.active ? "cursor-pointer" : "cursor-default"}`}
-          onClick={() => city.active && navigate("/map")}>
-          
-            {city.image ?
-          <img src={city.image} alt={city.name} className="h-full w-full object-cover" /> :
-          <div className="h-full w-full bg-surface-variant" />
-          }
+        <div className="flex flex-1 flex-col gap-3 overflow-y-auto">
+          {cities.map((c) =>
+          <button
+            key={c.id}
+            type="button"
+            onClick={() => openCity(c.id)}
+            className={`relative min-h-[9rem] flex-1 shrink-0 overflow-hidden rounded-2xl text-left elevation-2 transition-all active:scale-[0.99] ${cityId === c.id ? "ring-2 ring-primary" : ""}`}>
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              {c.image ?
+            <img src={c.image} alt={`${c.name}, ${c.state}`} className="h-full w-full object-cover" /> :
+            <div className="h-full w-full bg-surface-variant" />
+            }
 
-            {/* Content */}
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h2 className="font-display text-2xl font-medium text-white leading-tight">
-                {city.name}, {city.state}
-              </h2>
-            </div>
-          </div>
-        )}
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 right-0 p-4">
+                <h2 className="font-display text-2xl font-medium text-white leading-tight">
+                  {c.name}, {c.state}
+                </h2>
+                {c.comingSoon &&
+              <p className="mt-1 text-xs font-medium text-white/80">{COMING_SOON_TEXT}</p>
+              }
+              </div>
+            </button>
+          )}
+        </div>
 
         {/* Quick Actions */}
         <div className="flex shrink-0 flex-col gap-3">
