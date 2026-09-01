@@ -13,6 +13,8 @@ const AuthPage = () => {
   const [searchParams] = useSearchParams();
   const from = searchParams.get("from") || "/";
   const { user, loading } = useAuth();
+  const { enableGuest } = useGuest();
+
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
