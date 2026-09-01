@@ -759,11 +759,20 @@ const MapPage = () => {
                 path={nearestUnvisitedPath}
                 options={{
                   strokeColor: USER_LOCATION_COLOR,
-                  strokeOpacity: 0.35,
-                  strokeWeight: 2,
-                  strokePattern: [
-                    { icon: { path: google.maps.SymbolPath.CIRCLE, scale: 1, strokeOpacity: 0 }, length: 8 },
-                    { icon: { path: google.maps.SymbolPath.CIRCLE, scale: 1, strokeOpacity: 0 }, length: 8 },
+                  strokeOpacity: 0,
+                  strokeWeight: 0,
+                  icons: [
+                    {
+                      icon: {
+                        path: "M 0,0 0,1",
+                        strokeColor: USER_LOCATION_COLOR,
+                        strokeOpacity: 0.4,
+                        strokeWeight: 2,
+                        scale: 1,
+                      },
+                      offset: "0",
+                      repeat: "12px",
+                    },
                   ],
                 }}
               />
