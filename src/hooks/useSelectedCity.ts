@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { DEFAULT_CITY_ID, getCity, type City } from "@/data/cities";
+import { useAllMarkers } from "@/hooks/useAllMarkers";
 
 const STORAGE_KEY = "markerquest_city";
 const EVENT = "markerquest:city-changed";
@@ -15,6 +16,7 @@ function read(): string {
 /** The city the user is currently exploring, persisted per device. */
 export function useSelectedCity(): { city: City; cityId: string; setCityId: (id: string) => void } {
   const [cityId, setId] = useState<string>(read);
+  const markers = useAllMarkers();
 
   useEffect(() => {
     const onChange = () => setId(read());
@@ -32,5 +34,6 @@ export function useSelectedCity(): { city: City; cityId: string; setCityId: (id:
     window.dispatchEvent(new Event(EVENT));
   }, []);
 
-  return { city: getCity(cityId), cityId: getCity(cityId).id, setCityId };
+  const city = useMemo(() => getCity(cityId, markers), [cityId, markers]);
+  return { city, cityId: city.id, setCityId };
 }
