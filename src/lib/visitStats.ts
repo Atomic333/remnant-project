@@ -1,4 +1,4 @@
-import { cities, DEFAULT_CITY_ID, type City } from "@/data/cities";
+import { citiesForMarkers, DEFAULT_CITY_ID, type City } from "@/data/cities";
 import type { Marker } from "@/data/markers";
 
 export interface CityProgress {
@@ -10,7 +10,7 @@ export interface CityProgress {
 
 /** Per-city visited counts across every city the app knows about. */
 export function cityProgress(markers: Marker[], visited: Set<string>): CityProgress[] {
-  return cities.map((city) => {
+  return citiesForMarkers(markers).map((city) => {
     const inCity = markers.filter((m) => (m.city ?? DEFAULT_CITY_ID) === city.id);
     const visitedCount = inCity.filter((m) => visited.has(m.id)).length;
     return {

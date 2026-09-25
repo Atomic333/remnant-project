@@ -1,7 +1,8 @@
 import { Compass, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useCityMarkers } from "@/hooks/useAllMarkers";
-import { cities, COMING_SOON_TEXT } from "@/data/cities";
+import { useMemo } from "react";
+import { useAllMarkers, useCityMarkers } from "@/hooks/useAllMarkers";
+import { citiesForMarkers, COMING_SOON_TEXT } from "@/data/cities";
 import { useSelectedCity } from "@/hooks/useSelectedCity";
 import logo from "@/assets/logo.png";
 import { useVisited } from "@/hooks/useVisited";
@@ -9,6 +10,8 @@ import HamburgerMenu from "@/components/HamburgerMenu";
 
 const HomePage = () => {
   const markers = useCityMarkers();
+  const allMarkers = useAllMarkers();
+  const cities = useMemo(() => citiesForMarkers(allMarkers), [allMarkers]);
   const navigate = useNavigate();
   const { visited } = useVisited();
   const { city, cityId, setCityId } = useSelectedCity();

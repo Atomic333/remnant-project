@@ -8,7 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useDbMarkers, useAllMarkers } from "@/hooks/useAllMarkers";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { cities, DEFAULT_CITY_ID } from "@/data/cities";
+import { DEFAULT_CITY_ID, getCity, loadUsCities, makeCityId, US_STATES, type UsCityData } from "@/data/cities";
 import { categories, markers as staticMarkers, type Marker } from "@/data/markers";
 
 interface SourceInput {
@@ -25,6 +25,7 @@ interface FormState {
   address: string;
   category: string;
   city: string;
+  state: string;
   rarity: "common" | "rare";
   lat: string;
   lng: string;
@@ -45,7 +46,8 @@ const emptyForm: FormState = {
   name: "",
   address: "",
   category: "Architecture",
-  city: DEFAULT_CITY_ID,
+  city: "Tacoma",
+  state: "WA",
   rarity: "common",
   lat: "",
   lng: "",
@@ -134,6 +136,21 @@ const AdminPage = () => {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
+  const [cityData, setCityData] = useState<UsCityData | null>(null);
+  useEffect(() => {
+    loadUsCities().then(setCityData).catch(() => setCityData({}));
+  }, []);
+
+  /** Set the city; when it matches a known place and coordinates are empty, prefill its center. */
+  const pickCity = (name: string) =>
+    setForm((prev) => {
+      const hit = cityData?.[prev.state]?.find(([n]) => n === name);
+      if (hit && !prev.lat && !prev.lng) {
+        return { ...prev, city: name, lat: String(hit[1]), lng: String(hit[2]) };
+      }
+      return { ...prev, city: name };
+    });
+
   const resetForm = () => {
     setForm(emptyForm);
     setPhoto(null);
@@ -182,7 +199,8 @@ const AdminPage = () => {
       name: data.name,
       address: data.address ?? "",
       category: data.category ?? "Architecture",
-      city: data.city ?? DEFAULT_CITY_ID,
+      city: getCity(data.city ?? DEFAULT_CITY_ID).name,
+      state: data.state ?? getCity(data.city ?? DEFAULT_CITY_ID).state,
       rarity: data.rarity === "rare" ? "rare" : "common",
       lat: String(data.lat),
       lng: String(data.lng),
@@ -211,7 +229,8 @@ const AdminPage = () => {
       name: marker.name,
       address: marker.address ?? "",
       category: marker.category ?? "Architecture",
-      city: marker.city ?? DEFAULT_CITY_ID,
+      city: getCity(marker.city ?? DEFAULT_CITY_ID).name,
+      state: getCity(marker.city ?? DEFAULT_CITY_ID).state,
       rarity: marker.rarity === "rare" ? "rare" : "common",
       lat: String(marker.lat),
       lng: String(marker.lng),
@@ -328,7 +347,8 @@ const AdminPage = () => {
       name,
       address: form.address.trim(),
       category: form.category,
-      city: form.city,
+      city: makeCityId(form.city.trim() || "Tacoma", form.state),
+      state: form.state,
       lat,
       lng,
       summary: form.summary.trim(),
@@ -535,18 +555,32 @@ const AdminPage = () => {
           </div>
 
           <div>
-            <label className="text-xs font-medium text-on-surface-variant">City</label>
+            <label className="text-xs font-medium text-on-surface-variant">State</label>
             <select
-              value={form.city}
-              onChange={(e) => set("city", e.target.value)}
+              value={form.state}
+              onChange={(e) => setForm((p) => ({ ...p, state: e.target.value, city: "" }))}
               className={inputClass}
             >
-              {cities.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}, {c.state}
-                </option>
+              {US_STATES.map(([code, label]) => (
+                <option key={code} value={code}>{label}</option>
               ))}
             </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-medium text-on-surface-variant">City</label>
+            <input
+              list="admin-city-options"
+              value={form.city}
+              onChange={(e) => pickCity(e.target.value)}
+              placeholder={cityData ? "Start typing a city" : "Loading cities…"}
+              className={inputClass}
+            />
+            <datalist id="admin-city-options">
+              {(cityData?.[form.state] ?? []).map(([n]) => (
+                <option key={n} value={n} />
+              ))}
+            </datalist>
           </div>
 
           <div>

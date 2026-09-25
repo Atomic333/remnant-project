@@ -165,6 +165,7 @@ export type Database = {
           rarity: string
           slug: string
           sources: Json
+          state: string | null
           story: string
           street_view: Json | null
           summary: string
@@ -188,6 +189,7 @@ export type Database = {
           rarity?: string
           slug: string
           sources?: Json
+          state?: string | null
           story?: string
           street_view?: Json | null
           summary?: string
@@ -211,6 +213,7 @@ export type Database = {
           rarity?: string
           slug?: string
           sources?: Json
+          state?: string | null
           story?: string
           street_view?: Json | null
           summary?: string

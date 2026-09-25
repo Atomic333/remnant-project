@@ -71,6 +71,13 @@
       "when": 1788242868095,
       "tag": "0009_add_marker_artifacts",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790299144152,
+      "tag": "0010_add_marker_state",
+      "breakpoints": true
     }
   ]
 }
