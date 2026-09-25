@@ -11,7 +11,7 @@ import HamburgerMenu from "@/components/HamburgerMenu";
 const HomePage = () => {
   const markers = useCityMarkers();
   const allMarkers = useAllMarkers();
-  const cities = useMemo(() => citiesForMarkers(allMarkers.filter((m) => m.published !== false)), [allMarkers]);
+  const cities = useMemo(() => citiesForMarkers(allMarkers), [allMarkers]);
   const navigate = useNavigate();
   const { visited } = useVisited();
   const { city, cityId, setCityId } = useSelectedCity();
