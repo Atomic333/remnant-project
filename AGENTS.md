@@ -1,0 +1,1 @@
+- Every Quest Coin earn goes through `awardByRule` in `supabase/functions/_shared/quest.ts` with a unique `award_key`; purchases, refunds and adjustments run only through the service-role database functions (`purchase_item`, `refund_redemption`, `admin_adjust`). Why: one place enforces idempotency, limits and non-negative balances.
