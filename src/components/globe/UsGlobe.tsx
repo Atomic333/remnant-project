@@ -200,7 +200,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
         {STATES.filter((s) => counts[s.abbr]).map((s) => {
           const c = geoCentroid(s);
           const [cx, cy] = projection(c) ?? [NaN, NaN];
-          const visible = geoContains({ type: "Sphere" } as never, c) && path({ type: "Point", coordinates: c }) ;
+          const visible = path({ type: "Point", coordinates: c });
           if (!visible || Number.isNaN(cx)) return null;
           return (
             <g key={`b-${s.abbr}`} transform={`translate(${cx},${cy})`} pointerEvents="none">
