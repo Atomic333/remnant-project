@@ -95,8 +95,19 @@ const MarkerDetailPage = () => {
     { key: "sources", icon: FileText, label: "Sources" },
   ];
 
+  const activeTrail = getActiveTrail();
+  const onActiveTrail = activeTrail?.markerIds.includes(marker.id);
+
   return (
     <div className="min-h-screen pb-20">
+      {onActiveTrail && (
+        <button
+          onClick={() => navigate(`/trails/${activeTrail!.slug}`)}
+          className="sticky top-0 z-30 flex w-full items-center justify-center gap-2 bg-primary py-2.5 text-sm font-medium text-primary-foreground"
+        >
+          <ArrowLeft className="h-4 w-4" /> Back to your trail
+        </button>
+      )}
       {/* Hero - Marker image with overlay button */}
       <div className="relative h-60 bg-surface-variant">
         <img
