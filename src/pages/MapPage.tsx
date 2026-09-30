@@ -17,6 +17,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
 import markerIconAsset from "@/assets/marker-icon.png.asset.json";
+import { prepareVerifiedScan } from "@/hooks/useQuest";
 
 
 // Theme hex values matching CSS variables
@@ -183,7 +184,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
       if (found) {
         setResultLabel(found.name);
         setScanState("success");
-        setTimeout(() => { onClose(); navigate(`/marker/${found.id}`); }, 1500);
+        const ready = prepareVerifiedScan(found.id);
+        setTimeout(() => { void ready.finally(() => { onClose(); navigate(`/marker/${found.id}`); }); }, 1500);
         return;
       }
     }
