@@ -1,4 +1,5 @@
 import { checkinActiveTrailFromScan, getActiveTrail } from "@/lib/trails";
+import { toast } from "@/hooks/use-toast";
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, BookOpen, MessageCircle, FileText, Check, MapPin, Eye, X, Brain } from "lucide-react";
