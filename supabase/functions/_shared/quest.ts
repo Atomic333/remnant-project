@@ -323,3 +323,12 @@ export async function evaluateAchievements(
 
   return unlocked;
 }
+
+
+/** 6-digit code for a time window, shared by staff display and visitor check-in. */
+export async function rotatingCode(secret: string, window: number): Promise<string> {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(String(window))));
+  const n = ((sig[0] << 24) | (sig[1] << 16) | (sig[2] << 8) | sig[3]) >>> 0;
+  return String(n % 1_000_000).padStart(6, "0");
+}

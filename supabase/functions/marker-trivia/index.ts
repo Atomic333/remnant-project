@@ -3,9 +3,8 @@ import {
   corsHeaders,
   evaluateAchievements,
   getBalance,
-  insertEvent,
+  awardByRule,
   json,
-  QUEST_RULES,
   requireUser,
 } from "../_shared/quest.ts";
 
@@ -218,16 +217,16 @@ Deno.serve(async (req) => {
       let amount = 0;
       let event = null;
       if (!alreadyScored && score > 0) {
-        amount = score * QUEST_RULES.triviaPerCorrect + (perfect ? QUEST_RULES.triviaPerfectBonus : 0);
-        event = await insertEvent(admin, {
+        const r = await awardByRule(admin, {
           userId: user.id,
-          eventType: "trivia",
+          ruleCode: "history_challenge",
           sourceType: "marker",
           sourceId: markerId,
-          amount,
-          title: perfect ? "Perfect trivia set" : `Trivia — ${score} correct`,
+          title: perfect ? "Perfect history challenge" : `History challenge — ${score} correct`,
           metadata: { score, max_score: questions.length, perfect },
         });
+        event = r.event ?? null;
+        amount = r.amount;
       }
 
       const achievements = await evaluateAchievements(admin, user.id);
@@ -238,7 +237,7 @@ Deno.serve(async (req) => {
         results,
         awarded: Boolean(event),
         amount: event ? amount : 0,
-        title: event?.title ?? (alreadyScored ? "Already scored" : "No QUEST this time"),
+        title: event?.title ?? (alreadyScored ? "Already scored" : "No Quest Coins this time"),
         achievements,
         balance: await getBalance(admin, user.id),
       });
