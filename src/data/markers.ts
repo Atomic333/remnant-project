@@ -20,6 +20,10 @@ export interface Marker {
   artifactModelUrl?: string;
   artifactName?: string;
   artifactAttribution?: string;
+  /** Physical QR plaque (default) or digital-only discovery. */
+  markerType?: "physical" | "digital";
+  discoveryVisibility?: "visible" | "mystery" | "unlisted";
+  clue?: string;
   streetView?: {
     panoId: string;
     heading: number;

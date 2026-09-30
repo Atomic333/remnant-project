@@ -42,6 +42,12 @@ async function toMarker(row: Record<string, unknown>): Promise<Marker> {
     streetView: streetView?.panoId ? streetView : undefined,
     artifactName: row.artifact_name ? String(row.artifact_name) : undefined,
     artifactAttribution: row.artifact_attribution ? String(row.artifact_attribution) : undefined,
+    markerType: row.marker_type === "digital" ? "digital" : "physical",
+    discoveryVisibility:
+      row.discovery_visibility === "mystery" || row.discovery_visibility === "unlisted"
+        ? (row.discovery_visibility as "mystery" | "unlisted")
+        : "visible",
+    clue: row.clue ? String(row.clue) : undefined,
   };
 
   const modelPath = row.artifact_model_url ? String(row.artifact_model_url) : "";
@@ -86,7 +92,15 @@ export function useDbMarkers() {
         .select("*")
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return Promise.all((data ?? []).map((row) => toMarker(row as Record<string, unknown>)));
+      const rows = (data ?? []) as Record<string, unknown>[];
+      // Unlisted discoveries stay hidden until the server confirms this visitor unlocked them.
+      const { data: sess } = await supabase.auth.getSession();
+      if (sess.session) {
+        const { data: unlocked } = await supabase.functions.invoke("discovery", { body: { action: "unlocked_markers" } });
+        const have = new Set(rows.map((r) => r.slug));
+        for (const r of (unlocked?.markers ?? []) as Record<string, unknown>[]) if (!have.has(r.slug)) rows.push(r);
+      }
+      return Promise.all(rows.map((row) => toMarker(row)));
     },
     staleTime: 5 * 60 * 1000,
   });
