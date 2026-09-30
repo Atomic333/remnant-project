@@ -119,6 +119,294 @@ export type Database = {
         }
         Relationships: []
       }
+      collection_images: {
+        Row: {
+          alt: string | null
+          attribution: string | null
+          caption: string | null
+          cleared: boolean
+          creator: string | null
+          description: string | null
+          image_date: string | null
+          image_key: string
+          image_url: string | null
+          import_hash: string | null
+          kind: string | null
+          license: string | null
+          marker_id: string
+          notes: string | null
+          position: number
+          record_url: string | null
+          reuse_status: string | null
+          rights_holder: string | null
+          title: string | null
+        }
+        Insert: {
+          alt?: string | null
+          attribution?: string | null
+          caption?: string | null
+          cleared?: boolean
+          creator?: string | null
+          description?: string | null
+          image_date?: string | null
+          image_key: string
+          image_url?: string | null
+          import_hash?: string | null
+          kind?: string | null
+          license?: string | null
+          marker_id: string
+          notes?: string | null
+          position?: number
+          record_url?: string | null
+          reuse_status?: string | null
+          rights_holder?: string | null
+          title?: string | null
+        }
+        Update: {
+          alt?: string | null
+          attribution?: string | null
+          caption?: string | null
+          cleared?: boolean
+          creator?: string | null
+          description?: string | null
+          image_date?: string | null
+          image_key?: string
+          image_url?: string | null
+          import_hash?: string | null
+          kind?: string | null
+          license?: string | null
+          marker_id?: string
+          notes?: string | null
+          position?: number
+          record_url?: string | null
+          reuse_status?: string | null
+          rights_holder?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_images_marker_id_fkey"
+            columns: ["marker_id"]
+            isOneToOne: false
+            referencedRelation: "collection_markers"
+            referencedColumns: ["marker_id"]
+          },
+        ]
+      }
+      collection_markers: {
+        Row: {
+          access_notes: string | null
+          address: string | null
+          category: string | null
+          city_id: string | null
+          city_name: string | null
+          collection_code: string
+          community: string | null
+          coord_precision: string | null
+          coord_withheld: boolean
+          county: string | null
+          created_at: string
+          draft_settings: Json
+          featured_article: string | null
+          history_focus: string | null
+          import_hash: string | null
+          lat: number | null
+          lng: number | null
+          location_relationship: string | null
+          marker_id: string
+          marker_type: string | null
+          narrative_kind: string
+          period: string | null
+          plaque_status: string | null
+          region: string | null
+          region_label: string | null
+          review_status: string | null
+          sensitive: boolean
+          status: string
+          story: string | null
+          summary: string | null
+          tags: string[]
+          title: string
+          updated_at: string
+          visitor_connection: string | null
+          why_it_matters: string | null
+        }
+        Insert: {
+          access_notes?: string | null
+          address?: string | null
+          category?: string | null
+          city_id?: string | null
+          city_name?: string | null
+          collection_code: string
+          community?: string | null
+          coord_precision?: string | null
+          coord_withheld?: boolean
+          county?: string | null
+          created_at?: string
+          draft_settings?: Json
+          featured_article?: string | null
+          history_focus?: string | null
+          import_hash?: string | null
+          lat?: number | null
+          lng?: number | null
+          location_relationship?: string | null
+          marker_id: string
+          marker_type?: string | null
+          narrative_kind?: string
+          period?: string | null
+          plaque_status?: string | null
+          region?: string | null
+          region_label?: string | null
+          review_status?: string | null
+          sensitive?: boolean
+          status?: string
+          story?: string | null
+          summary?: string | null
+          tags?: string[]
+          title: string
+          updated_at?: string
+          visitor_connection?: string | null
+          why_it_matters?: string | null
+        }
+        Update: {
+          access_notes?: string | null
+          address?: string | null
+          category?: string | null
+          city_id?: string | null
+          city_name?: string | null
+          collection_code?: string
+          community?: string | null
+          coord_precision?: string | null
+          coord_withheld?: boolean
+          county?: string | null
+          created_at?: string
+          draft_settings?: Json
+          featured_article?: string | null
+          history_focus?: string | null
+          import_hash?: string | null
+          lat?: number | null
+          lng?: number | null
+          location_relationship?: string | null
+          marker_id?: string
+          marker_type?: string | null
+          narrative_kind?: string
+          period?: string | null
+          plaque_status?: string | null
+          region?: string | null
+          region_label?: string | null
+          review_status?: string | null
+          sensitive?: boolean
+          status?: string
+          story?: string | null
+          summary?: string | null
+          tags?: string[]
+          title?: string
+          updated_at?: string
+          visitor_connection?: string | null
+          why_it_matters?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_markers_collection_code_fkey"
+            columns: ["collection_code"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      collection_sources: {
+        Row: {
+          access_date: string | null
+          archival_ref: string | null
+          author: string | null
+          checked: boolean
+          import_hash: string | null
+          marker_id: string
+          position: number
+          pub_date: string | null
+          publisher: string | null
+          source_key: string
+          source_type: string | null
+          supports: string | null
+          title: string
+          url: string | null
+        }
+        Insert: {
+          access_date?: string | null
+          archival_ref?: string | null
+          author?: string | null
+          checked?: boolean
+          import_hash?: string | null
+          marker_id: string
+          position?: number
+          pub_date?: string | null
+          publisher?: string | null
+          source_key: string
+          source_type?: string | null
+          supports?: string | null
+          title: string
+          url?: string | null
+        }
+        Update: {
+          access_date?: string | null
+          archival_ref?: string | null
+          author?: string | null
+          checked?: boolean
+          import_hash?: string | null
+          marker_id?: string
+          position?: number
+          pub_date?: string | null
+          publisher?: string | null
+          source_key?: string
+          source_type?: string | null
+          supports?: string | null
+          title?: string
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_sources_marker_id_fkey"
+            columns: ["marker_id"]
+            isOneToOne: false
+            referencedRelation: "collection_markers"
+            referencedColumns: ["marker_id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          code: string
+          featured: Json
+          regions: Json
+          report_notes: Json
+          status: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          code: string
+          featured?: Json
+          regions?: Json
+          report_notes?: Json
+          status?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          code?: string
+          featured?: Json
+          regions?: Json
+          report_notes?: Json
+          status?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       discovery_claims: {
         Row: {
           claimed_at: string | null
@@ -372,6 +660,83 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      import_issues: {
+        Row: {
+          collection_code: string | null
+          created_at: string
+          details: Json
+          issue_key: string
+          kind: string
+          marker_id: string | null
+          message: string
+          resolved: boolean
+          run_id: string | null
+          severity: string
+          updated_at: string
+        }
+        Insert: {
+          collection_code?: string | null
+          created_at?: string
+          details?: Json
+          issue_key: string
+          kind: string
+          marker_id?: string | null
+          message: string
+          resolved?: boolean
+          run_id?: string | null
+          severity?: string
+          updated_at?: string
+        }
+        Update: {
+          collection_code?: string | null
+          created_at?: string
+          details?: Json
+          issue_key?: string
+          kind?: string
+          marker_id?: string | null
+          message?: string
+          resolved?: boolean
+          run_id?: string | null
+          severity?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_issues_run_id_fkey"
+            columns: ["run_id"]
+            isOneToOne: false
+            referencedRelation: "import_runs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      import_runs: {
+        Row: {
+          collection_code: string | null
+          created_at: string
+          created_by: string | null
+          files: Json
+          id: string
+          summary: Json
+        }
+        Insert: {
+          collection_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          files?: Json
+          id?: string
+          summary?: Json
+        }
+        Update: {
+          collection_code?: string | null
+          created_at?: string
+          created_by?: string | null
+          files?: Json
+          id?: string
+          summary?: Json
+        }
+        Relationships: []
       }
       marker_requests: {
         Row: {
@@ -1462,6 +1827,7 @@ export type Database = {
         }
         Returns: Json
       }
+      can_edit_collections: { Args: { _user_id: string }; Returns: boolean }
       can_manage_marker: {
         Args: { _slug: string; _user_id: string }
         Returns: boolean

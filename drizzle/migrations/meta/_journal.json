@@ -134,6 +134,13 @@
       "when": 1790808915722,
       "tag": "0018_h5p_activities",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1790809941436,
+      "tag": "0019_collections_import",
+      "breakpoints": true
     }
   ]
 }
