@@ -50,6 +50,108 @@ export type Database = {
         }
         Relationships: []
       }
+      discovery_claims: {
+        Row: {
+          claimed_at: string | null
+          expires_at: string | null
+          guest_secret: string | null
+          id: string
+          marker_slug: string
+          method: string
+          status: string
+          user_id: string | null
+          verified_at: string
+        }
+        Insert: {
+          claimed_at?: string | null
+          expires_at?: string | null
+          guest_secret?: string | null
+          id?: string
+          marker_slug: string
+          method: string
+          status?: string
+          user_id?: string | null
+          verified_at?: string
+        }
+        Update: {
+          claimed_at?: string | null
+          expires_at?: string | null
+          guest_secret?: string | null
+          id?: string
+          marker_slug?: string
+          method?: string
+          status?: string
+          user_id?: string | null
+          verified_at?: string
+        }
+        Relationships: []
+      }
+      discovery_content: {
+        Row: {
+          audio_path: string | null
+          bonus_story: string | null
+          campaign_code: string | null
+          created_by: string | null
+          enabled: boolean
+          gallery: Json
+          marker_slug: string
+          reflection_prompt: string | null
+          reward_badge_code: string | null
+          reward_kind: string
+          reward_quest: number
+          reward_scope: string
+          updated_at: string
+        }
+        Insert: {
+          audio_path?: string | null
+          bonus_story?: string | null
+          campaign_code?: string | null
+          created_by?: string | null
+          enabled?: boolean
+          gallery?: Json
+          marker_slug: string
+          reflection_prompt?: string | null
+          reward_badge_code?: string | null
+          reward_kind?: string
+          reward_quest?: number
+          reward_scope?: string
+          updated_at?: string
+        }
+        Update: {
+          audio_path?: string | null
+          bonus_story?: string | null
+          campaign_code?: string | null
+          created_by?: string | null
+          enabled?: boolean
+          gallery?: Json
+          marker_slug?: string
+          reflection_prompt?: string | null
+          reward_badge_code?: string | null
+          reward_kind?: string
+          reward_quest?: number
+          reward_scope?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      discovery_prerequisites: {
+        Row: {
+          marker_slug: string
+          requires_id: string
+          requires_type: string
+        }
+        Insert: {
+          marker_slug: string
+          requires_id: string
+          requires_type: string
+        }
+        Update: {
+          marker_slug?: string
+          requires_id?: string
+          requires_type?: string
+        }
+        Relationships: []
+      }
       explorer_balances: {
         Row: {
           balance: number
@@ -149,20 +251,30 @@ export type Database = {
       markers: {
         Row: {
           address: string
+          arrival_radius_m: number
           artifact_attribution: string | null
           artifact_model_url: string | null
           artifact_name: string | null
+          availability_tz: string
+          available_from: string | null
+          available_until: string | null
           category: string
           city: string
+          clue: string | null
           created_at: string
           created_by: string | null
+          discovery_visibility: string
           id: string
           image_path: string | null
           lat: number
           lng: number
+          marker_type: string
           name: string
           published: boolean
           rarity: string
+          reveal_style: string
+          review_status: string
+          sensitivity: string
           slug: string
           sources: Json
           state: string | null
@@ -173,20 +285,30 @@ export type Database = {
         }
         Insert: {
           address?: string
+          arrival_radius_m?: number
           artifact_attribution?: string | null
           artifact_model_url?: string | null
           artifact_name?: string | null
+          availability_tz?: string
+          available_from?: string | null
+          available_until?: string | null
           category?: string
           city?: string
+          clue?: string | null
           created_at?: string
           created_by?: string | null
+          discovery_visibility?: string
           id?: string
           image_path?: string | null
           lat: number
           lng: number
+          marker_type?: string
           name: string
           published?: boolean
           rarity?: string
+          reveal_style?: string
+          review_status?: string
+          sensitivity?: string
           slug: string
           sources?: Json
           state?: string | null
@@ -197,20 +319,30 @@ export type Database = {
         }
         Update: {
           address?: string
+          arrival_radius_m?: number
           artifact_attribution?: string | null
           artifact_model_url?: string | null
           artifact_name?: string | null
+          availability_tz?: string
+          available_from?: string | null
+          available_until?: string | null
           category?: string
           city?: string
+          clue?: string | null
           created_at?: string
           created_by?: string | null
+          discovery_visibility?: string
           id?: string
           image_path?: string | null
           lat?: number
           lng?: number
+          marker_type?: string
           name?: string
           published?: boolean
           rarity?: string
+          reveal_style?: string
+          review_status?: string
+          sensitivity?: string
           slug?: string
           sources?: Json
           state?: string | null
@@ -220,6 +352,95 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      postcard_sets: {
+        Row: {
+          city: string | null
+          code: string
+          created_at: string
+          created_by: string | null
+          name: string
+          trail_id: string | null
+        }
+        Insert: {
+          city?: string | null
+          code: string
+          created_at?: string
+          created_by?: string | null
+          name: string
+          trail_id?: string | null
+        }
+        Update: {
+          city?: string | null
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          name?: string
+          trail_id?: string | null
+        }
+        Relationships: []
+      }
+      postcards: {
+        Row: {
+          back_text: string
+          commemorative: boolean
+          created_at: string
+          created_by: string | null
+          credits: string
+          front_alt: string
+          front_path: string | null
+          id: string
+          location: string
+          marker_slug: string
+          secret_title: boolean
+          set_code: string | null
+          sources: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          back_text?: string
+          commemorative?: boolean
+          created_at?: string
+          created_by?: string | null
+          credits?: string
+          front_alt?: string
+          front_path?: string | null
+          id?: string
+          location?: string
+          marker_slug: string
+          secret_title?: boolean
+          set_code?: string | null
+          sources?: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          back_text?: string
+          commemorative?: boolean
+          created_at?: string
+          created_by?: string | null
+          credits?: string
+          front_alt?: string
+          front_path?: string | null
+          id?: string
+          location?: string
+          marker_slug?: string
+          secret_title?: boolean
+          set_code?: string | null
+          sources?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "postcards_set_code_fkey"
+            columns: ["set_code"]
+            isOneToOne: false
+            referencedRelation: "postcard_sets"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -714,6 +935,35 @@ export type Database = {
           },
         ]
       }
+      user_postcards: {
+        Row: {
+          collected_at: string
+          id: string
+          postcard_id: string
+          user_id: string
+        }
+        Insert: {
+          collected_at?: string
+          id?: string
+          postcard_id: string
+          user_id: string
+        }
+        Update: {
+          collected_at?: string
+          id?: string
+          postcard_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_postcards_postcard_id_fkey"
+            columns: ["postcard_id"]
+            isOneToOne: false
+            referencedRelation: "postcards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -740,6 +990,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_manage_marker: {
+        Args: { _slug: string; _user_id: string }
+        Returns: boolean
+      }
       get_shared_visits: {
         Args: { _code: string }
         Returns: {
@@ -756,9 +1010,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_creator: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "creator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -886,7 +1141,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "creator"],
     },
   },
 } as const
