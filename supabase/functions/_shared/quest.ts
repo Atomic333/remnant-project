@@ -99,6 +99,16 @@ export async function insertEvent(admin: SupabaseClient, input: AwardInput): Pro
   return data as LedgerRow | null;
 }
 
+/** Ledger event_type per rule (kept stable so progress counters keep working). */
+export const RULE_EVENT_TYPE: Record<string, string> = {
+  marker_visit: "marker_discovery",
+  digital_discovery: "discovery_reward",
+  history_challenge: "trivia",
+  trail_complete: "marker_trail_complete",
+  event_quest: "event_quest",
+  contribution: "contribution_approved",
+};
+
 export interface RuleAwardInput {
   userId: string;
   ruleCode: string;
@@ -136,7 +146,7 @@ export async function awardByRule(admin: SupabaseClient, input: RuleAwardInput):
   let awardKey = `${rule.code}:${input.userId}:${input.sourceId}`;
   if (rule.repeatable) {
     const { data: prior } = await admin.from("reward_events").select("created_at")
-      .eq("user_id", input.userId).eq("event_type", rule.code).eq("status", "confirmed")
+      .eq("user_id", input.userId).eq("event_type", RULE_EVENT_TYPE[rule.code] ?? rule.code).eq("status", "confirmed")
       .order("created_at", { ascending: false }).limit(1000);
     const rows = prior ?? [];
     if (rule.cap_per_user && rows.length >= rule.cap_per_user) return { awarded: false, amount: 0, title: input.title, reason: "Reward limit reached." };
@@ -166,7 +176,7 @@ export async function awardByRule(admin: SupabaseClient, input: RuleAwardInput):
 
   const event = await insertEvent(admin, {
     userId: input.userId,
-    eventType: rule.code,
+    eventType: RULE_EVENT_TYPE[rule.code] ?? rule.code,
     sourceType: input.sourceType,
     sourceId: rule.repeatable ? `${input.sourceId}:${awardKey.split(":").pop()}` : input.sourceId,
     amount,
@@ -187,7 +197,7 @@ export async function checkTravel(admin: SupabaseClient, userId: string, markerS
   const { data: here } = await admin.from("markers").select("lat,lng").eq("slug", markerSlug).maybeSingle();
   if (!here) return;
   const { data: last } = await admin.from("reward_events").select("source_id, created_at")
-    .eq("user_id", userId).eq("event_type", "marker_visit").order("created_at", { ascending: false }).limit(1).maybeSingle();
+    .eq("user_id", userId).eq("event_type", "marker_discovery").order("created_at", { ascending: false }).limit(1).maybeSingle();
   if (!last?.source_id || last.source_id === markerSlug) return;
   const { data: prev } = await admin.from("markers").select("lat,lng").eq("slug", last.source_id).maybeSingle();
   if (!prev) return;
