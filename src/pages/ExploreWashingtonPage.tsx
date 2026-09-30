@@ -180,7 +180,7 @@ const ExploreWashingtonPage = () => {
 
         {view === "map" && (
           <div className="mt-4">
-            <WaMap markers={mapped} selected={selected} onSelect={setSelected} />
+            <WaMap markers={mapped} selected={selected} onSelect={setSelected} animate={m.enabled} />
             <p className="mt-2 text-[11px] text-atlas-mist">
               {shown.length - mapped.length} stories have no public location (withheld or unverified) and appear only in the list. Pins marked approximate are not exact historical sites. No routes are drawn.
             </p>
@@ -234,12 +234,12 @@ const MAP_STYLE: google.maps.MapTypeStyle[] = [
   { featureType: "poi", stylers: [{ visibility: "off" }] },
 ];
 
-function WaMap({ markers, selected, onSelect }: { markers: CMarker[]; selected: string | null; onSelect: (id: string) => void }) {
+function WaMap({ markers, selected, onSelect, animate }: { markers: CMarker[]; selected: string | null; onSelect: (id: string) => void; animate: boolean }) {
   const { isLoaded, loadError } = useJsApiLoader({ googleMapsApiKey: GOOGLE_MAPS_STATIC_KEY });
   const mapRef = useRef<google.maps.Map | null>(null);
   const sel = markers.find((x) => x.marker_id === selected);
   useEffect(() => {
-    if (sel && mapRef.current) mapRef.current.panTo({ lat: sel.lat!, lng: sel.lng! });
+    if (sel && mapRef.current) mapRef.current[animate ? "panTo" : "setCenter"]({ lat: sel.lat!, lng: sel.lng! });
   }, [sel]);
   if (loadError) return <div className="flex h-72 items-center justify-center rounded-xl bg-atlas-char text-sm text-atlas-mist">The map is unavailable right now. Every story is still listed below.</div>;
   if (!isLoaded) return <div className="h-72 animate-pulse rounded-xl bg-atlas-char md:h-[28rem]" />;
@@ -263,7 +263,7 @@ function WaMap({ markers, selected, onSelect }: { markers: CMarker[]; selected: 
                   clusterer={clusterer}
                   title={`${x.title} (${locationLabel(x)})`}
                   onClick={() => onSelect(x.marker_id)}
-                  animation={google.maps.Animation.DROP}
+                  animation={animate ? google.maps.Animation.DROP : undefined}
                   icon={{
                     path: google.maps.SymbolPath.CIRCLE,
                     scale: selected === x.marker_id ? 10 : 7,
