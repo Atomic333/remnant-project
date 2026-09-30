@@ -230,6 +230,11 @@ const MarkerDetailPage = () => {
           )}
 
           {/* Discovery reveal, digital check-in and postcard collection */}
+          {awardPending && (
+            <p role="status" className="mb-3 rounded-xl border border-quest-gold/30 bg-quest-gold/5 px-4 py-3 text-xs text-on-surface-variant">
+              Your visit is saved on this phone. Quest Coins are pending and will be confirmed when you're back online.
+            </p>
+          )}
           <DiscoveryPanel marker={marker} scanVerified={scanVerified} />
 
           {/* Accordion */}
