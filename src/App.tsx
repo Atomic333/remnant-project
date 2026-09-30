@@ -16,6 +16,9 @@ import ProfilePage from "@/pages/ProfilePage";
 import AdminPage from "@/pages/AdminPage";
 import QrSheetPage from "@/pages/QrSheetPage";
 import NotFound from "@/pages/NotFound";
+import TrailsPage from "@/pages/TrailsPage";
+import TrailDetailPage from "@/pages/TrailDetailPage";
+import AdminTrailsPage from "@/pages/AdminTrailsPage";
 import SplashScreen from "@/components/SplashScreen";
 import RewardsPage from "@/pages/RewardsPage";
 import RequireAuth from "@/components/RequireAuth";
@@ -35,6 +38,8 @@ const App = () => (
           <Routes>
             {/* Public: marker pages opened from QR codes */}
             <Route path="/marker/:id" element={<MarkerDetailPage />} />
+            <Route path="/trails" element={<TrailsPage />} />
+            <Route path="/trails/:slug" element={<TrailDetailPage />} />
             <Route path="/u/:code" element={<SharedVisitsPage />} />
             <Route path="/auth" element={<AuthPage />} />
 
@@ -50,6 +55,7 @@ const App = () => (
             <Route path="/profile" element={<RequireAuth allowGuest={false}><ProfilePage /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
+            <Route path="/admin/trails" element={<RequireAuth admin><AdminTrailsPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
