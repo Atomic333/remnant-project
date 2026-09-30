@@ -291,7 +291,7 @@ const MarkerDetailPage = () => {
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-quest-navy text-quest-gold">
                 <Brain className="h-4 w-4" />
               </div>
-              <span className="font-display font-medium text-card-foreground">Earn QUEST on site</span>
+              <span className="font-display font-medium text-card-foreground">Earn Quest Coins on site</span>
             </div>
             <MarkerTrivia marker={marker} />
           </div>

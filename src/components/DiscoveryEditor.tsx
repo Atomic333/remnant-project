@@ -284,7 +284,7 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
       </div>
       {s.sensitivity === "sensitive" && (
         <p className="rounded-lg bg-secondary px-3 py-2 text-xs text-secondary-foreground">
-          Sensitive sites use Quiet Fade, no celebrations or rarity wording, and QUEST rewards default to off.
+          Sensitive sites use Quiet Fade, no celebrations or rarity wording, and Quest Coin rewards default to off.
         </p>
       )}
       {s.marker_type === "digital" && (
@@ -383,11 +383,11 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
             <option value="none">No reward</option>
             <option value="postcard">Postcard</option>
             <option value="badge">Existing badge</option>
-            <option value="quest">QUEST</option>
+            <option value="quest">Quest Coins</option>
           </select>
         </label>
         {s.reward_kind === "quest" && (
-          <label className={label}>QUEST amount
+          <label className={label}>Quest Coin amount
             <input type="number" min={1} max={1000} className={input} value={s.reward_quest} onChange={(e) => set("reward_quest", Number(e.target.value))} />
           </label>
         )}
@@ -410,7 +410,7 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
         )}
       </div>
       {s.sensitivity === "sensitive" && s.reward_kind === "quest" && (
-        <p className="text-xs text-on-surface-variant">QUEST on a sensitive site is paid quietly, with no celebration.</p>
+        <p className="text-xs text-on-surface-variant">Quest Coins on a sensitive site is paid quietly, with no celebration.</p>
       )}
 
       {/* Prerequisites */}
