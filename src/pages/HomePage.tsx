@@ -35,7 +35,7 @@ const HomePage = () => {
     for (const c of citiesForMarkers(allMarkers)) {
       const list = allMarkers.filter((m) => (m.city ?? "Tacoma") === c.id);
       const isCurated = curated.some((x) => x.id === c.id);
-      const photo = isCurated ? c.image : list.map((m) => getMarkerImage(m)).find(Boolean) || c.image;
+      const photo = isCurated ? c.image : list.map((m) => getMarkerImage(m.id, m.image)).find(Boolean) || c.image;
       cards.set(c.id, {
         id: c.id, name: c.name, state: c.state, image: photo,
         total: list.length, visited: list.filter((m) => visited.has(m.id)).length,
