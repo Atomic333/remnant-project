@@ -50,6 +50,75 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit_log: {
+        Row: {
+          action: string
+          actor_id: string
+          created_at: string
+          details: Json
+          id: string
+          reason: string | null
+          target_id: string | null
+          target_type: string | null
+        }
+        Insert: {
+          action: string
+          actor_id: string
+          created_at?: string
+          details?: Json
+          id?: string
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Update: {
+          action?: string
+          actor_id?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          reason?: string | null
+          target_id?: string | null
+          target_type?: string | null
+        }
+        Relationships: []
+      }
+      campaigns: {
+        Row: {
+          active: boolean
+          budget: number | null
+          code: string
+          created_at: string
+          created_by: string | null
+          ends_at: string | null
+          name: string
+          spent: number
+          starts_at: string | null
+        }
+        Insert: {
+          active?: boolean
+          budget?: number | null
+          code: string
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          name: string
+          spent?: number
+          starts_at?: string | null
+        }
+        Update: {
+          active?: boolean
+          budget?: number | null
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          name?: string
+          spent?: number
+          starts_at?: string | null
+        }
+        Relationships: []
+      }
       discovery_claims: {
         Row: {
           claimed_at: string | null
@@ -152,6 +221,51 @@ export type Database = {
         }
         Relationships: []
       }
+      entitlements: {
+        Row: {
+          created_at: string
+          equipped: boolean
+          id: string
+          redemption_id: string | null
+          revoked_at: string | null
+          reward_code: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          equipped?: boolean
+          id?: string
+          redemption_id?: string | null
+          revoked_at?: string | null
+          reward_code: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          equipped?: boolean
+          id?: string
+          redemption_id?: string | null
+          revoked_at?: string | null
+          reward_code?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "entitlements_redemption_id_fkey"
+            columns: ["redemption_id"]
+            isOneToOne: false
+            referencedRelation: "redemptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "entitlements_reward_code_fkey"
+            columns: ["reward_code"]
+            isOneToOne: false
+            referencedRelation: "rewards_catalog"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       explorer_balances: {
         Row: {
           balance: number
@@ -182,7 +296,9 @@ export type Database = {
           created_at: string
           id: string
           location_name: string
+          reviewed_at: string | null
           status: string
+          submitted_by: string | null
           submitter_email: string | null
           why_it_matters: string
         }
@@ -191,7 +307,9 @@ export type Database = {
           created_at?: string
           id?: string
           location_name: string
+          reviewed_at?: string | null
           status?: string
+          submitted_by?: string | null
           submitter_email?: string | null
           why_it_matters: string
         }
@@ -200,7 +318,9 @@ export type Database = {
           created_at?: string
           id?: string
           location_name?: string
+          reviewed_at?: string | null
           status?: string
+          submitted_by?: string | null
           submitter_email?: string | null
           why_it_matters?: string
         }
@@ -352,6 +472,57 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      partner_codes: {
+        Row: {
+          assigned_to: string | null
+          code: string
+          created_at: string
+          id: string
+          redeemed_at: string | null
+          redeemed_by: string | null
+          redemption_id: string | null
+          reward_code: string
+          status: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          code: string
+          created_at?: string
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          redemption_id?: string | null
+          reward_code: string
+          status?: string
+        }
+        Update: {
+          assigned_to?: string | null
+          code?: string
+          created_at?: string
+          id?: string
+          redeemed_at?: string | null
+          redeemed_by?: string | null
+          redemption_id?: string | null
+          reward_code?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "partner_codes_redemption_id_fkey"
+            columns: ["redemption_id"]
+            isOneToOne: false
+            referencedRelation: "redemptions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "partner_codes_reward_code_fkey"
+            columns: ["reward_code"]
+            isOneToOne: false
+            referencedRelation: "rewards_catalog"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       postcard_sets: {
         Row: {
@@ -514,30 +685,110 @@ export type Database = {
         }
         Relationships: []
       }
+      quest_events: {
+        Row: {
+          amount: number | null
+          campaign_code: string | null
+          checkin_secret: string
+          code: string
+          created_at: string
+          created_by: string | null
+          description: string
+          ends_at: string | null
+          id: string
+          location: string | null
+          name: string
+          published: boolean
+          rotate_seconds: number
+          starts_at: string | null
+          timezone: string
+          verification: string
+        }
+        Insert: {
+          amount?: number | null
+          campaign_code?: string | null
+          checkin_secret?: string
+          code: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          published?: boolean
+          rotate_seconds?: number
+          starts_at?: string | null
+          timezone?: string
+          verification?: string
+        }
+        Update: {
+          amount?: number | null
+          campaign_code?: string | null
+          checkin_secret?: string
+          code?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string
+          ends_at?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          published?: boolean
+          rotate_seconds?: number
+          starts_at?: string | null
+          timezone?: string
+          verification?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quest_events_campaign_code_fkey"
+            columns: ["campaign_code"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       redemptions: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
+          idempotency_key: string | null
           quest_spent: number
+          redeemed_at: string | null
           redemption_code: string | null
+          refund_reason: string | null
+          refunded_at: string | null
           reward_code: string
           status: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
+          idempotency_key?: string | null
           quest_spent: number
+          redeemed_at?: string | null
           redemption_code?: string | null
+          refund_reason?: string | null
+          refunded_at?: string | null
           reward_code: string
           status?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
+          idempotency_key?: string | null
           quest_spent?: number
+          redeemed_at?: string | null
           redemption_code?: string | null
+          refund_reason?: string | null
+          refunded_at?: string | null
           reward_code?: string
           status?: string
           user_id?: string
@@ -552,8 +803,36 @@ export type Database = {
           },
         ]
       }
+      review_flags: {
+        Row: {
+          created_at: string
+          details: Json
+          id: string
+          kind: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          details?: Json
+          id?: string
+          kind: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          details?: Json
+          id?: string
+          kind?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reward_events: {
         Row: {
+          award_key: string | null
           chain_id: string | null
           chain_tx_hash: string | null
           created_at: string
@@ -561,15 +840,18 @@ export type Database = {
           id: string
           metadata: Json
           quest_amount: number
+          reverses_event_id: string | null
           settled_at: string | null
           settlement_status: string
           source_id: string | null
           source_type: string | null
+          status: string
           title: string
           user_id: string
           wallet_address: string | null
         }
         Insert: {
+          award_key?: string | null
           chain_id?: string | null
           chain_tx_hash?: string | null
           created_at?: string
@@ -577,15 +859,18 @@ export type Database = {
           id?: string
           metadata?: Json
           quest_amount: number
+          reverses_event_id?: string | null
           settled_at?: string | null
           settlement_status?: string
           source_id?: string | null
           source_type?: string | null
+          status?: string
           title?: string
           user_id: string
           wallet_address?: string | null
         }
         Update: {
+          award_key?: string | null
           chain_id?: string | null
           chain_tx_hash?: string | null
           created_at?: string
@@ -593,13 +878,77 @@ export type Database = {
           id?: string
           metadata?: Json
           quest_amount?: number
+          reverses_event_id?: string | null
           settled_at?: string | null
           settlement_status?: string
           source_id?: string | null
           source_type?: string | null
+          status?: string
           title?: string
           user_id?: string
           wallet_address?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reward_events_reverses_event_id_fkey"
+            columns: ["reverses_event_id"]
+            isOneToOne: false
+            referencedRelation: "reward_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reward_rules: {
+        Row: {
+          active: boolean
+          amount: number
+          cap_per_user: number | null
+          code: string
+          cooldown_hours: number
+          description: string
+          ends_at: string | null
+          name: string
+          repeatable: boolean
+          sort_order: number
+          stacks_with_trail: boolean
+          starts_at: string | null
+          timezone: string
+          updated_at: string
+          verification: string
+        }
+        Insert: {
+          active?: boolean
+          amount?: number
+          cap_per_user?: number | null
+          code: string
+          cooldown_hours?: number
+          description?: string
+          ends_at?: string | null
+          name: string
+          repeatable?: boolean
+          sort_order?: number
+          stacks_with_trail?: boolean
+          starts_at?: string | null
+          timezone?: string
+          updated_at?: string
+          verification?: string
+        }
+        Update: {
+          active?: boolean
+          amount?: number
+          cap_per_user?: number | null
+          code?: string
+          cooldown_hours?: number
+          description?: string
+          ends_at?: string | null
+          name?: string
+          repeatable?: boolean
+          sort_order?: number
+          stacks_with_trail?: boolean
+          starts_at?: string | null
+          timezone?: string
+          updated_at?: string
+          verification?: string
         }
         Relationships: []
       }
@@ -607,37 +956,67 @@ export type Database = {
         Row: {
           active: boolean
           code: string
+          code_expires_days: number | null
           cost: number
           description: string
+          ends_at: string | null
           icon: string
+          inventory: number | null
+          item_type: string
           kind: string
           name: string
           partner_name: string | null
+          preview: Json
+          published: boolean
+          redemption_instructions: string | null
+          sold: number
           sort_order: number
+          sponsor_url: string | null
+          starts_at: string | null
           unlock_criteria: Json
         }
         Insert: {
           active?: boolean
           code: string
+          code_expires_days?: number | null
           cost?: number
           description?: string
+          ends_at?: string | null
           icon?: string
+          inventory?: number | null
+          item_type?: string
           kind?: string
           name: string
           partner_name?: string | null
+          preview?: Json
+          published?: boolean
+          redemption_instructions?: string | null
+          sold?: number
           sort_order?: number
+          sponsor_url?: string | null
+          starts_at?: string | null
           unlock_criteria?: Json
         }
         Update: {
           active?: boolean
           code?: string
+          code_expires_days?: number | null
           cost?: number
           description?: string
+          ends_at?: string | null
           icon?: string
+          inventory?: number | null
+          item_type?: string
           kind?: string
           name?: string
           partner_name?: string | null
+          preview?: Json
+          published?: boolean
+          redemption_instructions?: string | null
+          sold?: number
           sort_order?: number
+          sponsor_url?: string | null
+          starts_at?: string | null
           unlock_criteria?: Json
         }
         Relationships: []
@@ -990,6 +1369,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_adjust: {
+        Args: {
+          _actor: string
+          _amount: number
+          _key: string
+          _reason: string
+          _user: string
+        }
+        Returns: Json
+      }
       can_manage_marker: {
         Args: { _slug: string; _user_id: string }
         Returns: boolean
@@ -1011,6 +1400,18 @@ export type Database = {
         Returns: boolean
       }
       is_creator: { Args: { _user_id: string }; Returns: boolean }
+      purchase_item: {
+        Args: { _code: string; _key: string; _user: string }
+        Returns: Json
+      }
+      refund_redemption: {
+        Args: { _actor: string; _reason: string; _redemption: string }
+        Returns: Json
+      }
+      spend_campaign_budget: {
+        Args: { _amount: number; _code: string }
+        Returns: boolean
+      }
     }
     Enums: {
       app_role: "admin" | "user" | "creator"
