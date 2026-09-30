@@ -113,6 +113,20 @@
       "when": 1790807817144,
       "tag": "0015_marker_request_submitter",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1790808096139,
+      "tag": "0016_fix_balance_trigger_check",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1790808170252,
+      "tag": "0017_hide_event_secret",
+      "breakpoints": true
     }
   ]
 }
