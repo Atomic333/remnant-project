@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { setSoundEnabled, soundEnabled } from "@/lib/questSound";
 import { Sparkles, Shield, MapPin, ChevronRight, Users, User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
@@ -42,11 +44,18 @@ const team = [
 const SettingsPage = () => {
   const navigate = useNavigate();
 
+  const [sound, setSound] = useState(soundEnabled());
   return (
     <div className="min-h-screen pb-20">
       <PageHeader title="Settings" />
 
       <div className="px-5 pt-4">
+
+        {/* Reward sounds */}
+        <label className="mb-6 flex w-full items-center justify-between rounded-xl bg-card p-4 elevation-1">
+          <span className="text-sm text-card-foreground">Play a sound when I earn Quest Coins</span>
+          <input type="checkbox" className="h-5 w-5 accent-primary" checked={sound} onChange={(e) => { setSound(e.target.checked); setSoundEnabled(e.target.checked); }} />
+        </label>
 
         {/* Account */}
         <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-on-surface-variant">
