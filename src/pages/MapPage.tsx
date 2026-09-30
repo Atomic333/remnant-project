@@ -18,6 +18,7 @@ import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
 import markerIconAsset from "@/assets/marker-icon.png.asset.json";
 import { prepareVerifiedScan } from "@/hooks/useQuest";
+import { usePublishedCollection } from "@/hooks/usePublishedCollection";
 
 
 // Theme hex values matching CSS variables
@@ -422,9 +423,23 @@ const MYSTERY_ICON = (w: number) => {
 
 const MapPage = () => {
   const markers = useCityMarkers();
-  const { city } = useSelectedCity();
+  const { city, setCityId } = useSelectedCity();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
+  const stories = usePublishedCollection();
+  // Optional deep link: /map?city=<id>&lat=&lng=&z= (from the Home globe city cards).
+  const viewRef = useRef<{ city: string; lat: number; lng: number; z: number } | null>(null);
+  if (viewRef.current === null) {
+    const c = searchParams.get("city"), lat = Number(searchParams.get("lat")), lng = Number(searchParams.get("lng"));
+    if (c && Number.isFinite(lat) && Number.isFinite(lng) && searchParams.get("lat")) viewRef.current = { city: c, lat, lng, z: Number(searchParams.get("z")) || 13 };
+  }
+  const view = viewRef.current && viewRef.current.city === city.id ? viewRef.current : null;
+  const mapCenter = view ? { lat: view.lat, lng: view.lng } : city.center;
+  const mapZoom = view ? view.z : city.zoom;
+  useEffect(() => {
+    const c = searchParams.get("city");
+    if (c && c !== city.id) setCityId(c);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const { isVisited, recordsChronological } = useVisited();
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
@@ -469,10 +484,10 @@ const MapPage = () => {
   // Smoothly move the map when the selected city changes.
   useEffect(() => {
     if (!mapRef.current) return;
-    mapRef.current.panTo(city.center);
-    const t = window.setTimeout(() => mapRef.current?.setZoom(city.zoom), 300);
+    mapRef.current.panTo(mapCenter);
+    const t = window.setTimeout(() => mapRef.current?.setZoom(mapZoom), 300);
     return () => window.clearTimeout(t);
-  }, [city.id, city.center, city.zoom]);
+  }, [city.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Staggered drop animation for markers on first city load.
   useEffect(() => {
@@ -743,8 +758,8 @@ const MapPage = () => {
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
-            center={city.center}
-            zoom={city.zoom}
+            center={mapCenter}
+            zoom={mapZoom}
             options={mapOptions}
             onLoad={onMapLoad}
           >
@@ -790,6 +805,25 @@ const MapPage = () => {
                 </Fragment>
               );
             })}
+
+            {/* Published collection stories (exact-location withheld ones are list-only) */}
+            {stories.filter((s) => s.lat != null && s.lng != null).map((s) => (
+              <GMarker
+                key={`story-${s.id}`}
+                position={{ lat: s.lat!, lng: s.lng! }}
+                title={s.title}
+                onClick={() => navigate(`/explore/washington/story/${s.id}`)}
+                zIndex={2}
+                icon={{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 8,
+                  fillColor: "#C9A227",
+                  fillOpacity: 0.95,
+                  strokeColor: "#1B1712",
+                  strokeWeight: 2,
+                }}
+              />
+            ))}
 
             {/* Visited trail */}
             {showTrail && visitedPath.length >= 2 && (

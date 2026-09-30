@@ -23,6 +23,7 @@ import AdminImportPage from "@/pages/AdminImportPage";
 import ExploreWashingtonPage from "@/pages/ExploreWashingtonPage";
 import WashingtonStoryPage from "@/pages/WashingtonStoryPage";
 import SplashScreen from "@/components/SplashScreen";
+import FloatingMapButton from "@/components/FloatingMapButton";
 import WalletPage from "@/pages/WalletPage";
 import StorePage from "@/pages/StorePage";
 import AdminQuestPage from "@/pages/AdminQuestPage";
@@ -74,6 +75,7 @@ const App = () => (
             <Route path="/explore/washington/story/:markerId" element={<RequireAuth><WashingtonStoryPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <FloatingMapButton />
         </div>
         </QuestRewardProvider>
       </BrowserRouter>

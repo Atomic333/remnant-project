@@ -1832,6 +1832,10 @@ export type Database = {
         Args: { _slug: string; _user_id: string }
         Returns: boolean
       }
+      collection_marker_blockers: {
+        Args: { _marker: string }
+        Returns: string[]
+      }
       get_shared_visits: {
         Args: { _code: string }
         Returns: {
@@ -1855,6 +1859,10 @@ export type Database = {
       }
       refund_redemption: {
         Args: { _actor: string; _reason: string; _redemption: string }
+        Returns: Json
+      }
+      set_collection_status: {
+        Args: { _ids: string[]; _publish: boolean }
         Returns: Json
       }
       spend_campaign_budget: {

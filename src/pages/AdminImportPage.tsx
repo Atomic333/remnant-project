@@ -280,6 +280,8 @@ function ReviewQueue() {
   };
 
   return (
+    <>
+    <PublishPanel />
     <section className="space-y-3 rounded-xl bg-card p-4 elevation-1">
       <div className="flex flex-wrap items-center gap-2 text-xs">
         <select value={kind} onChange={(e) => setKind(e.target.value)} aria-label="Filter by type" className="rounded border border-border bg-background px-2 py-1">
@@ -320,6 +322,74 @@ function ReviewQueue() {
                     {wa.map((c) => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+    </>
+  );
+}
+
+const BLOCKING = new Set(["blocked", "consultation", "needs_verification", "missing_city"]);
+type StoryRow = { marker_id: string; title: string; city_id: string | null; status: string };
+
+/** Publish ready stories to visitors and the main map. The database re-checks readiness. */
+function PublishPanel() {
+  const [stories, setStories] = useState<StoryRow[]>([]);
+  const [open, setOpen] = useState<Record<string, string[]>>({});
+  const [busy, setBusy] = useState(false);
+  const load = useCallback(async () => {
+    const [m, i] = await Promise.all([
+      supabase.from("collection_markers").select("marker_id, title, city_id, status").eq("collection_code", COLLECTION_CODE).order("marker_id"),
+      supabase.from("import_issues").select("marker_id, kind").eq("collection_code", COLLECTION_CODE).eq("resolved", false).limit(1000),
+    ]);
+    setStories((m.data ?? []) as StoryRow[]);
+    const o: Record<string, string[]> = {};
+    for (const r of i.data ?? []) if (r.marker_id && BLOCKING.has(r.kind)) (o[r.marker_id] ??= []).includes(r.kind) || o[r.marker_id].push(r.kind);
+    setOpen(o);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  const blockers = (s: StoryRow) => [...(s.city_id ? [] : ["No city"]), ...(open[s.marker_id] ?? []).map((k) => KIND_TITLE[k] ?? k)];
+  const ready = stories.filter((s) => s.status !== "published" && !blockers(s).length);
+  const published = stories.filter((s) => s.status === "published").length;
+
+  const run = async (ids: string[], publish: boolean) => {
+    if (!ids.length) return;
+    setBusy(true);
+    const { data, error } = await supabase.rpc("set_collection_status", { _ids: ids, _publish: publish });
+    setBusy(false);
+    const res = data as { ok: boolean; error?: string; changed?: string[]; skipped?: unknown[] } | null;
+    if (error || !res?.ok) return toast.error(error?.message ?? res?.error ?? "Failed");
+    toast.success(`${res.changed?.length ?? 0} ${publish ? "published" : "unpublished"}${res.skipped?.length ? ` · ${res.skipped.length} not ready` : ""}`);
+    load();
+  };
+
+  return (
+    <section className="space-y-3 rounded-xl bg-card p-4 elevation-1">
+      <div className="flex flex-wrap items-center gap-2">
+        <h2 className="font-display text-base">Publish stories</h2>
+        <span className="text-xs text-on-surface-variant">{published} live · {ready.length} ready · {stories.length - published - ready.length} need review</span>
+        <button disabled={busy || !ready.length} onClick={() => run(ready.map((s) => s.marker_id), true)}
+          className="ml-auto rounded bg-primary px-3 py-1 text-xs font-medium text-primary-foreground disabled:opacity-50">
+          Publish all ready ({ready.length})
+        </button>
+      </div>
+      <p className="text-xs text-on-surface-variant">Published stories appear on the collection page, the Home globe and the main map. Withheld locations stay list-only. Quest Coins, QR discovery and postcards stay off.</p>
+      <ul className="max-h-72 divide-y divide-border overflow-y-auto text-xs">
+        {stories.map((s) => {
+          const b = blockers(s);
+          const live = s.status === "published";
+          return (
+            <li key={s.marker_id} className="flex items-center gap-2 py-1.5">
+              <span className="font-mono">{s.marker_id}</span>
+              <span className="min-w-0 flex-1 truncate">{s.title}{!live && b.length > 0 && <span className="text-on-surface-variant"> — {b.join(", ")}</span>}</span>
+              {live ? (
+                <button disabled={busy} onClick={() => run([s.marker_id], false)} className="shrink-0 rounded border border-border px-2 py-0.5">Unpublish</button>
+              ) : (
+                <button disabled={busy || b.length > 0} onClick={() => run([s.marker_id], true)} className="shrink-0 rounded border border-primary px-2 py-0.5 text-primary disabled:opacity-40">Publish</button>
               )}
             </li>
           );
