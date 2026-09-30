@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo2, Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
+import DiscoveryEditor from "@/components/DiscoveryEditor";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -76,7 +77,7 @@ const inputClass =
 
 const AdminPage = () => {
   const navigate = useNavigate();
-  const { user, isAdmin, loading, signOut } = useAuth();
+  const { user, isAdmin, isCreator, loading, signOut } = useAuth();
   const queryClient = useQueryClient();
   const { data: dbMarkers, isLoading: markersLoading } = useDbMarkers();
 
@@ -396,7 +397,7 @@ const AdminPage = () => {
     );
   }
 
-  if (!isAdmin) {
+  if (!isAdmin && !isCreator) {
     return (
       <div className="min-h-screen pb-20">
         <PageHeader title="Admin" />
@@ -775,6 +776,14 @@ const AdminPage = () => {
           </button>
         </form>
 
+        {form.id ? (
+          <DiscoveryEditor key={form.slug} slug={form.slug} markerName={form.name} />
+        ) : form.lockSlug ? (
+          <p className="rounded-xl bg-card p-4 text-xs text-on-surface-variant elevation-1">
+            Save this marker once to set up its Discovery &amp; Rewards.
+          </p>
+        ) : null}
+
         {/* Every site — curated and database */}
         <div className="rounded-xl bg-card p-4 elevation-1">
           <span className="font-display font-medium text-card-foreground">All sites</span>
@@ -864,12 +873,12 @@ const AdminPage = () => {
         </div>
 
 
-        <button
+        {isAdmin && <button
           onClick={() => navigate("/admin/trails")}
           className="flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 font-display text-sm font-medium text-card-foreground elevation-1"
         >
           Trail Manager
-        </button>
+        </button>}
 
         {/* All markers QR sheet */}
         <button
