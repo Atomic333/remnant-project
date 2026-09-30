@@ -15,6 +15,7 @@ import { getMarkerImage } from "@/lib/markerImages";
 import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
 import { useQuestReward } from "@/components/QuestRewardProvider";
 import { useCityMarkers } from "@/hooks/useAllMarkers";
+import DiscoveryPanel from "@/components/DiscoveryPanel";
 
 const MarkerDetailPage = () => {
   const markers = useAllMarkers();
@@ -55,6 +56,7 @@ const MarkerDetailPage = () => {
         /* unverified scans simply award nothing */
       })
       .finally(() => {
+        setScanVerified(true);
         // If a trail walk is open and includes this marker, record a QR-verified check-in.
         checkinActiveTrailFromScan(id)
           .then((res) => {
@@ -69,7 +71,7 @@ const MarkerDetailPage = () => {
             /* not verified: the walker can still mark the stop manually */
           });
       });
-  }, [id, user, marker?.name, marker?.city, cityMarkers.length, celebrate]);
+  }, [id, user, authLoading, marker?.name, marker?.city, cityMarkers.length, celebrate]);
 
   if (!marker) {
     return (
@@ -203,6 +205,9 @@ const MarkerDetailPage = () => {
               </span>
             </button>
           )}
+
+          {/* Discovery reveal, digital check-in and postcard collection */}
+          <DiscoveryPanel marker={marker} scanVerified={scanVerified} />
 
           {/* Accordion */}
           {sections.map(({ key, icon: Icon, label }) => {
