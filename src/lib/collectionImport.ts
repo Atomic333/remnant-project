@@ -325,9 +325,11 @@ export interface Diff {
 }
 
 async function existing<T extends Record<string, unknown>>(table: "collection_markers" | "collection_sources" | "collection_images", key: string, keys: string[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const db = supabase as any;
   const out = new Map<string, T>();
   for (let i = 0; i < keys.length; i += 100) {
-    const { data, error } = await supabase.from(table).select("*").in(key, keys.slice(i, i + 100));
+    const { data, error } = await db.from(table).select("*").in(key, keys.slice(i, i + 100));
     if (error) throw error;
     for (const r of data ?? []) out.set(String((r as Record<string, unknown>)[key]), r as unknown as T);
   }
@@ -414,7 +416,7 @@ export async function commitPlan(plan: Plan, diff: Diff, approveUpdates: boolean
   return summary;
 }
 
-export function issuesCsv(issues: Pick<Issue, "marker_id" | "kind" | "severity" | "message">[]) {
+export function issuesCsv(issues: { marker_id: string | null; kind: string; severity: string; message: string }[]) {
   const esc = (s: unknown) => `"${String(s ?? "").replace(/"/g, '""')}"`;
   return ["marker_id,kind,severity,message", ...issues.map((i) => [i.marker_id, i.kind, i.severity, i.message].map(esc).join(","))].join("\n");
 }
