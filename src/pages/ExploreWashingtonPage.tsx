@@ -117,7 +117,7 @@ const ExploreWashingtonPage = () => {
       {/* Regions */}
       <section className="mx-auto max-w-5xl px-5 py-6" aria-labelledby="regions-h">
         <h2 id="regions-h" className="font-atlas text-2xl">Four regions</h2>
-        <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
+        <div className="mt-3 grid grid-cols-2 gap-3">
           {REGIONS.map((r, i) => {
             const n = markers.filter((x) => x.region === r).length;
             const on = filters.region === r;
@@ -187,7 +187,7 @@ const ExploreWashingtonPage = () => {
           </div>
         )}
 
-        <ul key={JSON.stringify(filters) + view} className={`mt-4 grid gap-3 ${view === "map" ? "md:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-3"}`}>
+        <ul key={JSON.stringify(filters) + view} className="mt-4 grid gap-3">
           {shown.map((x, i) => (
             <li key={x.marker_id} className={motion.rise} style={stagger(i, 40, 400)}>
               <Link to={`/explore/washington/story/${x.marker_id}`}
