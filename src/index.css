@@ -286,3 +286,56 @@
 @media (prefers-reduced-motion: reduce) {
   .dr-flip, .dr-flap, .dr-rise, .dr-lid, .dr-glow, .dr-ripple, .dr-fade-in, .dr-quiet { animation: none !important; }
 }
+
+/* ---------- Washington atlas theme (scoped to .atlas) ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+.atlas {
+  --atlas-night: 205 30% 8%;
+  --atlas-char: 200 16% 13%;
+  --atlas-paper: 40 38% 92%;
+  --atlas-paper-deep: 38 30% 84%;
+  --atlas-ink: 200 25% 12%;
+  --atlas-ink-soft: 200 10% 35%;
+  --atlas-mist: 200 12% 72%;
+  --atlas-gold: 42 62% 55%;
+  --atlas-cedar: 152 38% 34%;
+  --atlas-river: 204 47% 40%;
+  --atlas-warn: 22 60% 42%;
+  background: hsl(var(--atlas-night));
+  color: hsl(var(--atlas-paper));
+}
+.atlas-grain {
+  background-image:
+    radial-gradient(hsl(var(--atlas-paper) / 0.035) 1px, transparent 1px),
+    radial-gradient(hsl(var(--atlas-paper) / 0.025) 1px, transparent 1px);
+  background-size: 3px 3px, 7px 7px;
+  background-position: 0 0, 1px 2px;
+}
+.atlas-contours {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'%3E%3Cg fill='none' stroke='%23d9b35a' stroke-opacity='0.10' stroke-width='1'%3E%3Cpath d='M-10 60 C40 20 90 90 140 50 S220 30 260 70'/%3E%3Cpath d='M-10 100 C50 60 100 130 150 90 S230 70 260 110'/%3E%3Cpath d='M-10 140 C40 110 110 170 160 130 S230 110 260 150'/%3E%3Cpath d='M-10 180 C60 150 110 210 170 170 S230 150 260 190'/%3E%3C/g%3E%3C/svg%3E");
+}
+.atlas-paper-surface {
+  background: hsl(var(--atlas-paper));
+  color: hsl(var(--atlas-ink));
+  box-shadow: 0 1px 0 hsl(var(--atlas-paper-deep)), 0 18px 40px -24px hsl(var(--atlas-night) / 0.8);
+}
+.atlas :focus-visible { outline: 2px solid hsl(var(--atlas-gold)); outline-offset: 2px; }
+
+@keyframes atlas-enter { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes atlas-rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes atlas-zoom { from { transform: scale(1.08); } to { transform: scale(1); } }
+@keyframes atlas-drift { 0%,100% { transform: translate3d(0,0,0) scale(1.06); } 50% { transform: translate3d(-1.5%, -1%, 0) scale(1.08); } }
+@keyframes atlas-pulse { 0% { box-shadow: 0 0 0 0 hsl(42 62% 55% / 0.55); } 100% { box-shadow: 0 0 0 14px hsl(42 62% 55% / 0); } }
+@keyframes atlas-fade { from { opacity: 0; } to { opacity: 1; } }
+.atlas-enter { animation: atlas-enter 450ms cubic-bezier(.2,.7,.2,1) both; }
+.atlas-rise { animation: atlas-rise 350ms cubic-bezier(.2,.7,.2,1) both; }
+.atlas-zoom { animation: atlas-zoom 1200ms cubic-bezier(.2,.7,.2,1) both; }
+.atlas-drift { animation: atlas-drift 28s ease-in-out infinite; will-change: transform; }
+.atlas-pulse { animation: atlas-pulse 1.6s ease-out 2; }
+.atlas-fade { animation: atlas-fade 500ms ease-out both; }
+.atlas-lift { transition: transform 200ms ease, box-shadow 200ms ease; }
+.atlas-lift:hover { transform: translateY(-3px); }
+[data-motion="off"] .atlas-enter, [data-motion="off"] .atlas-rise, [data-motion="off"] .atlas-zoom,
+[data-motion="off"] .atlas-drift, [data-motion="off"] .atlas-pulse, [data-motion="off"] .atlas-fade { animation: none !important; }
+[data-motion="off"] .atlas-lift, [data-motion="off"] .atlas-lift:hover { transition: none; transform: none; }
+[data-motion="off"] * { scroll-behavior: auto !important; }
