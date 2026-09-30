@@ -19,6 +19,7 @@ export interface PostcardView {
 /** A flippable postcard. Tap, Enter or Space turns it over. */
 const Postcard = ({ card, initialBack = false }: { card: PostcardView; initialBack?: boolean }) => {
   const [back, setBack] = useState(initialBack);
+  const [broken, setBroken] = useState(false);
   if (card.locked) {
     return (
       <div className="flex aspect-[3/2] w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-border bg-surface-variant/50 p-3 text-center">
@@ -42,8 +43,8 @@ const Postcard = ({ card, initialBack = false }: { card: PostcardView; initialBa
       >
         {/* Front */}
         <div className="absolute inset-0 overflow-hidden rounded-xl bg-card elevation-1 [backface-visibility:hidden]">
-          {card.front_url ? (
-            <img src={card.front_url} alt={card.front_alt || card.title} className="h-full w-full object-cover" />
+          {card.front_url && !broken ? (
+            <img src={card.front_url} alt={card.front_alt || card.title} onError={() => setBroken(true)} className="h-full w-full object-cover" />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-surface-variant">
               <ImageOff className="h-6 w-6 text-on-surface-variant" aria-hidden />
