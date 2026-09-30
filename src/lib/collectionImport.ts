@@ -178,8 +178,8 @@ export async function buildPlan(
 ): Promise<Plan> {
   const of = (k: SheetKind) => sheets.filter((s) => s.kind === k).flatMap((s) => s.rows);
   const issues: Issue[] = [];
-  const issue = (i: Omit<Issue, "issue_key"> & { ref?: string }) =>
-    issues.push({ ...i, issue_key: `${COLLECTION_CODE}:${i.kind}:${i.marker_id ?? "-"}:${i.ref ?? ""}` });
+  const issue = ({ ref, ...i }: Omit<Issue, "issue_key"> & { ref?: string }) =>
+    issues.push({ ...i, issue_key: `${COLLECTION_CODE}:${i.kind}:${i.marker_id ?? "-"}:${ref ?? ""}` });
 
   const research = new Map<string, Record<string, unknown>>();
   for (const row of of("research_markers")) {
