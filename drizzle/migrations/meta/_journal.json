@@ -141,6 +141,13 @@
       "when": 1790809941436,
       "tag": "0019_collections_import",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1790812399452,
+      "tag": "0020_collection_publishing",
+      "breakpoints": true
     }
   ]
 }
