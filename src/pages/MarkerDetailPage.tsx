@@ -12,7 +12,7 @@ import StreetView from "@/components/StreetView";
 import MarkerTrivia from "@/components/MarkerTrivia";
 import MarkerArtifactCard from "@/components/MarkerArtifactCard";
 import { getMarkerImage } from "@/lib/markerImages";
-import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
+import { awardDiscovery, clearPendingAward, consumeScanToken, isNetworkError, queuePendingAward, readPendingAwards } from "@/hooks/useQuest";
 import { useQuestReward } from "@/components/QuestRewardProvider";
 import { useCityMarkers } from "@/hooks/useAllMarkers";
 import DiscoveryPanel from "@/components/DiscoveryPanel";
@@ -31,6 +31,23 @@ const MarkerDetailPage = () => {
   const cityMarkers = useCityMarkers();
   const awardedRef = useRef(false);
   const [scanVerified, setScanVerified] = useState(false);
+  const [awardPending, setAwardPending] = useState(false);
+
+  // Retry a plaque award that failed offline. The server is idempotent, so this can't double-pay.
+  useEffect(() => {
+    if (!user || !id) return;
+    const retry = () => {
+      const p = readPendingAwards().find((x) => x.markerId === id);
+      if (!p || !navigator.onLine) return;
+      awardDiscovery({ markerId: p.markerId, markerName: p.markerName, scanToken: p.scanToken })
+        .then((r) => { clearPendingAward(p.markerId); setAwardPending(false); celebrate(r); })
+        .catch((e) => { if (!isNetworkError(e)) { clearPendingAward(p.markerId); setAwardPending(false); } });
+    };
+    if (readPendingAwards().some((x) => x.markerId === id)) setAwardPending(true);
+    retry();
+    window.addEventListener("online", retry);
+    return () => window.removeEventListener("online", retry);
+  }, [user, id, celebrate]);
 
   // A QR scan in the app leaves a one-time token behind; the server verifies it
   // and decides the reward. Nothing about the amount is computed here.
@@ -51,9 +68,15 @@ const MarkerDetailPage = () => {
       city: marker?.city,
       cityTotal: cityMarkers.length || undefined,
     })
-      .then(celebrate)
-      .catch(() => {
-        /* unverified scans simply award nothing */
+      .then((r) => {
+        if (r.already) toast({ title: "Already collected", description: "You've already earned coins for this marker." });
+        celebrate(r);
+      })
+      .catch((e) => {
+        if (isNetworkError(e)) {
+          queuePendingAward({ markerId: id, markerName: marker?.name ?? id, scanToken: token });
+          setAwardPending(true);
+        }
       })
       .finally(() => {
         setScanVerified(true);
