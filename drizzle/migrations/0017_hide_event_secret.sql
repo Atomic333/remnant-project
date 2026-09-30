@@ -1,0 +1,2 @@
+REVOKE SELECT ON public.quest_events FROM anon, authenticated;
+GRANT SELECT (id, code, name, description, location, amount, starts_at, ends_at, timezone, verification, published, created_at) ON public.quest_events TO anon, authenticated;
