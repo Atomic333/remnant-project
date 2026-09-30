@@ -4,6 +4,7 @@ import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo
 import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
 import DiscoveryEditor from "@/components/DiscoveryEditor";
+import H5PManager from "@/components/H5PManager";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -777,7 +778,10 @@ const AdminPage = () => {
         </form>
 
         {form.id ? (
-          <DiscoveryEditor key={form.slug} slug={form.slug} markerName={form.name} />
+          <>
+            <DiscoveryEditor key={form.slug} slug={form.slug} markerName={form.name} />
+            <H5PManager key={`h5p-${form.slug}`} slug={form.slug} />
+          </>
         ) : form.lockSlug ? (
           <p className="rounded-xl bg-card p-4 text-xs text-on-surface-variant elevation-1">
             Save this marker once to set up its Discovery &amp; Rewards.

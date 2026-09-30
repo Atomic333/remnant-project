@@ -290,6 +290,89 @@ export type Database = {
         }
         Relationships: []
       }
+      h5p_activities: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          library: string | null
+          marker_slug: string
+          min_seconds: number
+          position: number
+          published: boolean
+          reward_amount: number
+          storage_prefix: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          library?: string | null
+          marker_slug: string
+          min_seconds?: number
+          position?: number
+          published?: boolean
+          reward_amount?: number
+          storage_prefix: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          library?: string | null
+          marker_slug?: string
+          min_seconds?: number
+          position?: number
+          published?: boolean
+          reward_amount?: number
+          storage_prefix?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      h5p_attempts: {
+        Row: {
+          activity_id: string
+          completed_at: string | null
+          expires_at: string
+          id: string
+          raw_result: Json | null
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          activity_id: string
+          completed_at?: string | null
+          expires_at?: string
+          id?: string
+          raw_result?: Json | null
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          activity_id?: string
+          completed_at?: string | null
+          expires_at?: string
+          id?: string
+          raw_result?: Json | null
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "h5p_attempts_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "h5p_activities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marker_requests: {
         Row: {
           address: string | null

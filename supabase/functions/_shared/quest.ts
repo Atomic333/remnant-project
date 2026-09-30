@@ -107,6 +107,7 @@ export const RULE_EVENT_TYPE: Record<string, string> = {
   trail_complete: "marker_trail_complete",
   event_quest: "event_quest",
   contribution: "contribution_approved",
+  h5p_activity: "h5p_activity",
 };
 
 export interface RuleAwardInput {
