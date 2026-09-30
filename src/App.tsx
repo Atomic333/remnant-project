@@ -20,7 +20,10 @@ import TrailsPage from "@/pages/TrailsPage";
 import TrailDetailPage from "@/pages/TrailDetailPage";
 import AdminTrailsPage from "@/pages/AdminTrailsPage";
 import SplashScreen from "@/components/SplashScreen";
-import RewardsPage from "@/pages/RewardsPage";
+import WalletPage from "@/pages/WalletPage";
+import StorePage from "@/pages/StorePage";
+import AdminQuestPage from "@/pages/AdminQuestPage";
+import { Navigate } from "react-router-dom";
 import RequireAuth from "@/components/RequireAuth";
 import QuestRewardProvider from "@/components/QuestRewardProvider";
 import PostcardsPage from "@/pages/PostcardsPage";
@@ -55,7 +58,10 @@ const App = () => (
 
             <Route path="/request" element={<RequireAuth><RequestPage /></RequireAuth>} />
             <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
-            <Route path="/rewards" element={<RequireAuth allowGuest={false}><RewardsPage /></RequireAuth>} />
+            <Route path="/wallet" element={<RequireAuth allowGuest={false}><WalletPage /></RequireAuth>} />
+            <Route path="/store" element={<RequireAuth allowGuest={false}><StorePage /></RequireAuth>} />
+            <Route path="/rewards" element={<Navigate to="/wallet" replace />} />
+            <Route path="/admin/quest-coins" element={<RequireAuth admin allowCreator><AdminQuestPage /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth allowGuest={false}><ProfilePage /></RequireAuth>} />
             <Route path="/admin" element={<RequireAuth admin allowCreator><AdminPage /></RequireAuth>} />
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
