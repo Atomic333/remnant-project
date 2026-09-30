@@ -378,8 +378,12 @@ export async function commitPlan(plan: Plan, diff: Diff, approveUpdates: boolean
     }
   };
   await chunks("Markers", mRows, async (c) => {
-    const { error } = await supabase.from("collection_markers").upsert(c as never);
-    if (error) errors.push(`Markers: ${error.message}`);
+    // Rows without a city are sent without that column so an editor-assigned city is never cleared.
+    for (const group of [c.filter((m) => "city_id" in m), c.filter((m) => !("city_id" in m))]) {
+      if (!group.length) continue;
+      const { error } = await supabase.from("collection_markers").upsert(group as never);
+      if (error) errors.push(`Markers: ${error.message}`);
+    }
   }, 5, 40);
   const sRows = plan.sources.filter((s) => allowed(diff.sources[s.source_key]));
   await chunks("Sources", sRows, async (c) => {
