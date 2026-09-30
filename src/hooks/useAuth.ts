@@ -6,6 +6,7 @@ export function useAuth() {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,17 +32,19 @@ export function useAuth() {
     if (!user) return;
     let active = true;
     setLoading(true);
-    supabase
-      .rpc("has_role", { _user_id: user.id, _role: "admin" })
-      .then(({ data }) => {
-        if (!active) return;
-        setIsAdmin(Boolean(data));
-        setLoading(false);
-      });
+    Promise.all([
+      supabase.rpc("has_role", { _user_id: user.id, _role: "admin" }),
+      supabase.rpc("is_creator", { _user_id: user.id }),
+    ]).then(([a, c]) => {
+      if (!active) return;
+      setIsAdmin(Boolean(a.data));
+      setIsCreator(Boolean(c.data));
+      setLoading(false);
+    });
     return () => {
       active = false;
     };
   }, [user]);
 
-  return { session, user, isAdmin, loading, signOut: () => supabase.auth.signOut() };
+  return { session, user, isAdmin, isCreator, loading, signOut: () => supabase.auth.signOut() };
 }
