@@ -7,4 +7,6 @@
 - [x] Landing page, regions, Start Your Journey, filters, map/list toggle, clustering, mobile sheet
 - [x] Story page: narrative, why it matters, visiting, timeline, gallery/lightbox, sources, postcard preview, related, H5P
 - [x] Imported the supplied files (35/113/47) and verified rerun makes no duplicates
-- [ ] Publishing into live markers (with QR discovery, real postcards and coins) — blocked: every story still needs a confirmed city, and editorial and consultation review
+- [x] Publish/Unpublish in review queue; published stories on globe, city cards and main map
+- [x] Globe home, state → city cards → map; floating Map button on pages without the bottom bar
+- [ ] QR discovery, postcards and coins for collection stories — deliberately off for now
