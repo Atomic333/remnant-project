@@ -36,7 +36,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
   const wrap = useRef<HTMLDivElement>(null);
   const [size, setSize] = useState(320);
   const [rot, setRot] = useState<[number, number]>(HOME);
-  const [zoom, setZoom] = useState(1.6);
+  const [zoom, setZoom] = useState(1);
   const rotRef = useRef(rot); rotRef.current = rot;
   const zoomRef = useRef(zoom); zoomRef.current = zoom;
   const vel = useRef<[number, number]>([0, 0]);
@@ -171,7 +171,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
       >
         <defs>
           <radialGradient id="globe-ocean" cx="40%" cy="35%" r="75%">
-            <stop offset="0%" stopColor="hsl(var(--primary) / 0.22)" />
+            <stop offset="0%" stopColor="hsl(var(--secondary))" />
             <stop offset="100%" stopColor="hsl(var(--background))" />
           </radialGradient>
           <radialGradient id="globe-glow" r="50%">
@@ -182,7 +182,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
         <circle cx={size / 2} cy={size / 2} r={Math.min(r * 1.08, size)} fill="url(#globe-glow)" />
         <circle cx={size / 2} cy={size / 2} r={r} fill="url(#globe-ocean)" stroke="hsl(var(--primary) / 0.4)" strokeWidth={1} />
         <path d={path(GRATICULE) ?? ""} fill="none" stroke="hsl(var(--primary) / 0.12)" strokeWidth={0.5} />
-        <path d={path(LAND) ?? ""} fill="hsl(var(--muted))" stroke="hsl(var(--border))" strokeWidth={0.4} />
+        <path d={path(LAND) ?? ""} fill="hsl(var(--surface-variant))" stroke="hsl(var(--border))" strokeWidth={0.4} />
         {STATES.map((s) => {
           const active = !!counts[s.abbr];
           const isSel = selected === s.abbr;
@@ -190,7 +190,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
             <path
               key={s.abbr}
               d={path(s) ?? ""}
-              fill={isSel ? "hsl(var(--primary))" : active ? "hsl(var(--primary) / 0.7)" : "hsl(var(--surface-variant, var(--muted)))"}
+              fill={isSel ? "hsl(var(--primary))" : active ? "hsl(var(--primary) / 0.7)" : "hsl(var(--card))"}
               stroke={active ? "hsl(var(--primary-foreground) / 0.8)" : "hsl(var(--border))"}
               strokeWidth={isSel ? 1.4 : 0.5}
               className={active ? "globe-state-active" : ""}
@@ -212,7 +212,7 @@ export default function UsGlobe({ counts, selected, onSelect, onEmpty }: Props) 
       </svg>
       <button
         type="button"
-        onClick={() => animateTo(HOME, 1.6)}
+        onClick={() => animateTo(HOME, 1)}
         className="absolute bottom-2 right-2 flex h-9 items-center gap-1.5 rounded-full bg-background/80 px-3 text-xs font-medium text-foreground backdrop-blur-md elevation-1"
       >
         <LocateFixed className="h-3.5 w-3.5" /> Recenter
