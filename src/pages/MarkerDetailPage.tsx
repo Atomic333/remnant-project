@@ -16,6 +16,7 @@ import { awardDiscovery, clearPendingAward, consumeScanToken, isNetworkError, qu
 import { useQuestReward } from "@/components/QuestRewardProvider";
 import { useCityMarkers } from "@/hooks/useAllMarkers";
 import DiscoveryPanel from "@/components/DiscoveryPanel";
+import MarkerActivities from "@/components/MarkerActivities";
 
 const MarkerDetailPage = () => {
   const markers = useAllMarkers();
@@ -236,6 +237,7 @@ const MarkerDetailPage = () => {
             </p>
           )}
           <DiscoveryPanel marker={marker} scanVerified={scanVerified} />
+          <MarkerActivities markerId={marker.id} />
 
           {/* Accordion */}
           {sections.map(({ key, icon: Icon, label }) => {
