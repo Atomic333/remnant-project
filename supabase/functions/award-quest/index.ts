@@ -70,7 +70,7 @@ Deno.serve(async (req) => {
 
       const { data: marker } = await admin
         .from("markers")
-        .select("rarity, city, name")
+        .select("rarity, city, name, sensitivity")
         .eq("slug", markerId)
         .maybeSingle();
       const rarity = marker?.rarity === "rare" ? "rare" : "common";
@@ -98,6 +98,7 @@ Deno.serve(async (req) => {
         already: result.reason === "Already collected",
         reason: result.reason,
         rarity,
+        quiet: marker?.sensitivity === "sensitive",
         achievements,
         balance: await getBalance(admin, user.id),
       });
