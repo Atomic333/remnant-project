@@ -19,6 +19,9 @@ import NotFound from "@/pages/NotFound";
 import TrailsPage from "@/pages/TrailsPage";
 import TrailDetailPage from "@/pages/TrailDetailPage";
 import AdminTrailsPage from "@/pages/AdminTrailsPage";
+import AdminImportPage from "@/pages/AdminImportPage";
+import ExploreWashingtonPage from "@/pages/ExploreWashingtonPage";
+import WashingtonStoryPage from "@/pages/WashingtonStoryPage";
 import SplashScreen from "@/components/SplashScreen";
 import WalletPage from "@/pages/WalletPage";
 import StorePage from "@/pages/StorePage";
@@ -66,6 +69,9 @@ const App = () => (
             <Route path="/admin" element={<RequireAuth admin allowCreator><AdminPage /></RequireAuth>} />
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
             <Route path="/admin/trails" element={<RequireAuth admin><AdminTrailsPage /></RequireAuth>} />
+            <Route path="/admin/import" element={<RequireAuth admin allowCreator><AdminImportPage /></RequireAuth>} />
+            <Route path="/explore/washington" element={<RequireAuth><ExploreWashingtonPage /></RequireAuth>} />
+            <Route path="/explore/washington/story/:markerId" element={<RequireAuth><WashingtonStoryPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

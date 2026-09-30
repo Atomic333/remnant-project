@@ -891,6 +891,20 @@ const AdminPage = () => {
           Quest Coin Manager
         </button>
 
+        <button
+          onClick={() => navigate("/admin/import")}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 font-display text-sm font-medium text-card-foreground elevation-1"
+        >
+          Washington Import &amp; Review
+        </button>
+        <button
+          onClick={() => navigate("/explore/washington")}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 font-display text-sm font-medium text-card-foreground elevation-1"
+        >
+          Preview Washington collection
+        </button>
+
+
         {/* All markers QR sheet */}
         <button
           onClick={() => navigate("/admin/qr-codes")}

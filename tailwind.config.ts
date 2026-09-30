@@ -16,8 +16,23 @@ export default {
       fontFamily: {
         display: ["'Google Sans'", "system-ui", "sans-serif"],
         body: ["'Google Sans Text'", "'Google Sans'", "system-ui", "sans-serif"],
+        atlas: ["'Newsreader'", "Georgia", "serif"],
+        "atlas-sans": ["'IBM Plex Sans'", "system-ui", "sans-serif"],
       },
       colors: {
+        atlas: {
+          night: "hsl(var(--atlas-night))",
+          char: "hsl(var(--atlas-char))",
+          paper: "hsl(var(--atlas-paper))",
+          "paper-deep": "hsl(var(--atlas-paper-deep))",
+          ink: "hsl(var(--atlas-ink))",
+          "ink-soft": "hsl(var(--atlas-ink-soft))",
+          mist: "hsl(var(--atlas-mist))",
+          gold: "hsl(var(--atlas-gold))",
+          cedar: "hsl(var(--atlas-cedar))",
+          river: "hsl(var(--atlas-river))",
+          warn: "hsl(var(--atlas-warn))",
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
