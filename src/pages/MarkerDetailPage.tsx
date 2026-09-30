@@ -22,21 +22,27 @@ const MarkerDetailPage = () => {
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);
   const { isVisited, toggle: toggleVisited } = useVisited();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
   const [showStreetView, setShowStreetView] = useState(false);
   const { celebrate } = useQuestReward();
   const cityMarkers = useCityMarkers();
   const awardedRef = useRef(false);
+  const [scanVerified, setScanVerified] = useState(false);
 
   // A QR scan in the app leaves a one-time token behind; the server verifies it
   // and decides the reward. Nothing about the amount is computed here.
   useEffect(() => {
-    if (!id || !user || awardedRef.current) return;
+    if (!id || authLoading || awardedRef.current) return;
     const token = consumeScanToken(id);
     if (!token) return;
     awardedRef.current = true;
+    if (!user || token === "guest") {
+      // Guest scans: the discovery panel keeps a pending claim on the server.
+      setScanVerified(true);
+      return;
+    }
     awardDiscovery({
       markerId: id,
       markerName: marker?.name ?? id,
