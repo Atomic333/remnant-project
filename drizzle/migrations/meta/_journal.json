@@ -85,6 +85,13 @@
       "when": 1790803690912,
       "tag": "0011_create_marker_trails",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1790803712307,
+      "tag": "0012_trail_covers_policies",
+      "breakpoints": true
     }
   ]
 }
