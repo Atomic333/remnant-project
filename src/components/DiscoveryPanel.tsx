@@ -23,7 +23,7 @@ function outcomeText(r: VerifyResult, sensitive: boolean) {
   if (r.repeat) return "Already in your collection. Enjoy it again.";
   const parts: string[] = [];
   if (r.postcard_new) parts.push(sensitive ? "Saved to your remembrances." : "Postcard saved to My Postcards.");
-  if (r.quest) parts.push(sensitive ? `${r.quest} QUEST added.` : `+${r.quest} QUEST`);
+  if (r.quest) parts.push(sensitive ? `${r.quest} Quest Coins added.` : `+${r.quest} Quest Coins`);
   if (r.badge) parts.push("Badge unlocked.");
   return parts.join(" ") || "Discovery saved.";
 }

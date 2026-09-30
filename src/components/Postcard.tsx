@@ -1,3 +1,4 @@
+import { useEquipped } from "@/hooks/useQuest";
 import { useState } from "react";
 import { ImageOff, Lock, RotateCw } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -19,6 +20,7 @@ export interface PostcardView {
 /** A flippable postcard. Tap, Enter or Space turns it over. */
 const Postcard = ({ card, initialBack = false }: { card: PostcardView; initialBack?: boolean }) => {
   const [back, setBack] = useState(initialBack);
+  const { frame } = useEquipped();
   const [broken, setBroken] = useState(false);
   if (card.locked) {
     return (
@@ -36,6 +38,7 @@ const Postcard = ({ card, initialBack = false }: { card: PostcardView; initialBa
       aria-pressed={back}
       aria-label={`${card.title} postcard. ${back ? "Showing the back." : "Showing the front."} Press to turn it over.`}
       className="group relative block aspect-[3/2] w-full text-left [perspective:1000px] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
+      style={frame ? { padding: 4, background: frame.preview?.color, borderRadius: 14 } : undefined}
     >
       <div
         className="relative h-full w-full rounded-xl transition-transform duration-500 motion-reduce:transition-none [transform-style:preserve-3d]"

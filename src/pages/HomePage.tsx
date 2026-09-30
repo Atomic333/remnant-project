@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import QuestCoinIcon from "@/components/QuestCoinIcon";
 import { Compass, Footprints, Mail, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
@@ -36,6 +39,11 @@ const HomePage = () => {
       </header>
 
       <div className="flex flex-1 flex-col gap-4 overflow-hidden px-5 mt-3 pb-6">
+
+        <Link to="/wallet" className="interactive flex shrink-0 items-center justify-between rounded-xl border border-quest-gold/30 bg-quest-gold/5 px-4 py-3">
+          <span className="flex items-center gap-2 font-display text-sm text-foreground"><QuestCoinIcon className="h-4 w-4" /> Quest Wallet &amp; Store</span>
+          <ChevronRight className="h-4 w-4 text-on-surface-variant" />
+        </Link>
 
         {/* City card — grows to fill available space */}
         <div className="shrink-0">

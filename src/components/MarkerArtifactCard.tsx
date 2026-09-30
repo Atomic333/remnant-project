@@ -110,8 +110,8 @@ const MarkerArtifactCard = ({ marker }: { marker: Marker }) => {
 
         <p className="mt-3 text-[11px] leading-relaxed text-on-surface-variant">
           {claimed
-            ? "This artifact is recorded in your QUEST ledger and will carry over when artifacts become mintable."
-            : "Drag to inspect the artifact now — scan this site's QR code in person to claim it and earn QUEST."}
+            ? "This artifact is saved in your collection."
+            : "Drag to inspect the artifact now — scan this site's QR code in person to claim it and earn Quest Coins."}
           {artifact.attribution ? ` Model: ${artifact.attribution}.` : ""}
         </p>
       </div>

@@ -35,6 +35,7 @@ const QuestRewardProvider = ({ children }: { children: React.ReactNode }) => {
         title: award.title || "A new find joins your collection",
         rarity: (award as QuestAward).rarity,
         achievements,
+        quiet: (award as ArtifactReveal).quiet,
       });
       setPulseKey((k) => k + 1);
 
@@ -44,6 +45,7 @@ const QuestRewardProvider = ({ children }: { children: React.ReactNode }) => {
       queryClient.invalidateQueries({ queryKey: ["quest-achievements"] });
       queryClient.invalidateQueries({ queryKey: ["quest-discovery-count"] });
       queryClient.invalidateQueries({ queryKey: ["visits"] });
+      queryClient.invalidateQueries({ queryKey: ["entitlements"] });
     },
     [queryClient],
   );

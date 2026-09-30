@@ -294,7 +294,7 @@ const TrailDetailPage = () => {
             )}
             {approach && visitedCount === 0 && <p className="text-xs text-on-surface-variant">The dotted gray line is your walk to the start. The colored line is the trail.</p>}
             {routeError && <p className="text-xs text-on-surface-variant">Walking directions from your location aren't available: {routeError}</p>}
-            {!user && <p className="text-xs text-on-surface-variant">You're walking as a guest. Progress is saved on this device, and visits stay unverified. Sign in to verify with QR and earn QUEST.</p>}
+            {!user && <p className="text-xs text-on-surface-variant">You're walking as a guest. Progress is saved on this device, and visits stay unverified. Sign in to verify with QR and earn Quest Coins.</p>}
             <p className="flex items-center gap-1 text-xs text-on-surface-variant"><Clock className="h-3 w-3" /> About {formatDuration(walkingLeft)} of walking left, not counting time at stops.</p>
             <div className="flex gap-2">
               <button onClick={() => walk.setStatus(paused ? "resume" : "pause")} className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-xl bg-secondary text-sm font-medium text-secondary-foreground">

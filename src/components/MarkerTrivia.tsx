@@ -72,7 +72,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
             Earned on location
           </p>
           <p className="mt-1 text-sm text-on-surface-variant">
-            QUEST is only awarded to explorers who stand at the site and scan the plaque's QR code.
+            Quest Coins are only awarded to explorers who stand at the site and scan the plaque's QR code.
             {signedIn
               ? " Visit this marker, scan its code, and the trivia set unlocks here."
               : " Create a free account, then scan the plaque's code to start earning."}
@@ -127,7 +127,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
     return (
       <div>
         <p className="text-sm text-on-surface-variant">
-          You scanned this plaque — answer three questions about the site to earn QUEST.
+          You scanned this plaque — answer three questions about the site to earn Quest Coins.
         </p>
         <button
           onClick={start}
@@ -149,7 +149,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
       {set.already_completed && !result && (
         <p className="rounded-lg bg-surface-variant px-3 py-2 text-xs text-on-surface-variant">
           You already scored {set.previous_score}/{set.max_score} here — replaying is just for fun, no
-          extra QUEST.
+          extra Quest Coins.
         </p>
       )}
 
@@ -200,7 +200,7 @@ const MarkerTrivia = ({ marker }: { marker: Marker }) => {
       {result ? (
         <p className="font-display text-sm font-medium text-foreground">
           {result.score}/{result.max_score} correct
-          {result.amount > 0 ? ` · +${result.amount} QUEST earned` : ""}
+          {result.amount > 0 ? ` · +${result.amount} Quest Coins earned` : ""}
         </p>
       ) : (
         <button

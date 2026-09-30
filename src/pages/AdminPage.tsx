@@ -880,6 +880,13 @@ const AdminPage = () => {
           Trail Manager
         </button>}
 
+        <button
+          onClick={() => navigate("/admin/quest-coins")}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 font-display text-sm font-medium text-card-foreground elevation-1"
+        >
+          Quest Coin Manager
+        </button>
+
         {/* All markers QR sheet */}
         <button
           onClick={() => navigate("/admin/qr-codes")}

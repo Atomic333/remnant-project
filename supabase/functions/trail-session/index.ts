@@ -1,5 +1,5 @@
 import {
-  adminClient, corsHeaders, evaluateAchievements, getBalance, insertEvent, json, QUEST_RULES, requireUser,
+  adminClient, corsHeaders, awardByRule, evaluateAchievements, getBalance, json, requireUser,
 } from "../_shared/quest.ts";
 import { RoutingSetupError, validPt, walkRoute } from "../_shared/trailRoutes.ts";
 
@@ -96,17 +96,16 @@ Deno.serve(async (req) => {
       }
       if (complete && required.every((s) => done.get(s.marker_id))) {
         const { data: trail } = await admin.from("trails").select("title").eq("id", rev.trail_id).single();
-        const event = await insertEvent(admin, {
+        const r = await awardByRule(admin, {
           userId: user.id,
-          eventType: "marker_trail_complete",
+          ruleCode: "trail_complete",
           sourceType: "trail",
           sourceId: rev.trail_id,
-          amount: QUEST_RULES.trailComplete,
           title: `Completed ${trail?.title ?? "a trail"}`,
           metadata: { session_id: sessionId, stops: required.length },
         });
-        if (event) {
-          reward = { amount: QUEST_RULES.trailComplete, title: event.title, achievements: await evaluateAchievements(admin, user.id), balance: await getBalance(admin, user.id) };
+        if (r.awarded) {
+          reward = { amount: r.amount, title: r.title, achievements: await evaluateAchievements(admin, user.id), balance: await getBalance(admin, user.id) };
         }
       }
       return json({ ok: true, duplicate, verified, complete, reward, checkins: all });

@@ -19,7 +19,8 @@ const links = [
   { icon: Footprints, label: "Trails", path: "/trails" },
   { icon: Mail, label: "My Postcards", path: "/postcards" },
   { icon: Trophy, label: "My Dashboard", path: "/dashboard" },
-  { icon: Sparkles, label: "QUEST Rewards", path: "/rewards" },
+  { icon: Sparkles, label: "Quest Wallet", path: "/wallet" },
+  { icon: Sparkles, label: "Reward Store", path: "/store" },
   { icon: User, label: "Profile", path: "/profile" },
   { icon: Settings, label: "Settings", path: "/settings" },
 ];

@@ -27,6 +27,7 @@ export interface QuestAward {
   balance?: QuestBalance;
   error?: string;
   reason?: string;
+  already?: boolean;
 }
 
 const EMPTY: QuestBalance = { balance: 0, lifetime_earned: 0, lifetime_spent: 0 };
@@ -146,6 +147,13 @@ export function useAchievements() {
 
 export interface RewardCatalogRow {
   code: string;
+  item_type: "accessory" | "frame" | "theme" | "collectible" | "partner" | string;
+  preview: { color?: string; emoji?: string; from?: string; to?: string } | null;
+  inventory: number | null;
+  sold: number;
+  starts_at: string | null;
+  ends_at: string | null;
+  redemption_instructions: string | null;
   name: string;
   description: string;
   kind: string;
@@ -165,11 +173,12 @@ export function useRewardsCatalog() {
       const [catalog, mine] = await Promise.all([
         supabase
           .from("rewards_catalog")
-          .select("code, name, description, kind, cost, icon, unlock_criteria, partner_name, sort_order")
+          .select("code, name, description, kind, cost, icon, unlock_criteria, partner_name, sort_order, item_type, preview, inventory, sold, starts_at, ends_at, redemption_instructions")
           .eq("active", true)
+          .eq("published", true)
           .order("sort_order"),
         userId
-          ? supabase.from("redemptions").select("id, reward_code, redemption_code, status, created_at")
+          ? supabase.from("redemptions").select("id, reward_code, redemption_code, status, created_at, expires_at").order("created_at", { ascending: false })
           : Promise.resolve({ data: [], error: null } as never),
       ]);
       if (catalog.error) throw catalog.error;
@@ -181,6 +190,7 @@ export function useRewardsCatalog() {
           redemption_code: string | null;
           status: string;
           created_at: string;
+          expires_at: string | null;
         }[],
       };
     },
@@ -350,11 +360,103 @@ export function gradeTrivia(markerId: string, answers: number[]) {
   });
 }
 
-export function redeemReward(rewardCode: string) {
-  return invokeQuest<{
-    redeemed: boolean;
-    reward: { code: string; name: string; kind: string };
-    redemption_code: string | null;
-    balance: QuestBalance;
-  }>("redeem-reward", { reward_code: rewardCode });
+/** Stable per-attempt key so a retried purchase never charges twice. */
+export function newIdempotencyKey() {
+  return crypto.randomUUID();
+}
+
+export function purchaseItem(rewardCode: string, idempotencyKey: string) {
+  return invokeQuest<{ ok: boolean; replayed?: boolean; redemption_code: string | null; balance: QuestBalance }>(
+    "store",
+    { action: "purchase", reward_code: rewardCode, idempotency_key: idempotencyKey },
+  );
+}
+
+export function equipItem(rewardCode: string, equip = true) {
+  return invokeQuest<{ ok: boolean }>("store", { action: "equip", reward_code: rewardCode, equip });
+}
+
+export function eventCheckin(eventCode: string, checkinCode: string) {
+  return invokeQuest<QuestAward>("award-quest", { action: "event_checkin", event_code: eventCode, checkin_code: checkinCode });
+}
+
+export function questAdmin<T = any>(action: string, body: Record<string, unknown> = {}) {
+  return invokeQuest<T>("quest-admin", { action, ...body });
+}
+
+export interface EntitlementRow {
+  reward_code: string;
+  equipped: boolean;
+  created_at: string;
+  item: RewardCatalogRow | null;
+}
+
+/** Items this visitor owns (from purchases), with the catalog row joined client-side. */
+export function useEntitlements() {
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  return useQuery({
+    queryKey: ["entitlements", userId],
+    enabled: Boolean(userId),
+    queryFn: async (): Promise<EntitlementRow[]> => {
+      const [{ data: ents, error }, { data: items }] = await Promise.all([
+        supabase.from("entitlements").select("reward_code, equipped, created_at").is("revoked_at", null),
+        supabase.from("rewards_catalog").select("*"),
+      ]);
+      if (error) throw error;
+      const byCode = new Map(((items ?? []) as unknown as RewardCatalogRow[]).map((i) => [i.code, i]));
+      return (ents ?? []).map((e) => ({ ...e, item: byCode.get(e.reward_code) ?? null }));
+    },
+  });
+}
+
+/** Equipped theme / frame / accessory for the signed-in visitor. */
+export function useEquipped() {
+  const { data } = useEntitlements();
+  const eq = (type: string) => data?.find((e) => e.equipped && e.item?.item_type === type)?.item ?? null;
+  return { theme: eq("theme"), frame: eq("frame"), accessory: eq("accessory") };
+}
+
+export interface RewardRuleRow {
+  code: string;
+  name: string;
+  description: string;
+  amount: number;
+  stacks_with_trail: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
+}
+
+export function useRewardRules() {
+  return useQuery({
+    queryKey: ["reward-rules"],
+    queryFn: async (): Promise<RewardRuleRow[]> => {
+      const { data, error } = await supabase.from("reward_rules").select("code,name,description,amount,stacks_with_trail,starts_at,ends_at").order("sort_order");
+      if (error) throw error;
+      return (data ?? []) as RewardRuleRow[];
+    },
+  });
+}
+
+// ---- Offline-safe retry for plaque awards (keyed by marker, server is idempotent) ----
+const PENDING_KEY = "markerquest_pending_awards";
+interface PendingAward { markerId: string; markerName: string; scanToken: string; at: number }
+
+export function readPendingAwards(): PendingAward[] {
+  try { return JSON.parse(localStorage.getItem(PENDING_KEY) ?? "[]"); } catch { return []; }
+}
+function writePending(list: PendingAward[]) {
+  try { localStorage.setItem(PENDING_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+}
+export function queuePendingAward(p: Omit<PendingAward, "at">) {
+  writePending([...readPendingAwards().filter((x) => x.markerId !== p.markerId), { ...p, at: Date.now() }]);
+}
+export function clearPendingAward(markerId: string) {
+  writePending(readPendingAwards().filter((x) => x.markerId !== markerId));
+}
+
+/** True when the failure is a connectivity problem worth retrying (not a server refusal). */
+export function isNetworkError(e: unknown) {
+  const msg = e instanceof Error ? e.message : String(e);
+  return !navigator.onLine || /fetch|network|Failed to send|timeout/i.test(msg);
 }

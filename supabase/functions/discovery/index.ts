@@ -1,6 +1,6 @@
 // Discovery reveals, digital markers and collectible postcards.
 // Everything that decides eligibility or grants something happens here, on the server.
-import { adminClient, corsHeaders, getBalance, insertEvent, isAdmin, json, requireUser } from "../_shared/quest.ts";
+import { adminClient, awardByRule, corsHeaders, getBalance, isAdmin, json, requireUser } from "../_shared/quest.ts";
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 type Admin = SupabaseClient;
@@ -114,15 +114,19 @@ async function grant(admin: Admin, userId: string, m: MarkerRow, content: Record
   }
   let quest = 0;
   let badge: string | null = null;
-  if (content.reward_kind === "quest" && Number(content.reward_quest) > 0) {
-    const sourceId = content.reward_scope === "campaign" && content.campaign_code
-      ? `campaign:${content.campaign_code}` : `discovery:${m.slug}`;
-    const ev = await insertEvent(admin, {
-      userId, eventType: "discovery_reward", sourceType: content.reward_scope === "campaign" ? "campaign" : "discovery",
-      sourceId, amount: Math.min(Number(content.reward_quest), 1000), title: `Discovery: ${m.name}`,
+  // Plaque visits already earn the marker_visit award via the scanner; digital markers earn here.
+  if (content.reward_kind === "quest" && (m.marker_type === "digital" || Number(content.reward_quest) > 0)) {
+    const campaign = content.reward_scope === "campaign" && content.campaign_code ? String(content.campaign_code) : null;
+    const r = await awardByRule(admin, {
+      userId, ruleCode: m.marker_type === "digital" ? "digital_discovery" : "marker_visit",
+      sourceType: campaign ? "campaign" : "discovery",
+      sourceId: campaign ? `campaign:${campaign}` : m.slug,
+      amount: Number(content.reward_quest) > 0 ? Math.min(Number(content.reward_quest), 1000) : null,
+      campaignCode: campaign,
+      title: `Discovery: ${m.name}`,
       metadata: { marker: m.slug, sensitive: m.sensitivity === "sensitive" },
     });
-    if (ev) quest = ev.quest_amount;
+    quest = r.amount;
   }
   if (content.reward_kind === "badge" && content.reward_badge_code) {
     const { error } = await admin.from("user_achievements").insert({ user_id: userId, achievement_code: content.reward_badge_code });

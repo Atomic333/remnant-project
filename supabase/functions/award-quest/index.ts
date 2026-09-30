@@ -1,13 +1,13 @@
 import {
   adminClient,
   corsHeaders,
+  awardByRule,
+  checkTravel,
   evaluateAchievements,
   getBalance,
-  insertEvent,
-  isAdmin,
   json,
-  QUEST_RULES,
   requireUser,
+  rotatingCode,
 } from "../_shared/quest.ts";
 
 /**
@@ -56,44 +56,75 @@ Deno.serve(async (req) => {
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (!scan || scan.marker_id !== markerId || scan.consumed_at || scan.created_at < tenMinutesAgo) {
+      if (!scan || scan.marker_id !== markerId || scan.created_at < tenMinutesAgo) {
         return json({ error: "Scan could not be verified" }, 403);
+      }
+      // A retried request after a lost response: the token is spent, so just report the saved result.
+      if (scan.consumed_at) {
+        const { data: prior } = await admin.from("reward_events").select("quest_amount, title")
+          .eq("user_id", user.id).eq("event_type", "marker_discovery").eq("source_id", markerId).maybeSingle();
+        if (!prior) return json({ error: "Scan could not be verified" }, 403);
+        return json({ awarded: false, amount: 0, title: "Already collected", already: true, achievements: [], balance: await getBalance(admin, user.id) });
       }
       await admin.from("scan_tokens").update({ consumed_at: new Date().toISOString() }).eq("token", token);
 
-      // Rarity is read from the database, never trusted from the client.
       const { data: marker } = await admin
         .from("markers")
-        .select("rarity, city, name")
+        .select("rarity, city, name, sensitivity")
         .eq("slug", markerId)
         .maybeSingle();
       const rarity = marker?.rarity === "rare" ? "rare" : "common";
-      const amount = rarity === "rare" ? QUEST_RULES.rareDiscovery : QUEST_RULES.discovery;
 
-      // Keep the account's visit log in step with the discovery.
+      // Save the verified visit before any coins move.
       await admin
         .from("marker_visits")
         .upsert({ user_id: user.id, marker_id: markerId }, { onConflict: "user_id,marker_id" });
 
-      const event = await insertEvent(admin, {
+      await checkTravel(admin, user.id, markerId);
+      const result = await awardByRule(admin, {
         userId: user.id,
-        eventType: "marker_discovery",
+        ruleCode: "marker_visit",
         sourceType: "marker",
         sourceId: markerId,
-        amount,
         title: `Discovered ${marker?.name ?? markerName}`,
         metadata: { rarity, city: marker?.city ?? city, city_total: cityTotal },
       });
 
       const achievements = await evaluateAchievements(admin, user.id);
       return json({
-        awarded: Boolean(event),
-        amount: event ? amount : 0,
-        title: event?.title ?? "Already discovered",
+        awarded: result.awarded,
+        amount: result.amount,
+        title: result.title,
+        already: result.reason === "Already collected",
+        reason: result.reason,
         rarity,
+        quiet: marker?.sensitivity === "sensitive",
         achievements,
         balance: await getBalance(admin, user.id),
       });
+    }
+
+    // ---- Special event check-in with a rotating staff code ----
+    if (action === "event_checkin") {
+      const code = String(body?.event_code ?? "").slice(0, 80);
+      const entered = String(body?.checkin_code ?? "").replace(/\D/g, "").slice(0, 6);
+      const { data: ev } = await admin.from("quest_events").select("*").eq("code", code).eq("published", true).maybeSingle();
+      if (!ev) return json({ error: "Event not found" }, 404);
+      const now = Date.now();
+      if (ev.starts_at && now < Date.parse(ev.starts_at)) return json({ error: "This event hasn't started yet." }, 409);
+      if (ev.ends_at && now > Date.parse(ev.ends_at)) return json({ error: "This event has ended." }, 409);
+      if (ev.verification !== "staff") {
+        const w = Math.floor(now / 1000 / ev.rotate_seconds);
+        const valid = [await rotatingCode(ev.checkin_secret, w), await rotatingCode(ev.checkin_secret, w - 1)];
+        if (!valid.includes(entered)) return json({ error: "That code didn't match. Ask staff for the current code." }, 403);
+      } else {
+        return json({ error: "Staff will confirm your attendance at this event." }, 403);
+      }
+      const result = await awardByRule(admin, {
+        userId: user.id, ruleCode: "event_quest", sourceType: "event", sourceId: ev.id,
+        title: `Event: ${ev.name}`, amount: ev.amount, campaignCode: ev.campaign_code,
+      });
+      return json({ ...result, event: undefined, balance: await getBalance(admin, user.id) });
     }
 
     // ---- Trail / city completion: the server recounts the discoveries ----
@@ -131,48 +162,23 @@ Deno.serve(async (req) => {
         });
       if (compError && compError.code !== "23505") throw compError;
 
-      const event = await insertEvent(admin, {
+      const result = await awardByRule(admin, {
         userId: user.id,
-        eventType: "trail_complete",
+        ruleCode: "trail_complete",
         sourceType: "city",
-        sourceId: city,
-        amount: QUEST_RULES.trailComplete,
+        sourceId: `city:${city}`,
         title: `Completed the ${city} trail`,
         metadata: { city, discovered, city_total: cityTotal },
       });
 
       const achievements = await evaluateAchievements(admin, user.id);
       return json({
-        awarded: Boolean(event),
-        amount: event ? QUEST_RULES.trailComplete : 0,
-        title: event?.title ?? "Trail already completed",
+        awarded: result.awarded,
+        amount: result.amount,
+        title: result.awarded ? result.title : "Trail already completed",
         achievements,
         balance: await getBalance(admin, user.id),
       });
-    }
-
-    // ---- Admin-granted: events and approved contributions ----
-    if (action === "grant") {
-      if (!(await isAdmin(admin, user.id))) return json({ error: "Admins only" }, 403);
-      const targetUser = String(body?.user_id ?? "");
-      const kind = body?.kind === "contribution" ? "contribution_approved" : "event_participation";
-      const amount = kind === "contribution_approved"
-        ? QUEST_RULES.contributionApproved
-        : Math.max(0, Math.min(5000, Number(body?.amount ?? 0)));
-      const title = String(body?.title ?? "Event reward").slice(0, 200);
-      const sourceId = body?.source_id ? String(body.source_id).slice(0, 120) : null;
-      if (!targetUser || amount <= 0) return json({ error: "user_id and amount required" }, 400);
-
-      const event = await insertEvent(admin, {
-        userId: targetUser,
-        eventType: kind,
-        sourceType: kind === "contribution_approved" ? "marker_request" : "event",
-        sourceId,
-        amount,
-        title,
-      });
-      const achievements = await evaluateAchievements(admin, targetUser);
-      return json({ awarded: Boolean(event), amount: event ? amount : 0, achievements });
     }
 
     // ---- Catch-up: evaluate achievements without a new earn ----

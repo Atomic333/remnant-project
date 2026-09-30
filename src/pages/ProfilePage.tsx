@@ -1,3 +1,6 @@
+import { Link } from "react-router-dom";
+import QuestCoinIcon from "@/components/QuestCoinIcon";
+import { useEquipped, useQuestBalance } from "@/hooks/useQuest";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Mail, Bell, Megaphone, LogOut, Camera, Shield, MapPin, Trophy } from "lucide-react";
@@ -28,6 +31,8 @@ const prefOptions = [
 ];
 
 const ProfilePage = () => {
+  const equipped = useEquipped();
+  const questBalance = useQuestBalance();
   const navigate = useNavigate();
   const { user, isAdmin, signOut } = useAuth();
   const { profile, update } = useProfile();
@@ -149,7 +154,10 @@ const ProfilePage = () => {
 
       <div className="space-y-3 px-5 pt-4">
         {/* Identity */}
-        <div className="rounded-xl bg-card p-4 elevation-1">
+        <div className="overflow-hidden rounded-xl bg-card p-4 elevation-1">
+          {equipped.theme && (
+            <div aria-hidden className="-mx-4 -mt-4 mb-4 h-14" style={{ background: `linear-gradient(135deg, ${equipped.theme.preview?.from}, ${equipped.theme.preview?.to})` }} />
+          )}
           <div className="flex items-center gap-4">
             <button
               onClick={() => fileRef.current?.click()}
@@ -162,6 +170,11 @@ const ProfilePage = () => {
                   {initials || "?"}
                 </AvatarFallback>
               </Avatar>
+              {equipped.accessory && (
+                <span className="absolute -left-1 -top-1 flex h-8 w-8 items-center justify-center rounded-full bg-card text-lg elevation-1" title={equipped.accessory.name} aria-label={equipped.accessory.name}>
+                  {equipped.accessory.preview?.emoji ?? "🎖️"}
+                </span>
+              )}
               <span className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground">
                 {uploading ? (
                   <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -180,6 +193,10 @@ const ProfilePage = () => {
               </p>
             </div>
           </div>
+          <Link to="/wallet" className="mt-4 flex items-center justify-between rounded-lg border border-quest-gold/30 bg-quest-gold/5 px-3 py-2.5 text-sm text-foreground">
+            <span className="flex items-center gap-2"><QuestCoinIcon className="h-4 w-4" /> Quest Wallet</span>
+            <span className="font-display text-quest-gold tabular-nums">{questBalance.balance.toLocaleString()}</span>
+          </Link>
           <input
             ref={fileRef}
             type="file"

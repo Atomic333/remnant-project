@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Award, Gem, Sparkles, X } from "lucide-react";
+import { Award, X } from "lucide-react";
 import type { UnlockedAchievement } from "@/hooks/useQuest";
+import QuestCoinIcon, { coinLabel } from "@/components/QuestCoinIcon";
+import { playCoinChime, prefersReducedMotion } from "@/lib/questSound";
 
 export interface ArtifactReveal {
   amount: number;
   title: string;
   rarity?: string;
   achievements?: UnlockedAchievement[];
+  /** Sensitive historical site: quiet acknowledgment, no celebration. */
+  quiet?: boolean;
 }
 
 interface Props {
@@ -18,6 +22,10 @@ interface Props {
 function useCountUp(target: number, active: boolean) {
   const [value, setValue] = useState(0);
   useEffect(() => {
+    if (active && prefersReducedMotion()) {
+      setValue(target);
+      return;
+    }
     if (!active) {
       setValue(0);
       return;
@@ -41,6 +49,12 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
   const active = Boolean(reveal);
   const amount = useCountUp(reveal?.amount ?? 0, active);
   const rare = reveal?.rarity === "rare";
+  const quiet = Boolean(reveal?.quiet);
+  const calm = quiet || prefersReducedMotion();
+
+  useEffect(() => {
+    if (active && !quiet) playCoinChime();
+  }, [active, quiet]);
 
   // Fixed dust trajectories so the particles don't re-randomize on re-render.
   const dust = useMemo(
@@ -66,7 +80,7 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
       className="fixed inset-0 z-[70] flex items-center justify-center px-6"
       role="dialog"
       aria-live="polite"
-      aria-label="QUEST earned"
+      aria-label="Quest Coins earned"
     >
       <button
         onClick={onDismiss}
@@ -74,7 +88,7 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
         className="absolute inset-0 bg-quest-navy/80 backdrop-blur-md animate-fade-in"
       />
 
-      <div className="relative w-full max-w-sm animate-artifact-rise">
+      <div className={`relative w-full max-w-sm ${calm ? "animate-fade-in" : "animate-artifact-rise"}`}>
         <button
           onClick={onDismiss}
           aria-label="Close"
@@ -85,6 +99,11 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
 
         <div className="relic-surface artifact-glow-strong overflow-hidden rounded-xl border border-quest-gold/30 px-6 pb-6 pt-9 text-center">
           {/* Seal + dust */}
+          {calm ? (
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-quest-gold/10">
+              <QuestCoinIcon className="h-9 w-9" />
+            </div>
+          ) : (
           <div className="relative mx-auto mb-5 h-24 w-24">
             <span className="absolute inset-0 rounded-full border border-quest-gold/50 animate-relic-ring" />
             <span
@@ -92,11 +111,7 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
               aria-hidden
             />
             <div className="absolute inset-0 flex items-center justify-center rounded-full bg-quest-gold/12 animate-seal-crack">
-              {rare ? (
-                <Gem className="h-10 w-10 text-quest-gold" />
-              ) : (
-                <Sparkles className="h-10 w-10 text-quest-gold" />
-              )}
+              <QuestCoinIcon className="h-12 w-12" />
             </div>
             {dust.map((d, i) => (
               <span
@@ -111,15 +126,15 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
               />
             ))}
           </div>
+          )}
 
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-quest-cyan">
-            {rare ? "Rare artifact unearthed" : "Artifact recovered"}
+            {quiet ? "Thank you for visiting" : rare ? "Rare find" : "Verified visit"}
           </p>
 
-          <p className="mt-3 font-display text-5xl font-medium quest-gold-text quest-engraved">
-            +{amount}
+          <p className="mt-3 font-display text-lg text-white" aria-live="polite">
+            You earned <span className="quest-gold-text font-medium">{coinLabel(amount)}</span>
           </p>
-          <p className="mt-1 font-display text-xs uppercase tracking-[0.3em] text-quest-gold/80">QUEST</p>
 
           <p className="mt-4 text-sm text-white/80">{reveal.title}</p>
 
@@ -131,7 +146,7 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
                   <div className="min-w-0">
                     <p className="truncate font-display text-sm text-white">{a.name}</p>
                     <p className="text-xs text-white/60">
-                      Achievement unlocked · +{a.quest_reward} QUEST
+                      Achievement unlocked · +{coinLabel(a.quest_reward)}
                     </p>
                   </div>
                 </div>
@@ -143,7 +158,7 @@ const ArtifactRewardOverlay = ({ reveal, onDismiss }: Props) => {
             onClick={onDismiss}
             className="interactive mt-6 w-full rounded-xl bg-quest-gold py-3 font-display text-sm font-medium text-quest-navy"
           >
-            Add to my collection
+            Continue
           </button>
         </div>
       </div>
