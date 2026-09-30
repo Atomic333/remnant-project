@@ -4,17 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
-import { mintScanToken, stashScanToken } from "@/hooks/useQuest";
-
-/** Mint a one-time token so the server can verify this really was a QR scan. */
-async function prepareVerifiedScan(markerId: string) {
-  try {
-    const { token } = await mintScanToken(markerId);
-    stashScanToken(markerId, token);
-  } catch {
-    /* signed-out or offline scans just skip the reward */
-  }
-}
+import { prepareVerifiedScan } from "@/hooks/useQuest";
 
 type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
 

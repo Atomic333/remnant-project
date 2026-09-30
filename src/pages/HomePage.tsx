@@ -1,4 +1,4 @@
-import { Compass, Footprints, Trophy } from "lucide-react";
+import { Compass, Footprints, Mail, Trophy } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import { useAllMarkers, useCityMarkers } from "@/hooks/useAllMarkers";
@@ -98,6 +98,17 @@ const HomePage = () => {
             <div className="text-left">
               <p className="font-display text-sm font-medium text-foreground">Trails</p>
               <p className="text-xs text-muted-foreground">Guided walks from marker to marker</p>
+            </div>
+          </button>
+          <button
+            onClick={() => navigate("/postcards")}
+            className="flex w-full items-center gap-4 rounded-2xl border border-border bg-card p-3 elevation-1 transition-all active:scale-[0.98]">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <Mail className="h-4 w-4 text-primary" />
+            </div>
+            <div className="text-left">
+              <p className="font-display text-sm font-medium text-foreground">My Postcards</p>
+              <p className="text-xs text-muted-foreground">Collectibles you unlock at markers</p>
             </div>
           </button>
           <button

@@ -15,6 +15,7 @@ import { getMarkerImage } from "@/lib/markerImages";
 import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
 import { useQuestReward } from "@/components/QuestRewardProvider";
 import { useCityMarkers } from "@/hooks/useAllMarkers";
+import DiscoveryPanel from "@/components/DiscoveryPanel";
 
 const MarkerDetailPage = () => {
   const markers = useAllMarkers();
@@ -22,21 +23,27 @@ const MarkerDetailPage = () => {
   const navigate = useNavigate();
   const marker = markers.find((m) => m.id === id);
   const { isVisited, toggle: toggleVisited } = useVisited();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const visited = id ? isVisited(id) : false;
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(["summary"]));
   const [showStreetView, setShowStreetView] = useState(false);
   const { celebrate } = useQuestReward();
   const cityMarkers = useCityMarkers();
   const awardedRef = useRef(false);
+  const [scanVerified, setScanVerified] = useState(false);
 
   // A QR scan in the app leaves a one-time token behind; the server verifies it
   // and decides the reward. Nothing about the amount is computed here.
   useEffect(() => {
-    if (!id || !user || awardedRef.current) return;
+    if (!id || authLoading || awardedRef.current) return;
     const token = consumeScanToken(id);
     if (!token) return;
     awardedRef.current = true;
+    if (!user || token === "guest") {
+      // Guest scans: the discovery panel keeps a pending claim on the server.
+      setScanVerified(true);
+      return;
+    }
     awardDiscovery({
       markerId: id,
       markerName: marker?.name ?? id,
@@ -49,6 +56,7 @@ const MarkerDetailPage = () => {
         /* unverified scans simply award nothing */
       })
       .finally(() => {
+        setScanVerified(true);
         // If a trail walk is open and includes this marker, record a QR-verified check-in.
         checkinActiveTrailFromScan(id)
           .then((res) => {
@@ -63,7 +71,7 @@ const MarkerDetailPage = () => {
             /* not verified: the walker can still mark the stop manually */
           });
       });
-  }, [id, user, marker?.name, marker?.city, cityMarkers.length, celebrate]);
+  }, [id, user, authLoading, marker?.name, marker?.city, cityMarkers.length, celebrate]);
 
   if (!marker) {
     return (
@@ -197,6 +205,9 @@ const MarkerDetailPage = () => {
               </span>
             </button>
           )}
+
+          {/* Discovery reveal, digital check-in and postcard collection */}
+          <DiscoveryPanel marker={marker} scanVerified={scanVerified} />
 
           {/* Accordion */}
           {sections.map(({ key, icon: Icon, label }) => {

@@ -23,6 +23,8 @@ import SplashScreen from "@/components/SplashScreen";
 import RewardsPage from "@/pages/RewardsPage";
 import RequireAuth from "@/components/RequireAuth";
 import QuestRewardProvider from "@/components/QuestRewardProvider";
+import PostcardsPage from "@/pages/PostcardsPage";
+import PendingDiscoveryClaimer from "@/components/PendingDiscoveryClaimer";
 
 const queryClient = new QueryClient();
 
@@ -34,12 +36,14 @@ const App = () => (
       <SplashScreen />
       <BrowserRouter>
         <QuestRewardProvider>
+        <PendingDiscoveryClaimer />
         <div className="mx-auto min-h-screen max-w-lg">
           <Routes>
             {/* Public: marker pages opened from QR codes */}
             <Route path="/marker/:id" element={<MarkerDetailPage />} />
             <Route path="/trails" element={<TrailsPage />} />
             <Route path="/trails/:slug" element={<TrailDetailPage />} />
+            <Route path="/postcards" element={<PostcardsPage />} />
             <Route path="/u/:code" element={<SharedVisitsPage />} />
             <Route path="/auth" element={<AuthPage />} />
 
@@ -53,7 +57,7 @@ const App = () => (
             <Route path="/settings" element={<RequireAuth><SettingsPage /></RequireAuth>} />
             <Route path="/rewards" element={<RequireAuth allowGuest={false}><RewardsPage /></RequireAuth>} />
             <Route path="/profile" element={<RequireAuth allowGuest={false}><ProfilePage /></RequireAuth>} />
-            <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
+            <Route path="/admin" element={<RequireAuth admin allowCreator><AdminPage /></RequireAuth>} />
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
             <Route path="/admin/trails" element={<RequireAuth admin><AdminTrailsPage /></RequireAuth>} />
             <Route path="*" element={<NotFound />} />

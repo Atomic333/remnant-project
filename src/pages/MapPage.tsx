@@ -17,6 +17,7 @@ import { Html5Qrcode } from "html5-qrcode";
 import { getStaticMapUrl } from "@/lib/staticMap";
 import { getMarkerImage } from "@/lib/markerImages";
 import markerIconAsset from "@/assets/marker-icon.png.asset.json";
+import { prepareVerifiedScan } from "@/hooks/useQuest";
 
 
 // Theme hex values matching CSS variables
@@ -183,7 +184,8 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
       if (found) {
         setResultLabel(found.name);
         setScanState("success");
-        setTimeout(() => { onClose(); navigate(`/marker/${found.id}`); }, 1500);
+        const ready = prepareVerifiedScan(found.id);
+        setTimeout(() => { void ready.finally(() => { onClose(); navigate(`/marker/${found.id}`); }); }, 1500);
         return;
       }
     }
@@ -406,6 +408,17 @@ const ScanPanel = ({ onClose }: { onClose: () => void }) => {
 
 // ── MapPage ───────────────────────────────────────────────────────
 type Sheet = "scan" | "progress" | null;
+
+/** Question-mark pin for mystery discoveries. */
+const MYSTERY_ICON = (w: number) => {
+  const h = Math.round(w * 1.3);
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 40 52'><path d='M20 51C20 51 38 31 38 19A18 18 0 0 0 2 19C2 31 20 51 20 51Z' fill='%230b1430' stroke='%23f5b82e' stroke-width='2.5'/><text x='20' y='27' font-size='20' font-family='sans-serif' font-weight='700' text-anchor='middle' fill='%23f5b82e'>?</text></svg>`;
+  return {
+    url: `data:image/svg+xml;charset=UTF-8,${svg}`,
+    scaledSize: new google.maps.Size(w, h),
+    anchor: new google.maps.Point(w / 2, h),
+  } as google.maps.Icon;
+};
 
 const MapPage = () => {
   const markers = useCityMarkers();
@@ -769,10 +782,10 @@ const MapPage = () => {
                         ? google.maps.Animation.BOUNCE
                         : undefined
                     }
-                    icon={getMarkerIcon(state)}
+                    icon={m.discoveryVisibility === "mystery" && !isVisited(m.id) ? MYSTERY_ICON(MARKER_STATE_STYLE[state].size) : getMarkerIcon(state)}
                     opacity={dimmed ? 0.25 : style.opacity}
                     zIndex={state === "rare" || state === "available" ? 3 : 2}
-                    title={m.name}
+                    title={m.discoveryVisibility === "mystery" && !isVisited(m.id) ? "Mystery discovery" : m.name}
                   />
                 </Fragment>
               );
@@ -920,6 +933,12 @@ const MapPage = () => {
                 <div className="flex-1">
                   <h3 className="font-display text-lg font-medium text-foreground">{selectedMarker.name}</h3>
                   <p className="text-sm text-on-surface-variant">{selectedMarker.address}</p>
+                  {selectedMarker.discoveryVisibility === "mystery" && selectedMarker.clue && (
+                    <p className="mt-1 text-xs italic text-primary">Mystery clue: {selectedMarker.clue}</p>
+                  )}
+                  {selectedMarker.markerType === "digital" && (
+                    <p className="mt-1 text-[11px] text-on-surface-variant">Digital discovery — no physical plaque at this location.</p>
+                  )}
                   {selectedMarker.distance && (
                     <p className="mt-1 text-xs text-on-surface-variant">{selectedMarker.distance}</p>
                   )}

@@ -264,3 +264,25 @@
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* Discovery reveal animations: brief, no flashing, disabled under reduced motion. */
+@layer utilities {
+  .dr-flip { animation: dr-flip 1.1s ease-in-out 0.2s both; }
+  .dr-flap { animation: dr-flap 0.6s ease-in both; }
+  .dr-rise { animation: dr-rise 0.8s ease-out 0.5s both; }
+  .dr-lid { animation: dr-lid 0.7s ease-out 0.2s both; }
+  .dr-glow { animation: dr-glow 1.4s ease-out both; }
+  .dr-ripple { animation: dr-ripple 1.4s ease-out both; }
+  .dr-fade-in { animation: dr-fade 1s ease-out 0.4s both; }
+  .dr-quiet { animation: dr-fade 1.4s ease-in-out both; }
+}
+@keyframes dr-flip { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+@keyframes dr-flap { from { transform: rotateX(0); } to { transform: rotateX(180deg); opacity: 0.6; } }
+@keyframes dr-rise { from { transform: translateY(40%); opacity: 0; } to { transform: translateY(-10%); opacity: 1; } }
+@keyframes dr-lid { from { transform: translateY(0) rotate(0); } to { transform: translateY(-24px) rotate(-12deg); } }
+@keyframes dr-glow { from { opacity: 0; } 60% { opacity: 0.7; } to { opacity: 0.45; } }
+@keyframes dr-ripple { from { transform: scale(0.6); opacity: 0.8; } to { transform: scale(2.6); opacity: 0; } }
+@keyframes dr-fade { from { opacity: 0; transform: scale(0.97); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .dr-flip, .dr-flap, .dr-rise, .dr-lid, .dr-glow, .dr-ripple, .dr-fade-in, .dr-quiet { animation: none !important; }
+}

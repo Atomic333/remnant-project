@@ -268,6 +268,25 @@ export function consumeScanToken(markerId: string): string | null {
   }
 }
 
+/**
+ * Called by every in-app QR scanner. Signed-in visitors get a one-time server token;
+ * guests get a marker so the page knows the visit came from the scanner (their claim stays
+ * pending on the server until they sign in).
+ */
+export async function prepareVerifiedScan(markerId: string) {
+  try {
+    const { data } = await supabase.auth.getSession();
+    if (!data.session) {
+      stashScanToken(markerId, "guest");
+      return;
+    }
+    const { token } = await mintScanToken(markerId);
+    stashScanToken(markerId, token);
+  } catch {
+    /* offline scans just skip verification */
+  }
+}
+
 export function mintScanToken(markerId: string) {
   return invokeQuest<{ token: string }>("award-quest", { action: "mint_scan_token", marker_id: markerId });
 }

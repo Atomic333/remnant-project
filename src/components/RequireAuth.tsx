@@ -10,6 +10,8 @@ interface RequireAuthProps {
   children: React.ReactNode;
   /** Admin-only route. */
   admin?: boolean;
+  /** With `admin`, also let creators in (they only see content they own). */
+  allowCreator?: boolean;
   /** Whether guests (no account) may view this route. Defaults to true. */
   allowGuest?: boolean;
 }
@@ -20,8 +22,8 @@ const Spinner = () => (
   </div>
 );
 
-const RequireAuth = ({ children, admin, allowGuest = true }: RequireAuthProps) => {
-  const { user, isAdmin, loading } = useAuth();
+const RequireAuth = ({ children, admin, allowCreator, allowGuest = true }: RequireAuthProps) => {
+  const { user, isAdmin, isCreator, loading } = useAuth();
   const { isGuest } = useGuest();
   const { profile, loading: profileLoading } = useProfile();
   const navigate = useNavigate();
@@ -80,7 +82,7 @@ const RequireAuth = ({ children, admin, allowGuest = true }: RequireAuthProps) =
   // Everyone with an account picks their communication preferences once.
   if (profile && !profile.onboarded_at) return <PreferencesOnboarding />;
 
-  if (admin && !isAdmin) {
+  if (admin && !isAdmin && !(allowCreator && isCreator)) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <h2 className="font-display text-lg font-medium text-foreground">Admins only</h2>
