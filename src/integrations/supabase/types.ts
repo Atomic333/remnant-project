@@ -445,6 +445,246 @@ export type Database = {
         }
         Relationships: []
       }
+      trail_checkins: {
+        Row: {
+          created_at: string
+          id: string
+          marker_id: string
+          method: string
+          session_id: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          marker_id: string
+          method: string
+          session_id: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          marker_id?: string
+          method?: string
+          session_id?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trail_checkins_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "trail_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trail_revisions: {
+        Row: {
+          distance_m: number
+          duration_s: number
+          id: string
+          legs: Json
+          published_at: string
+          stops: Json
+          trail_id: string
+          version: number
+        }
+        Insert: {
+          distance_m?: number
+          duration_s?: number
+          id?: string
+          legs?: Json
+          published_at?: string
+          stops?: Json
+          trail_id: string
+          version: number
+        }
+        Update: {
+          distance_m?: number
+          duration_s?: number
+          id?: string
+          legs?: Json
+          published_at?: string
+          stops?: Json
+          trail_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trail_revisions_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trail_route_cache: {
+        Row: {
+          created_at: string
+          distance_m: number
+          duration_s: number
+          key: string
+          polyline: string
+        }
+        Insert: {
+          created_at?: string
+          distance_m: number
+          duration_s: number
+          key: string
+          polyline: string
+        }
+        Update: {
+          created_at?: string
+          distance_m?: number
+          duration_s?: number
+          key?: string
+          polyline?: string
+        }
+        Relationships: []
+      }
+      trail_sessions: {
+        Row: {
+          completed_at: string | null
+          id: string
+          revision_id: string
+          started_at: string
+          status: string
+          trail_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          id?: string
+          revision_id: string
+          started_at?: string
+          status?: string
+          trail_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          id?: string
+          revision_id?: string
+          started_at?: string
+          status?: string
+          trail_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trail_sessions_revision_id_fkey"
+            columns: ["revision_id"]
+            isOneToOne: false
+            referencedRelation: "trail_revisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trail_sessions_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trail_stops: {
+        Row: {
+          id: string
+          marker_id: string
+          note: string
+          position: number
+          required: boolean
+          trail_id: string
+        }
+        Insert: {
+          id?: string
+          marker_id: string
+          note?: string
+          position?: number
+          required?: boolean
+          trail_id: string
+        }
+        Update: {
+          id?: string
+          marker_id?: string
+          note?: string
+          position?: number
+          required?: boolean
+          trail_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trail_stops_trail_id_fkey"
+            columns: ["trail_id"]
+            isOneToOne: false
+            referencedRelation: "trails"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trails: {
+        Row: {
+          accessibility: string | null
+          city: string
+          cover_path: string | null
+          created_at: string
+          created_by: string | null
+          current_revision_id: string | null
+          description: string
+          id: string
+          is_loop: boolean
+          slug: string
+          status: string
+          terrain: string | null
+          theme: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          accessibility?: string | null
+          city?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_revision_id?: string | null
+          description?: string
+          id?: string
+          is_loop?: boolean
+          slug: string
+          status?: string
+          terrain?: string | null
+          theme?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          accessibility?: string | null
+          city?: string
+          cover_path?: string | null
+          created_at?: string
+          created_by?: string | null
+          current_revision_id?: string | null
+          description?: string
+          id?: string
+          is_loop?: boolean
+          slug?: string
+          status?: string
+          terrain?: string | null
+          theme?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_achievements: {
         Row: {
           achievement_code: string
