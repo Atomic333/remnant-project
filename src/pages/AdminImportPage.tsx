@@ -342,7 +342,7 @@ type StoryRow = { marker_id: string; title: string; city_id: string | null; stat
 type OpenIssue = { issue_key: string; marker_id: string; kind: string; message: string };
 
 /** True when a "blocked" note only cites the missing city and/or withheld coordinates. */
-export function onlyCityBlock(message: string) {
+function onlyCityBlock(message: string) {
   return message
     .replace(/^Blocked in upload draft:\s*/, "")
     .replace(/cityId not invented — must be assigned from MarkerQuest city list|coordinates withheld \([^)]*\)|[;\s]/g, "") === "";
