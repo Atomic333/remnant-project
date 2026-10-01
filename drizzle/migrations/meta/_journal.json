@@ -155,6 +155,13 @@
       "when": 1790813394496,
       "tag": "0021_fix_set_collection_status_where",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1790814431683,
+      "tag": "0022_collection_story_feature_parity",
+      "breakpoints": true
     }
   ]
 }

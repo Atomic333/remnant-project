@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, List, Map as MapIcon, MapPin, Sparkles, SlidersHorizontal, Pause, Play } from "lucide-react";
-import { GoogleMap, MarkerClustererF, MarkerF, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import { useCollection, locationLabel, focusTone, type CMarker, type CImage } from "@/hooks/useCollection";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,6 +9,7 @@ import { useMotion, motion, stagger } from "@/lib/motion";
 import { REGIONS, COLLECTION_TITLE } from "@/lib/collectionImport";
 import { GOOGLE_MAPS_STATIC_KEY } from "@/lib/googleMapsKey";
 import AtlasImage, { sized } from "@/components/atlas/AtlasImage";
+import CollectionMapMarker from "@/components/CollectionMapMarker";
 
 const WA_CENTER = { lat: 47.4, lng: -120.6 };
 const decade = (p: string | null) => {
@@ -253,30 +254,17 @@ function WaMap({ markers, selected, onSelect, animate }: { markers: CMarker[]; s
         onUnmount={() => { mapRef.current = null; }}
         options={{ styles: MAP_STYLE, disableDefaultUI: true, zoomControl: true, gestureHandling: "greedy", clickableIcons: false }}
       >
-        <MarkerClustererF options={{ averageCenter: true, gridSize: 48 }}>
-          {(clusterer) => (
-            <>
-              {markers.map((x) => (
-                <MarkerF
-                  key={x.marker_id}
-                  position={{ lat: x.lat!, lng: x.lng! }}
-                  clusterer={clusterer}
-                  title={`${x.title} (${locationLabel(x)})`}
-                  onClick={() => onSelect(x.marker_id)}
-                  animation={animate ? google.maps.Animation.DROP : undefined}
-                  icon={{
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: selected === x.marker_id ? 10 : 7,
-                    fillColor: x.sensitive ? "#9fb0ac" : "#d9b35a",
-                    fillOpacity: 1,
-                    strokeColor: "#0f1a20",
-                    strokeWeight: 2,
-                  }}
-                />
-              ))}
-            </>
-          )}
-        </MarkerClustererF>
+        {markers.map((x) => (
+          <CollectionMapMarker
+            key={x.marker_id}
+            lat={x.lat as number}
+            lng={x.lng as number}
+            title={`${x.title} (${locationLabel(x)})`}
+            selected={selected === x.marker_id}
+            motion={animate}
+            onClick={() => onSelect(x.marker_id)}
+          />
+        ))}
       </GoogleMap>
     </div>
   );

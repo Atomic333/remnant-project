@@ -37,6 +37,14 @@ Deno.serve(async (req) => {
         note: s.note,
       }));
       const problems: string[] = [];
+      const collectionIds = stops.map((s) => s.marker_id);
+      const { data: collectionStops } = collectionIds.length
+        ? await admin.from("collection_markers").select("marker_id,coord_withheld,status").in("marker_id", collectionIds)
+        : { data: [] };
+      for (const story of collectionStops ?? []) {
+        if (story.status !== "published") problems.push(`"${story.marker_id}" is not published.`);
+        if (story.coord_withheld) problems.push(`"${story.marker_id}" has a withheld location and cannot be a trail stop.`);
+      }
       if (new Set(stops.map((s) => s.marker_id)).size < 2) problems.push("A trail needs at least 2 different markers.");
       stops.forEach((s) => { if (!validPt(s)) problems.push(`"${s.name}" has no valid coordinates.`); });
       if (problems.length) return json({ error: "Trail is not ready", problems }, 422);

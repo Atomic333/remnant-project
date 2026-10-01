@@ -1,10 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, BookOpen, ChevronDown, ExternalLink, Info, MapPin, Pause, Play, X, Check, Clock } from "lucide-react";
+import { ArrowLeft, BookOpen, Brain, CheckCircle2, ChevronDown, ExternalLink, Eye, Info, MapPin, MessageCircle, Navigation, Pause, Play, QrCode, Share2, X, Check, Clock } from "lucide-react";
 import { useCollection, locationLabel, focusTone, type CImage } from "@/hooks/useCollection";
 import { useMotion, motion, stagger } from "@/lib/motion";
 import AtlasImage, { sized, TitleCard } from "@/components/atlas/AtlasImage";
 import MarkerActivities from "@/components/MarkerActivities";
+import MarkerChat from "@/components/MarkerChat";
+import MarkerTrivia from "@/components/MarkerTrivia";
+import MarkerArtifactCard from "@/components/MarkerArtifactCard";
+import DiscoveryPanel from "@/components/DiscoveryPanel";
+import StreetView from "@/components/StreetView";
+import { collectionMarker } from "@/lib/collectionMarker";
+import { useVisited } from "@/hooks/useVisited";
+import { useAuth } from "@/hooks/useAuth";
+import { awardDiscovery, consumeScanToken } from "@/hooks/useQuest";
+import { useQuestReward } from "@/components/QuestRewardProvider";
+import { checkinActiveTrailFromScan } from "@/lib/trails";
+import { toast } from "@/hooks/use-toast";
+import MarkerQrCard from "@/components/MarkerQrCard";
 
 const WashingtonStoryPage = () => {
   const { markerId = "" } = useParams();
@@ -14,10 +27,19 @@ const WashingtonStoryPage = () => {
   const [progress, setProgress] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [flipped, setFlipped] = useState(false);
+  const [showStreetView, setShowStreetView] = useState(false);
+  const [scanVerified, setScanVerified] = useState(false);
+  const { isVisited, toggle: toggleVisited } = useVisited();
+  const { user, loading: authLoading } = useAuth();
+  const { celebrate } = useQuestReward();
 
   const story = markers.find((x) => x.marker_id === markerId);
   const gallery = useMemo(() => images.filter((i) => i.marker_id === markerId), [images, markerId]);
   const refs = useMemo(() => sources.filter((s) => s.marker_id === markerId), [sources, markerId]);
+  const featureMarker = useMemo(
+    () => story ? collectionMarker(story, refs, gallery[0]) : null,
+    [story, refs, gallery],
+  );
   const related = useMemo(() => {
     if (!story) return [];
     return markers.filter((x) => x.marker_id !== story.marker_id)
@@ -35,6 +57,24 @@ const WashingtonStoryPage = () => {
     return () => window.removeEventListener("scroll", on);
   }, [story]);
   useEffect(() => { window.scrollTo(0, 0); }, [markerId]);
+  useEffect(() => {
+    if (!story || !featureMarker || story.status !== "published" || authLoading) return;
+    const token = consumeScanToken(story.marker_id);
+    if (!token) return;
+    if (!user || token === "guest") { setScanVerified(true); return; }
+    awardDiscovery({
+      markerId: story.marker_id,
+      markerName: story.title,
+      scanToken: token,
+      city: story.city_id ?? undefined,
+      cityTotal: markers.filter((x) => x.status === "published" && x.city_id === story.city_id).length || undefined,
+    }).then((result) => {
+      celebrate(result);
+      return checkinActiveTrailFromScan(story.marker_id);
+    }).then((result) => {
+      if (result) toast({ title: result.complete ? "Trail complete!" : "Trail stop verified" });
+    }).catch(() => undefined).finally(() => setScanVerified(true));
+  }, [story, featureMarker, authLoading, user, markers, celebrate]);
   useEffect(() => {
     if (lightbox === null) return;
     const k = (e: KeyboardEvent) => {
@@ -62,6 +102,7 @@ const WashingtonStoryPage = () => {
   const settings = (story.draft_settings ?? {}) as { questCoins?: number | null; revealAnimation?: string | null };
   const years = [...new Set([...(story.period ?? "").matchAll(/\b(1[6-9]\d\d|20\d\d)\b[^;]*/g)].map((x) => x[0].trim()))].slice(0, 8);
   const paragraphs = (story.story ?? "").split(/\n{2,}|\r\n\r\n/).filter(Boolean);
+  const hasLocation = !story.coord_withheld && story.lat != null && story.lng != null;
 
   return (
     <div className="atlas atlas-grain min-h-dvh pb-24 font-atlas-sans" data-motion={m.enabled ? "on" : "off"}>
@@ -104,6 +145,22 @@ const WashingtonStoryPage = () => {
             <p className="mt-3 rounded-lg border border-atlas-mist/20 px-4 py-3 text-sm text-atlas-paper/90">
               This is a place of remembrance. Please visit quietly and with respect.
             </p>
+          )}
+          {story.status === "published" && featureMarker && (
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button onClick={() => toggleVisited(story.marker_id)} className="inline-flex items-center gap-2 rounded-full bg-atlas-gold px-4 py-2 text-xs font-medium text-atlas-ink">
+                <CheckCircle2 className="h-4 w-4" /> {isVisited(story.marker_id) ? "Visited" : "Mark visited"}
+              </button>
+              {hasLocation && (
+                <a href={`https://www.google.com/maps/dir/?api=1&destination=${story.lat},${story.lng}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full border border-atlas-mist/40 px-4 py-2 text-xs">
+                  <Navigation className="h-4 w-4" /> Directions
+                </a>
+              )}
+              <button onClick={() => navigator.share?.({ title: story.title, url: window.location.href }) ?? navigator.clipboard.writeText(window.location.href)} className="inline-flex items-center gap-2 rounded-full border border-atlas-mist/40 px-4 py-2 text-xs">
+                <Share2 className="h-4 w-4" /> Share
+              </button>
+              {hasLocation && <button onClick={() => setShowStreetView(true)} className="inline-flex items-center gap-2 rounded-full border border-atlas-mist/40 px-4 py-2 text-xs"><Eye className="h-4 w-4" /> Street View</button>}
+            </div>
           )}
         </div>
       </header>
@@ -209,6 +266,22 @@ const WashingtonStoryPage = () => {
         {/* Activities: only real, configured H5P activities (none are invented) */}
         <MarkerActivities markerId={story.marker_id} />
 
+        {story.status === "published" && featureMarker && (
+          <>
+            <DiscoveryPanel marker={featureMarker} scanVerified={scanVerified} />
+            {featureMarker.artifactModelUrl && <MarkerArtifactCard marker={featureMarker} />}
+            <Expandable title="History challenge" icon={<Brain className="h-4 w-4" />}>
+              <MarkerTrivia marker={featureMarker} />
+            </Expandable>
+            <Expandable title="Ask about this story" icon={<MessageCircle className="h-4 w-4" />} defaultOpen>
+              <MarkerChat marker={featureMarker} />
+            </Expandable>
+            <Expandable title="Marker QR code" icon={<QrCode className="h-4 w-4" />}>
+              <MarkerQrCard marker={featureMarker} />
+            </Expandable>
+          </>
+        )}
+
         {related.length > 0 && (
           <section aria-labelledby="rel-h">
             <h2 id="rel-h" className="font-atlas text-xl">Related stories</h2>
@@ -229,6 +302,12 @@ const WashingtonStoryPage = () => {
       {lightbox !== null && gallery[lightbox] && (
         <Lightbox img={gallery[lightbox]} onClose={() => setLightbox(null)} count={gallery.length} index={lightbox}
           onNav={(d) => setLightbox((i) => (i === null ? i : (i + d + gallery.length) % gallery.length))} quiet={quiet || !m.enabled} />
+      )}
+      {showStreetView && hasLocation && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-atlas-night">
+          <div className="flex items-center justify-between border-b border-atlas-char px-4 py-3"><span>Street View</span><button onClick={() => setShowStreetView(false)} aria-label="Close Street View"><X className="h-5 w-5" /></button></div>
+          <div className="flex-1"><StreetView lat={story.lat as number} lng={story.lng as number} name={story.title} panoId={(story.street_view as { panoId?: string } | null)?.panoId} heading={(story.street_view as { heading?: number } | null)?.heading} autoActivate /></div>
+        </div>
       )}
     </div>
   );

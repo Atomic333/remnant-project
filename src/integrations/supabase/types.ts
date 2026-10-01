@@ -197,15 +197,24 @@ export type Database = {
         Row: {
           access_notes: string | null
           address: string | null
+          arrival_radius_m: number
+          artifact_attribution: string | null
+          artifact_model_url: string | null
+          artifact_name: string | null
+          availability_tz: string
+          available_from: string | null
+          available_until: string | null
           category: string | null
           city_id: string | null
           city_name: string | null
+          clue: string | null
           collection_code: string
           community: string | null
           coord_precision: string | null
           coord_withheld: boolean
           county: string | null
           created_at: string
+          discovery_visibility: string
           draft_settings: Json
           featured_article: string | null
           history_focus: string | null
@@ -218,12 +227,15 @@ export type Database = {
           narrative_kind: string
           period: string | null
           plaque_status: string | null
+          rarity: string
           region: string | null
           region_label: string | null
+          reveal_style: string
           review_status: string | null
           sensitive: boolean
           status: string
           story: string | null
+          street_view: Json | null
           summary: string | null
           tags: string[]
           title: string
@@ -234,15 +246,24 @@ export type Database = {
         Insert: {
           access_notes?: string | null
           address?: string | null
+          arrival_radius_m?: number
+          artifact_attribution?: string | null
+          artifact_model_url?: string | null
+          artifact_name?: string | null
+          availability_tz?: string
+          available_from?: string | null
+          available_until?: string | null
           category?: string | null
           city_id?: string | null
           city_name?: string | null
+          clue?: string | null
           collection_code: string
           community?: string | null
           coord_precision?: string | null
           coord_withheld?: boolean
           county?: string | null
           created_at?: string
+          discovery_visibility?: string
           draft_settings?: Json
           featured_article?: string | null
           history_focus?: string | null
@@ -255,12 +276,15 @@ export type Database = {
           narrative_kind?: string
           period?: string | null
           plaque_status?: string | null
+          rarity?: string
           region?: string | null
           region_label?: string | null
+          reveal_style?: string
           review_status?: string | null
           sensitive?: boolean
           status?: string
           story?: string | null
+          street_view?: Json | null
           summary?: string | null
           tags?: string[]
           title: string
@@ -271,15 +295,24 @@ export type Database = {
         Update: {
           access_notes?: string | null
           address?: string | null
+          arrival_radius_m?: number
+          artifact_attribution?: string | null
+          artifact_model_url?: string | null
+          artifact_name?: string | null
+          availability_tz?: string
+          available_from?: string | null
+          available_until?: string | null
           category?: string | null
           city_id?: string | null
           city_name?: string | null
+          clue?: string | null
           collection_code?: string
           community?: string | null
           coord_precision?: string | null
           coord_withheld?: boolean
           county?: string | null
           created_at?: string
+          discovery_visibility?: string
           draft_settings?: Json
           featured_article?: string | null
           history_focus?: string | null
@@ -292,12 +325,15 @@ export type Database = {
           narrative_kind?: string
           period?: string | null
           plaque_status?: string | null
+          rarity?: string
           region?: string | null
           region_label?: string | null
+          reveal_style?: string
           review_status?: string | null
           sensitive?: boolean
           status?: string
           story?: string | null
+          street_view?: Json | null
           summary?: string | null
           tags?: string[]
           title?: string

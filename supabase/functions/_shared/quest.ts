@@ -195,12 +195,21 @@ export async function awardByRule(admin: SupabaseClient, input: RuleAwardInput):
 
 /** Flag (never block) impossible travel between two plaque visits. */
 export async function checkTravel(admin: SupabaseClient, userId: string, markerSlug: string) {
-  const { data: here } = await admin.from("markers").select("lat,lng").eq("slug", markerSlug).maybeSingle();
+  const resolve = async (id: string) => {
+    const { data: regular } = await admin.from("markers").select("lat,lng").eq("slug", id).maybeSingle();
+    if (regular) return regular;
+    const { data: collection } = await admin.from("collection_markers").select("lat,lng,coord_withheld,status")
+      .eq("marker_id", id).eq("status", "published").maybeSingle();
+    return collection && !collection.coord_withheld && collection.lat != null && collection.lng != null
+      ? { lat: collection.lat, lng: collection.lng }
+      : null;
+  };
+  const here = await resolve(markerSlug);
   if (!here) return;
   const { data: last } = await admin.from("reward_events").select("source_id, created_at")
     .eq("user_id", userId).eq("event_type", "marker_discovery").order("created_at", { ascending: false }).limit(1).maybeSingle();
   if (!last?.source_id || last.source_id === markerSlug) return;
-  const { data: prev } = await admin.from("markers").select("lat,lng").eq("slug", last.source_id).maybeSingle();
+  const prev = await resolve(last.source_id);
   if (!prev) return;
   const R = 6371, toR = Math.PI / 180;
   const dLat = (here.lat - prev.lat) * toR, dLng = (here.lng - prev.lng) * toR;

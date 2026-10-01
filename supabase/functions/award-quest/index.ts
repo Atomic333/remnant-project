@@ -68,11 +68,27 @@ Deno.serve(async (req) => {
       }
       await admin.from("scan_tokens").update({ consumed_at: new Date().toISOString() }).eq("token", token);
 
-      const { data: marker } = await admin
+      const { data: regularMarker } = await admin
         .from("markers")
         .select("rarity, city, name, sensitivity")
         .eq("slug", markerId)
         .maybeSingle();
+      let marker = regularMarker;
+      if (!marker) {
+        const { data: collectionMarker } = await admin
+          .from("collection_markers")
+          .select("rarity, city_id, title, sensitive, status")
+          .eq("marker_id", markerId)
+          .eq("status", "published")
+          .maybeSingle();
+        if (collectionMarker) marker = {
+          rarity: collectionMarker.rarity,
+          city: collectionMarker.city_id,
+          name: collectionMarker.title,
+          sensitivity: collectionMarker.sensitive ? "sensitive" : "standard",
+        };
+      }
+      if (!marker) return json({ error: "Marker not found" }, 404);
       const rarity = marker?.rarity === "rare" ? "rare" : "common";
 
       // Save the verified visit before any coins move.

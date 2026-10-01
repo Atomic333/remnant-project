@@ -7,7 +7,7 @@ type Admin = SupabaseClient;
 const SIGN_TTL = 60 * 60 * 6;
 
 interface MarkerRow {
-  slug: string; name: string; city: string; lat: number; lng: number; published: boolean;
+  slug: string; name: string; city: string; lat: number | null; lng: number | null; published: boolean;
   created_by: string | null; marker_type: string; discovery_visibility: string; reveal_style: string;
   sensitivity: string; arrival_radius_m: number; available_from: string | null; available_until: string | null;
   availability_tz: string; clue: string | null; review_status: string;
@@ -17,7 +17,30 @@ const MARKER_COLS =
 
 async function getMarker(admin: Admin, slug: string) {
   const { data } = await admin.from("markers").select(MARKER_COLS).eq("slug", slug).maybeSingle();
-  return data as MarkerRow | null;
+  if (data) return data as MarkerRow;
+  const { data: story } = await admin.from("collection_markers")
+    .select("marker_id,title,city_id,lat,lng,coord_withheld,status,sensitive,discovery_visibility,reveal_style,arrival_radius_m,available_from,available_until,availability_tz,clue")
+    .eq("marker_id", slug).eq("status", "published").maybeSingle();
+  if (!story) return null;
+  return {
+    slug: story.marker_id,
+    name: story.title,
+    city: story.city_id ?? "Washington",
+    lat: story.coord_withheld ? null : story.lat,
+    lng: story.coord_withheld ? null : story.lng,
+    published: true,
+    created_by: null,
+    marker_type: "physical",
+    discovery_visibility: story.discovery_visibility,
+    reveal_style: story.reveal_style,
+    sensitivity: story.sensitive ? "sensitive" : "standard",
+    arrival_radius_m: story.arrival_radius_m,
+    available_from: story.available_from,
+    available_until: story.available_until,
+    availability_tz: story.availability_tz,
+    clue: story.clue,
+    review_status: "approved",
+  };
 }
 
 function availability(m: MarkerRow): "upcoming" | "active" | "ended" {
@@ -28,11 +51,8 @@ function availability(m: MarkerRow): "upcoming" | "active" | "ended" {
 }
 
 async function canManage(admin: Admin, userId: string, slug: string) {
-  if (await isAdmin(admin, userId)) return true;
-  const { data: role } = await admin.from("user_roles").select("role").eq("user_id", userId).eq("role", "creator").maybeSingle();
-  if (!role) return false;
-  const { data } = await admin.from("markers").select("created_by").eq("slug", slug).maybeSingle();
-  return data?.created_by === userId;
+  const { data } = await admin.rpc("can_manage_marker", { _user_id: userId, _slug: slug });
+  return Boolean(data);
 }
 
 async function sign(admin: Admin, path: string | null | undefined) {
@@ -63,7 +83,7 @@ async function missingPrereqs(admin: Admin, userId: string | null, slug: string)
     }
     if (!met) {
       if (r.requires_type === "marker") {
-        const { data: m } = await admin.from("markers").select("name").eq("slug", r.requires_id).maybeSingle();
+        const m = await getMarker(admin, r.requires_id);
         missing.push(`Discover ${m?.name ?? r.requires_id}`);
       } else {
         const { data: t } = await admin.from("trails").select("title").eq("id", r.requires_id).maybeSingle();
@@ -159,13 +179,14 @@ function haversine(a: { lat: number; lng: number }, b: { lat: number; lng: numbe
 /** Check a GPS reading against a digital marker. The reading itself is never stored. */
 function checkArrival(m: MarkerRow, lat: number, lng: number, accuracy: number) {
   if (m.marker_type !== "digital") return { ok: false, error: "This marker has a physical plaque. Scan its QR code instead." };
+  if (m.lat == null || m.lng == null) return { ok: false, error: "This location isn't available for proximity check-in." };
   if (![lat, lng, accuracy].every(Number.isFinite)) return { ok: false, error: "We couldn't read your location." };
   const radius = Math.max(15, Math.min(m.arrival_radius_m || 75, 1000));
   const maxAccuracy = Math.max(radius, 30);
   if (accuracy > maxAccuracy) {
     return { ok: false, error: `Your GPS is only accurate to about ${Math.round(accuracy)} m. Step away from tall buildings or wait a few seconds, then try again.` };
   }
-  const d = haversine({ lat, lng }, m);
+  const d = haversine({ lat, lng }, { lat: m.lat, lng: m.lng });
   if (d > radius) return { ok: false, error: `You're about ${Math.round(d)} m away. Get within ${radius} m to discover it.`, distance: Math.round(d) };
   return { ok: true };
 }
@@ -216,7 +237,7 @@ async function validate(admin: Admin, slug: string, prereqs: { requires_type: st
   if (!m) return ["Save the marker first."];
   const content = await getContent(admin, slug);
   const pc = await getPostcard(admin, slug);
-  if (!Number.isFinite(m.lat) || !Number.isFinite(m.lng) || (m.lat === 0 && m.lng === 0)) errors.push("The marker needs real coordinates.");
+  if (m.lat == null || m.lng == null || !Number.isFinite(m.lat) || !Number.isFinite(m.lng) || (m.lat === 0 && m.lng === 0)) errors.push("The marker needs real coordinates.");
   if (m.review_status !== "approved") errors.push("Content is marked Needs review. Approve it before publishing.");
   if (m.available_from && m.available_until && Date.parse(m.available_until) <= Date.parse(m.available_from)) errors.push("The end date must be after the start date.");
   if (m.discovery_visibility === "mystery" && !m.clue?.trim()) errors.push("Mystery discoveries need a clue.");
@@ -351,12 +372,11 @@ Deno.serve(async (req) => {
         admin.from("postcard_sets").select("code,name,city,trail_id"),
       ]);
       const slugs = (cards ?? []).map((c) => c.marker_slug);
-      const { data: ms } = slugs.length
-        ? await admin.from("markers").select("slug,name,city,published,review_status,discovery_visibility").in("slug", slugs)
-        : { data: [] as any[] };
+      const ms = [] as MarkerRow[];
+      for (const slug of slugs) { const marker = await getMarker(admin, slug); if (marker) ms.push(marker); }
       const { data: contents } = slugs.length ? await admin.from("discovery_content").select("marker_slug,enabled").in("marker_slug", slugs) : { data: [] as any[] };
       const live = new Set((contents ?? []).filter((c) => c.enabled).map((c) => c.marker_slug));
-      const byMarker = new Map((ms ?? []).map((m) => [m.slug, m]));
+      const byMarker = new Map(ms.map((m) => [m.slug, m]));
       const owned = new Map<string, string>();
       if (user) {
         const { data } = await admin.from("user_postcards").select("postcard_id,collected_at").eq("user_id", user.id);
