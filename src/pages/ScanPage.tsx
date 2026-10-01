@@ -5,6 +5,8 @@ import { useAllMarkers } from "@/hooks/useAllMarkers";
 import PageHeader from "@/components/PageHeader";
 import { Html5Qrcode } from "html5-qrcode";
 import { prepareVerifiedScan } from "@/hooks/useQuest";
+import { usePublishedCollection } from "@/hooks/usePublishedCollection";
+import { collectionStoryUrl } from "@/lib/collectionMarker";
 
 type ScanState = "idle" | "starting" | "scanning" | "success" | "not-found" | "external-url";
 
@@ -15,6 +17,7 @@ const isIOS = typeof navigator !== "undefined" &&
 
 const ScanPage = () => {
   const markers = useAllMarkers();
+  const stories = usePublishedCollection();
   const navigate = useNavigate();
   const [manualCode, setManualCode] = useState("");
   const [showManual, setShowManual] = useState(false);
@@ -74,6 +77,14 @@ const ScanPage = () => {
         setScanState("success");
         void prepareVerifiedScan(markerId);
         setTimeout(() => navigate(`/marker/${markerId}`), 1500);
+        return;
+      }
+      const story = stories.find((m) => m.id === markerId);
+      if (story) {
+        setResultLabel(story.title);
+        setScanState("success");
+        void prepareVerifiedScan(markerId);
+        setTimeout(() => navigate(collectionStoryUrl(markerId)), 1500);
         return;
       }
     }
@@ -194,6 +205,12 @@ const ScanPage = () => {
       setScanState("success");
       void prepareVerifiedScan(found.id);
       setTimeout(() => navigate(`/marker/${found.id}`), 1500);
+    } else if (stories.some((m) => m.id === code)) {
+      const story = stories.find((m) => m.id === code);
+      setResultLabel(story?.title ?? code);
+      setScanState("success");
+      void prepareVerifiedScan(code);
+      setTimeout(() => navigate(collectionStoryUrl(code)), 1500);
     } else {
       // No matching marker — show error screen
       setResultLabel(code.length > 40 ? code.slice(0, 40) + "…" : code);
