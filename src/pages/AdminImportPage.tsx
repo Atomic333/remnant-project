@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { AlertTriangle, CheckCircle2, Download, Eye, FileSpreadsheet, FileText, Loader2, Upload } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Download, Eye, FileSpreadsheet, FileText, Loader2, Settings2, Upload } from "lucide-react";
 import { toast } from "sonner";
 import PageHeader from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +9,9 @@ import {
   buildPlan, commitPlan, DEFAULT_MAPPINGS, diffPlan, download, issuesCsv, parseReport, parseWorkbook,
   type CommitSummary, type Diff, type ParsedReport, type ParsedSheet, type Plan, type SheetKind, COLLECTION_CODE,
 } from "@/lib/collectionImport";
+import DiscoveryEditor from "@/components/DiscoveryEditor";
+import H5PManager from "@/components/H5PManager";
+import MarkerQrCard from "@/components/MarkerQrCard";
 
 const KIND_LABEL: Record<SheetKind, string> = {
   research_markers: "Research markers", upload_markers: "Upload draft markers", sources: "Sources & articles",
@@ -353,6 +356,7 @@ function PublishPanel() {
   const [stories, setStories] = useState<StoryRow[]>([]);
   const [open, setOpen] = useState<Record<string, OpenIssue[]>>({});
   const [busy, setBusy] = useState(false);
+  const [features, setFeatures] = useState<StoryRow | null>(null);
   const load = useCallback(async () => {
     const [m, i] = await Promise.all([
       supabase.from("collection_markers").select("marker_id, title, city_id, status").eq("collection_code", COLLECTION_CODE).order("marker_id"),
@@ -386,6 +390,7 @@ function PublishPanel() {
   };
 
   return (
+    <>
     <section className="space-y-3 rounded-xl bg-card p-4 elevation-1">
       <div className="flex flex-wrap items-center gap-2">
         <h2 className="font-display text-base">Publish stories</h2>
@@ -395,7 +400,7 @@ function PublishPanel() {
           Publish all ready ({ready.length})
         </button>
       </div>
-      <p className="text-xs text-on-surface-variant">Published stories appear on the collection page, the Home globe and the main map. Withheld locations stay list-only. Quest Coins, QR discovery and postcards stay off.</p>
+       <p className="text-xs text-on-surface-variant">Published stories appear throughout MarkerQuest. Withheld locations stay list-only and cannot provide directions, Street View, proximity check-ins, or trail stops.</p>
       <ul className="max-h-96 divide-y divide-border overflow-y-auto text-xs">
         {stories.map((s) => {
           const b = blockers(s);
@@ -413,6 +418,7 @@ function PublishPanel() {
                   <button disabled={busy || b.length > 0} title={b.length ? `Not ready: ${b.join(" · ")}` : "Publish this story"}
                     onClick={() => run([s.marker_id], true)} className="shrink-0 rounded border border-primary px-2 py-0.5 text-primary disabled:opacity-40">Publish</button>
                 )}
+                {live && <button onClick={() => setFeatures(s)} aria-label={`Features for ${s.title}`} className="shrink-0 rounded border border-border p-1"><Settings2 className="h-3.5 w-3.5" /></button>}
               </div>
               {!live && !s.city_id && <p className="ml-1 text-destructive">No city assigned — choose one in the queue below.</p>}
               {!live && issues.map((r) => (
@@ -427,6 +433,15 @@ function PublishPanel() {
         })}
       </ul>
     </section>
+    {features && (
+      <section className="space-y-3">
+        <div className="flex items-center gap-2"><h2 className="min-w-0 flex-1 truncate font-display text-base">Features · {features.title}</h2><button onClick={() => setFeatures(null)} className="rounded border border-border px-2 py-1 text-xs">Close</button></div>
+        <div className="rounded-xl bg-card p-4 elevation-1"><MarkerQrCard marker={{ id: features.marker_id, name: features.title, qrUrl: `https://markerquest.ai/marker/${features.marker_id}` }} /></div>
+        <DiscoveryEditor slug={features.marker_id} markerName={features.title} collection />
+        <H5PManager slug={features.marker_id} />
+      </section>
+    )}
+    </>
   );
 }
 
