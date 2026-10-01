@@ -24,6 +24,8 @@ export interface Marker {
   markerType?: "physical" | "digital";
   discoveryVisibility?: "visible" | "mystery" | "unlisted";
   clue?: string;
+  /** Visitor routing hint for stories that remain in the collection staging model. */
+  source?: "collection";
   streetView?: {
     panoId: string;
     heading: number;

@@ -14,27 +14,30 @@ import { getMarkerImage } from "@/lib/markerImages";
 import { COMING_SOON_TEXT, DEFAULT_CITY_ID, getCity } from "@/data/cities";
 import { cityProgress, overallProgress, formatVisitDate } from "@/lib/visitStats";
 import { downloadProgressCard } from "@/lib/progressCard";
+import { usePublishedStoryMarkers } from "@/hooks/usePublishedStoryMarkers";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
   const markers = useAllMarkers();
+  const { markers: stories } = usePublishedStoryMarkers();
+  const allSites = useMemo(() => [...markers, ...stories], [markers, stories]);
   const { records, visited, loading } = useVisited();
   const { profile } = useProfile();
   const { user } = useAuth();
   const { enabled, shareUrl, setEnabled, busy } = useShareLink();
   const [downloading, setDownloading] = useState(false);
 
-  const overall = useMemo(() => overallProgress(markers, visited), [markers, visited]);
-  const perCity = useMemo(() => cityProgress(markers, visited), [markers, visited]);
+  const overall = useMemo(() => overallProgress(allSites, visited), [allSites, visited]);
+  const perCity = useMemo(() => cityProgress(allSites, visited), [allSites, visited]);
 
   const history = useMemo(
     () =>
       records
-        .map((r) => ({ record: r, marker: markers.find((m) => m.id === r.marker_id) }))
+        .map((r) => ({ record: r, marker: allSites.find((m) => m.id === r.marker_id) }))
         .filter((row): row is { record: typeof records[number]; marker: NonNullable<typeof row.marker> } =>
           Boolean(row.marker),
         ),
-    [records, markers],
+    [records, allSites],
   );
 
   const lastVisit = history.find((h) => h.record.visited_at)?.record.visited_at ?? null;
@@ -228,7 +231,7 @@ const DashboardPage = () => {
               {history.map(({ record, marker }) => (
                 <button
                   key={marker.id}
-                  onClick={() => navigate(`/marker/${marker.id}`)}
+                  onClick={() => navigate(marker.source === "collection" ? `/explore/washington/story/${marker.id}` : `/marker/${marker.id}`)}
                   className="flex w-full items-center gap-3 rounded-xl bg-card p-3 text-left elevation-1"
                 >
                   <img

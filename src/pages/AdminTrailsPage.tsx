@@ -10,6 +10,7 @@ import TrailMap from "@/components/TrailMap";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
+import { usePublishedStoryMarkers } from "@/hooks/usePublishedStoryMarkers";
 import { citiesForMarkers, getCity } from "@/data/cities";
 import { formatDistance, formatDuration, haversineM, invokeFn, slugifyTrail, TRAIL_THEMES, type Leg, type TrailRow } from "@/lib/trails";
 
@@ -59,7 +60,9 @@ function SortableStop({ id, index, total, name, stop, onMove, onRemove, onChange
 const AdminTrailsPage = () => {
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const markers = useAllMarkers();
+  const regularMarkers = useAllMarkers();
+  const { markers: collectionMarkers } = usePublishedStoryMarkers();
+  const markers = useMemo(() => [...regularMarkers, ...collectionMarkers.filter((m) => m.lat !== 0 || m.lng !== 0)], [regularMarkers, collectionMarkers]);
   const markerById = useMemo(() => new Map(markers.map((m) => [m.id, m])), [markers]);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [search, setSearch] = useState("");

@@ -4,11 +4,16 @@ import { COMING_SOON_TEXT } from "@/data/cities";
 import PageHeader from "@/components/PageHeader";
 import MarkerCard from "@/components/MarkerCard";
 import { useVisited } from "@/hooks/useVisited";
+import { usePublishedStoryMarkers } from "@/hooks/usePublishedStoryMarkers";
+import { useSelectedCity } from "@/hooks/useSelectedCity";
 
 const tabs = ["All", "Visited", "To See"];
 
 const ProgressPage = () => {
-  const markers = useCityMarkers();
+  const regularMarkers = useCityMarkers();
+  const { markers: stories } = usePublishedStoryMarkers();
+  const { cityId } = useSelectedCity();
+  const markers = [...regularMarkers, ...stories.filter((m) => m.city === cityId)];
   const [activeTab, setActiveTab] = useState("All");
   const { visited: visitedSet } = useVisited();
 

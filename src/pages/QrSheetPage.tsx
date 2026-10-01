@@ -5,11 +5,14 @@ import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
 import { useAllMarkers } from "@/hooks/useAllMarkers";
 import { useAuth } from "@/hooks/useAuth";
+import { usePublishedStoryMarkers } from "@/hooks/usePublishedStoryMarkers";
 
 const QrSheetPage = () => {
   const navigate = useNavigate();
   const { user, isAdmin, loading } = useAuth();
   const markers = useAllMarkers();
+  const { markers: stories } = usePublishedStoryMarkers();
+  const allSites = [...markers, ...stories];
 
   useEffect(() => {
     if (!loading && !user) navigate("/auth", { replace: true });
@@ -52,7 +55,7 @@ const QrSheetPage = () => {
       <div className="qr-sheet px-5 pt-4">
         <div className="qr-hide-print mb-4 flex items-center justify-between gap-3">
           <p className="text-xs text-on-surface-variant">
-            {markers.length} markers — print this page or save it as a PDF.
+            {allSites.length} markers — print this page or save it as a PDF.
           </p>
           <button
             onClick={() => window.print()}
@@ -64,7 +67,7 @@ const QrSheetPage = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-5 sm:grid-cols-3">
-          {markers.map((m) => (
+          {allSites.map((m) => (
             <MarkerQrCard key={m.id} marker={m} size={130} />
           ))}
         </div>

@@ -17,7 +17,7 @@ const MarkerCard = ({ marker, showDistance, distanceLabel }: MarkerCardProps) =>
 
   return (
     <button
-      onClick={() => navigate(`/marker/${marker.id}`)}
+      onClick={() => navigate(marker.source === "collection" ? `/explore/washington/story/${marker.id}` : `/marker/${marker.id}`)}
       className="card-interactive focus-ring group flex w-full items-center gap-4 rounded-xl bg-card p-3 text-left elevation-1 hover:bg-card"
     >
       <div className="relative shrink-0 overflow-hidden rounded-xl">
