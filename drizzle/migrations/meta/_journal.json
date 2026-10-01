@@ -162,6 +162,13 @@
       "when": 1790814431683,
       "tag": "0022_collection_story_feature_parity",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1790814837760,
+      "tag": "0023_secure_collection_feature_management",
+      "breakpoints": true
     }
   ]
 }

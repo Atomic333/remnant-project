@@ -9,6 +9,7 @@ import { getMarkerImage } from "@/lib/markerImages";
 import { COMING_SOON_TEXT, DEFAULT_CITY_ID, getCity } from "@/data/cities";
 import { cityProgress, overallProgress, formatVisitDate } from "@/lib/visitStats";
 import logo from "@/assets/logo.png";
+import { usePublishedStoryMarkers } from "@/hooks/usePublishedStoryMarkers";
 
 interface SharedRow {
   display_name: string | null;
@@ -20,6 +21,8 @@ interface SharedRow {
 const SharedVisitsPage = () => {
   const { code } = useParams<{ code: string }>();
   const markers = useAllMarkers();
+  const { markers: stories } = usePublishedStoryMarkers();
+  const allSites = useMemo(() => [...markers, ...stories], [markers, stories]);
 
   const { data, isLoading } = useQuery({
     queryKey: ["shared-visits", code],
@@ -38,12 +41,12 @@ const SharedVisitsPage = () => {
     [rows],
   );
 
-  const overall = useMemo(() => overallProgress(markers, visitedIds), [markers, visitedIds]);
-  const perCity = useMemo(() => cityProgress(markers, visitedIds), [markers, visitedIds]);
+  const overall = useMemo(() => overallProgress(allSites, visitedIds), [allSites, visitedIds]);
+  const perCity = useMemo(() => cityProgress(allSites, visitedIds), [allSites, visitedIds]);
 
   const history = rows
     .filter((r) => r.marker_id)
-    .map((r) => ({ row: r, marker: markers.find((m) => m.id === r.marker_id) }))
+    .map((r) => ({ row: r, marker: allSites.find((m) => m.id === r.marker_id) }))
     .filter((x) => x.marker);
 
   const name = owner?.display_name?.trim() || "A MarkerQuest explorer";
@@ -146,7 +149,7 @@ const SharedVisitsPage = () => {
               {history.map(({ row, marker }) => (
                 <Link
                   key={marker!.id}
-                  to={`/marker/${marker!.id}`}
+                  to={marker!.source === "collection" ? `/explore/washington/story/${marker!.id}` : `/marker/${marker!.id}`}
                   className="flex w-full items-center gap-3 rounded-xl bg-card p-3 elevation-1"
                 >
                   <img

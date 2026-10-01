@@ -73,7 +73,7 @@ async function upload(slug: string, file: File) {
 }
 
 /** "Discovery & Rewards" section of the marker builder. */
-const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: string }) => {
+const DiscoveryEditor = ({ slug, markerName, collection = false }: { slug: string; markerName: string; collection?: boolean }) => {
   const { user } = useAuth();
   const qc = useQueryClient();
   const allMarkers = useAllMarkers();
@@ -99,13 +99,26 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
     setLoaded(false);
     setErrors([]);
     (async () => {
-      const [{ data: m }, { data: c }, { data: pc }, { data: pr }] = await Promise.all([
-        supabase.from("markers").select("*").eq("slug", slug).maybeSingle(),
+      const [{ data: regular }, { data: imported }, { data: c }, { data: pc }, { data: pr }] = await Promise.all([
+        collection ? Promise.resolve({ data: null }) : supabase.from("markers").select("*").eq("slug", slug).maybeSingle(),
+        collection ? supabase.from("collection_markers").select("*").eq("marker_id", slug).maybeSingle() : Promise.resolve({ data: null }),
         supabase.from("discovery_content").select("*").eq("marker_slug", slug).maybeSingle(),
         supabase.from("postcards").select("*").eq("marker_slug", slug).maybeSingle(),
         supabase.from("discovery_prerequisites").select("requires_type,requires_id").eq("marker_slug", slug),
       ]);
       if (!active) return;
+      const m = regular ?? (imported ? {
+        marker_type: "physical",
+        discovery_visibility: imported.discovery_visibility,
+        reveal_style: imported.reveal_style,
+        sensitivity: imported.sensitive ? "sensitive" : "standard",
+        arrival_radius_m: imported.arrival_radius_m,
+        available_from: imported.available_from,
+        available_until: imported.available_until,
+        availability_tz: imported.availability_tz,
+        clue: imported.clue,
+        review_status: "approved",
+      } : null);
       const tz = m?.availability_tz || "America/Los_Angeles";
       setS({
         ...empty,
@@ -131,15 +144,18 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
       setLoaded(true);
     })();
     return () => { active = false; };
-  }, [slug]);
+  }, [slug, collection]);
 
   const persist = async (enabled: boolean) => {
-    const { error: mErr } = await supabase.from("markers").update({
-      marker_type: s.marker_type, discovery_visibility: s.discovery_visibility, reveal_style: s.reveal_style,
-      sensitivity: s.sensitivity, arrival_radius_m: Math.round(s.arrival_radius_m),
+    const values = {
+      discovery_visibility: s.discovery_visibility, reveal_style: s.reveal_style,
+      arrival_radius_m: Math.round(s.arrival_radius_m),
       available_from: localToIso(s.from, s.tz), available_until: localToIso(s.until, s.tz), availability_tz: s.tz,
-      clue: s.clue.trim() || null, review_status: s.review_status,
-    }).eq("slug", slug);
+      clue: s.clue.trim() || null,
+    };
+    const { error: mErr } = collection
+      ? await supabase.from("collection_markers").update({ ...values, sensitive: s.sensitivity === "sensitive" }).eq("marker_id", slug)
+      : await supabase.from("markers").update({ ...values, marker_type: s.marker_type, sensitivity: s.sensitivity, review_status: s.review_status }).eq("slug", slug);
     if (mErr) throw mErr;
     const { error: cErr } = await supabase.from("discovery_content").upsert({
       marker_slug: slug, enabled, bonus_story: s.bonus_story.trim() || null, reflection_prompt: s.reflection_prompt.trim() || null,
@@ -258,7 +274,7 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
         <label className={label}>Marker type
           <select className={input} value={s.marker_type} onChange={(e) => set("marker_type", e.target.value as State["marker_type"])}>
             <option value="physical">Physical QR marker</option>
-            <option value="digital">Digital only</option>
+            {!collection && <option value="digital">Digital only</option>}
           </select>
         </label>
         <label className={label}>Visibility
@@ -436,10 +452,10 @@ const DiscoveryEditor = ({ slug, markerName }: { slug: string; markerName: strin
         </button>
       </div>
 
-      <label className="flex items-center gap-2 text-xs text-card-foreground">
+      {!collection && <label className="flex items-center gap-2 text-xs text-card-foreground">
         <input type="checkbox" checked={s.review_status === "needs_review"} onChange={(e) => set("review_status", e.target.checked ? "needs_review" : "approved")} />
         Content needs review (blocks publishing)
-      </label>
+      </label>}
 
       {errors.length > 0 && (
         <ul role="alert" className="list-disc space-y-1 rounded-lg bg-destructive/10 py-2 pl-7 pr-3 text-xs text-destructive">

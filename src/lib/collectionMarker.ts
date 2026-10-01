@@ -34,6 +34,7 @@ export function collectionMarker(
     markerType: "physical",
     discoveryVisibility: story.discovery_visibility as Marker["discoveryVisibility"],
     clue: story.clue ?? undefined,
+    source: "collection",
     collectionCode: story.collection_code,
   };
 }

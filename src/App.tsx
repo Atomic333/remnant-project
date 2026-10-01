@@ -71,8 +71,8 @@ const App = () => (
             <Route path="/admin/qr-codes" element={<RequireAuth admin><QrSheetPage /></RequireAuth>} />
             <Route path="/admin/trails" element={<RequireAuth admin><AdminTrailsPage /></RequireAuth>} />
             <Route path="/admin/import" element={<RequireAuth admin allowCreator><AdminImportPage /></RequireAuth>} />
-            <Route path="/explore/washington" element={<RequireAuth><ExploreWashingtonPage /></RequireAuth>} />
-            <Route path="/explore/washington/story/:markerId" element={<RequireAuth><WashingtonStoryPage /></RequireAuth>} />
+            <Route path="/explore/washington" element={<ExploreWashingtonPage />} />
+            <Route path="/explore/washington/story/:markerId" element={<WashingtonStoryPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <FloatingMapButton />

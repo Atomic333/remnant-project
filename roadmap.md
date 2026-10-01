@@ -9,4 +9,5 @@
 - [x] Imported the supplied files (35/113/47) and verified rerun makes no duplicates
 - [x] Publish/Unpublish in review queue; published stories on globe, city cards and main map
 - [x] Globe home, state → city cards → map; floating Map button on pages without the bottom bar
-- [ ] QR discovery, postcards and coins for collection stories — deliberately off for now
+- [x] Published stories use standard QR discovery, Quest Coins, postcards, activities, artifacts, trivia, chat, visits and progress
+- [x] Imported story pins use the standard icon with a restrained gold glow and side-to-side motion
