@@ -368,7 +368,7 @@
 }
 .collection-map-pin-motion .collection-map-pin-visual { animation: collection-pin-sway 2.8s ease-in-out infinite; }
 .collection-map-pin-selected .collection-map-pin-visual { --collection-pin-scale: 1.14; transform: scale(var(--collection-pin-scale)); }
-.collection-map-pin-selected.collection-map-pin-motion { animation-duration: 1.8s; }
+.collection-map-pin-selected.collection-map-pin-motion .collection-map-pin-visual { animation-duration: 1.8s; }
 [data-motion="off"] .collection-map-pin-motion .collection-map-pin-visual { animation: none !important; }
 .atlas-enter { animation: atlas-enter 450ms cubic-bezier(.2,.7,.2,1) both; }
 .atlas-rise { animation: atlas-rise 350ms cubic-bezier(.2,.7,.2,1) both; }
