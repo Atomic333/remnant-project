@@ -327,6 +327,35 @@
 @keyframes atlas-drift { 0%,100% { transform: translate3d(0,0,0) scale(1.06); } 50% { transform: translate3d(-1.5%, -1%, 0) scale(1.08); } }
 @keyframes atlas-pulse { 0% { box-shadow: 0 0 0 0 hsl(42 62% 55% / 0.55); } 100% { box-shadow: 0 0 0 14px hsl(42 62% 55% / 0); } }
 @keyframes atlas-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes collection-pin-sway { 0%, 100% { transform: translateX(-2px) rotate(-1.5deg); } 50% { transform: translateX(2px) rotate(1.5deg); } }
+.collection-map-pin {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 55px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  transform-origin: 50% 100%;
+  cursor: pointer;
+}
+.collection-map-pin img { position: relative; z-index: 1; display: block; width: 42px; height: 55px; object-fit: contain; }
+.collection-map-pin-halo {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  transform: translateX(-50%);
+  background: hsl(var(--quest-gold) / 0.3);
+  box-shadow: 0 0 12px 5px hsl(var(--quest-gold) / 0.42);
+}
+.collection-map-pin-motion { animation: collection-pin-sway 2.8s ease-in-out infinite; }
+.collection-map-pin-selected { transform: scale(1.14); }
+.collection-map-pin-selected.collection-map-pin-motion { animation-duration: 1.8s; }
+[data-motion="off"] .collection-map-pin-motion { animation: none !important; }
 .atlas-enter { animation: atlas-enter 450ms cubic-bezier(.2,.7,.2,1) both; }
 .atlas-rise { animation: atlas-rise 350ms cubic-bezier(.2,.7,.2,1) both; }
 .atlas-zoom { animation: atlas-zoom 1200ms cubic-bezier(.2,.7,.2,1) both; }

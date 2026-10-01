@@ -19,6 +19,9 @@ import { getMarkerImage } from "@/lib/markerImages";
 import markerIconAsset from "@/assets/marker-icon.png.asset.json";
 import { prepareVerifiedScan } from "@/hooks/useQuest";
 import { usePublishedCollection } from "@/hooks/usePublishedCollection";
+import CollectionMapMarker from "@/components/CollectionMapMarker";
+import { collectionStoryUrl } from "@/lib/collectionMarker";
+import { useMotion } from "@/lib/motion";
 
 
 // Theme hex values matching CSS variables
@@ -427,6 +430,7 @@ const MapPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const stories = usePublishedCollection();
+  const motion = useMotion();
   // Optional deep link: /map?city=<id>&lat=&lng=&z= (from the Home globe city cards).
   const viewRef = useRef<{ city: string; lat: number; lng: number; z: number } | null>(null);
   if (viewRef.current === null) {
@@ -806,22 +810,15 @@ const MapPage = () => {
               );
             })}
 
-            {/* Published collection stories (exact-location withheld ones are list-only) */}
+            {/* Published collection stories (withheld locations remain list-only). */}
             {stories.filter((s) => s.lat != null && s.lng != null).map((s) => (
-              <GMarker
+              <CollectionMapMarker
                 key={`story-${s.id}`}
-                position={{ lat: s.lat!, lng: s.lng! }}
+                lat={s.lat as number}
+                lng={s.lng as number}
                 title={s.title}
-                onClick={() => navigate(`/explore/washington/story/${s.id}`)}
-                zIndex={2}
-                icon={{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 8,
-                  fillColor: "#C9A227",
-                  fillOpacity: 0.95,
-                  strokeColor: "#1B1712",
-                  strokeWeight: 2,
-                }}
+                motion={motion.enabled}
+                onClick={() => navigate(collectionStoryUrl(s.id))}
               />
             ))}
 

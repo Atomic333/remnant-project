@@ -9,6 +9,8 @@ export interface PublishedStory {
   lat: number | null;
   lng: number | null;
   image: string | null;
+  cityName: string | null;
+  summary: string | null;
 }
 
 /** Published collection stories only — drafts are excluded even for editors. */
@@ -19,7 +21,7 @@ export function usePublishedCollection(): PublishedStory[] {
     queryFn: async () => {
       const { data: m } = await supabase
         .from("collection_markers")
-        .select("marker_id, title, city_id, lat, lng, coord_withheld")
+        .select("marker_id, title, city_id, city_name, summary, lat, lng, coord_withheld")
         .eq("collection_code", COLLECTION_CODE)
         .eq("status", "published");
       const rows = m ?? [];
@@ -39,6 +41,8 @@ export function usePublishedCollection(): PublishedStory[] {
         lat: r.coord_withheld ? null : r.lat,
         lng: r.coord_withheld ? null : r.lng,
         image: firstImg.get(r.marker_id) ?? null,
+        cityName: r.city_name,
+        summary: r.summary,
       }));
     },
   });

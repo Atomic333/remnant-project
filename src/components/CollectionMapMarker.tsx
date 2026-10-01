@@ -1,4 +1,4 @@
-import { OverlayViewF } from "@react-google-maps/api";
+import { OverlayView, OverlayViewF } from "@react-google-maps/api";
 import markerIconAsset from "@/assets/marker-icon.png.asset.json";
 
 interface Props {
@@ -14,7 +14,7 @@ interface Props {
 const CollectionMapMarker = ({ lat, lng, title, selected, motion = true, onClick }: Props) => (
   <OverlayViewF
     position={{ lat, lng }}
-    mapPaneName={OverlayViewF.OVERLAY_MOUSE_TARGET}
+    mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
     getPixelPositionOffset={(width, height) => ({ x: -width / 2, y: -height })}
   >
     <button
