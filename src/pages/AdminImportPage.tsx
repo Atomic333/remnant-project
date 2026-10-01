@@ -275,6 +275,11 @@ function ReviewQueue() {
     if (!r.marker_id || !cityId) return;
     const { error } = await supabase.from("collection_markers").update({ city_id: cityId }).eq("marker_id", r.marker_id);
     if (error) return toast.error(error.message);
+    // Also close the upload-draft "blocked" note when its only reason was the missing city.
+    const { data: blocked } = await supabase.from("import_issues").select("issue_key, message")
+      .eq("marker_id", r.marker_id).eq("kind", "blocked").eq("resolved", false);
+    const stale = (blocked ?? []).filter((b) => onlyCityBlock(b.message)).map((b) => b.issue_key);
+    if (stale.length) await supabase.from("import_issues").update({ resolved: true }).in("issue_key", stale);
     await resolve(r);
     toast.success(`${r.marker_id} assigned to ${cityId}`);
   };
@@ -334,27 +339,40 @@ function ReviewQueue() {
 
 const BLOCKING = new Set(["blocked", "consultation", "needs_verification", "missing_city"]);
 type StoryRow = { marker_id: string; title: string; city_id: string | null; status: string };
+type OpenIssue = { issue_key: string; marker_id: string; kind: string; message: string };
+
+/** True when a "blocked" note only cites the missing city and/or withheld coordinates. */
+function onlyCityBlock(message: string) {
+  return message
+    .replace(/^Blocked in upload draft:\s*/, "")
+    .replace(/cityId not invented — must be assigned from MarkerQuest city list|coordinates withheld \([^)]*\)|[;\s]/g, "") === "";
+}
 
 /** Publish ready stories to visitors and the main map. The database re-checks readiness. */
 function PublishPanel() {
   const [stories, setStories] = useState<StoryRow[]>([]);
-  const [open, setOpen] = useState<Record<string, string[]>>({});
+  const [open, setOpen] = useState<Record<string, OpenIssue[]>>({});
   const [busy, setBusy] = useState(false);
   const load = useCallback(async () => {
     const [m, i] = await Promise.all([
       supabase.from("collection_markers").select("marker_id, title, city_id, status").eq("collection_code", COLLECTION_CODE).order("marker_id"),
-      supabase.from("import_issues").select("marker_id, kind").eq("collection_code", COLLECTION_CODE).eq("resolved", false).limit(1000),
+      supabase.from("import_issues").select("issue_key, marker_id, kind, message").eq("collection_code", COLLECTION_CODE).eq("resolved", false).limit(1000),
     ]);
     setStories((m.data ?? []) as StoryRow[]);
-    const o: Record<string, string[]> = {};
-    for (const r of i.data ?? []) if (r.marker_id && BLOCKING.has(r.kind)) (o[r.marker_id] ??= []).includes(r.kind) || o[r.marker_id].push(r.kind);
+    const o: Record<string, OpenIssue[]> = {};
+    for (const r of (i.data ?? []) as OpenIssue[]) if (r.marker_id && BLOCKING.has(r.kind)) (o[r.marker_id] ??= []).push(r);
     setOpen(o);
   }, []);
   useEffect(() => { load(); }, [load]);
 
-  const blockers = (s: StoryRow) => [...(s.city_id ? [] : ["No city"]), ...(open[s.marker_id] ?? []).map((k) => KIND_TITLE[k] ?? k)];
+  const blockers = (s: StoryRow) => [...(s.city_id ? [] : ["No city"]), ...(open[s.marker_id] ?? []).map((r) => `${KIND_TITLE[r.kind] ?? r.kind}: ${r.message}`)];
   const ready = stories.filter((s) => s.status !== "published" && !blockers(s).length);
   const published = stories.filter((s) => s.status === "published").length;
+
+  const resolveIssue = async (key: string) => {
+    const { error } = await supabase.from("import_issues").update({ resolved: true }).eq("issue_key", key);
+    if (error) toast.error(error.message); else load();
+  };
 
   const run = async (ids: string[], publish: boolean) => {
     if (!ids.length) return;
@@ -378,19 +396,32 @@ function PublishPanel() {
         </button>
       </div>
       <p className="text-xs text-on-surface-variant">Published stories appear on the collection page, the Home globe and the main map. Withheld locations stay list-only. Quest Coins, QR discovery and postcards stay off.</p>
-      <ul className="max-h-72 divide-y divide-border overflow-y-auto text-xs">
+      <ul className="max-h-96 divide-y divide-border overflow-y-auto text-xs">
         {stories.map((s) => {
           const b = blockers(s);
           const live = s.status === "published";
+          const issues = open[s.marker_id] ?? [];
           return (
-            <li key={s.marker_id} className="flex items-center gap-2 py-1.5">
-              <span className="font-mono">{s.marker_id}</span>
-              <span className="min-w-0 flex-1 truncate">{s.title}{!live && b.length > 0 && <span className="text-on-surface-variant"> — {b.join(", ")}</span>}</span>
-              {live ? (
-                <button disabled={busy} onClick={() => run([s.marker_id], false)} className="shrink-0 rounded border border-border px-2 py-0.5">Unpublish</button>
-              ) : (
-                <button disabled={busy || b.length > 0} onClick={() => run([s.marker_id], true)} className="shrink-0 rounded border border-primary px-2 py-0.5 text-primary disabled:opacity-40">Publish</button>
-              )}
+            <li key={s.marker_id} className="space-y-1 py-1.5">
+              <div className="flex items-center gap-2">
+                <span className="font-mono">{s.marker_id}</span>
+                <span className="min-w-0 flex-1 truncate">{s.title}</span>
+                {live && <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">Live</span>}
+                {live ? (
+                  <button disabled={busy} onClick={() => run([s.marker_id], false)} className="shrink-0 rounded border border-border px-2 py-0.5">Unpublish</button>
+                ) : (
+                  <button disabled={busy || b.length > 0} title={b.length ? `Not ready: ${b.join(" · ")}` : "Publish this story"}
+                    onClick={() => run([s.marker_id], true)} className="shrink-0 rounded border border-primary px-2 py-0.5 text-primary disabled:opacity-40">Publish</button>
+                )}
+              </div>
+              {!live && !s.city_id && <p className="ml-1 text-destructive">No city assigned — choose one in the queue below.</p>}
+              {!live && issues.map((r) => (
+                <div key={r.issue_key} className="ml-1 flex items-start gap-2 text-on-surface-variant">
+                  <AlertTriangle className="mt-0.5 h-3 w-3 shrink-0 text-quest-gold" />
+                  <span className="flex-1"><b className="font-medium text-foreground">{KIND_TITLE[r.kind] ?? r.kind}:</b> {r.message}</span>
+                  <button onClick={() => resolveIssue(r.issue_key)} className="shrink-0 rounded border border-border px-2 py-0.5 text-foreground">Mark resolved</button>
+                </div>
+              ))}
             </li>
           );
         })}
