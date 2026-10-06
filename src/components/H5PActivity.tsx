@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import { completeAttempt, h5pContentPath, startAttempt } from "@/hooks/useH5P";
 import type { QuestAward } from "@/hooks/useQuest";
 
@@ -66,6 +66,16 @@ const H5PActivity = ({ activityId, onAward, onStatus, preview, sharedLibraries }
           ...(sharedLibraries ? { librariesPath: `${window.location.origin}/h5p-libraries` } : {}),
         });
         if (cancelled) return;
+        const frame = el.current.querySelector("iframe");
+        const frameDocument = frame?.contentDocument;
+        if (frame && !frame.title) frame.title = "Interactive history activity";
+        if (frameDocument?.head && !frameDocument.querySelector('[data-markerquest-activity-theme]')) {
+          const theme = frameDocument.createElement("link");
+          theme.rel = "stylesheet";
+          theme.href = "/h5p-player/styles/markerquest-activity.css";
+          theme.dataset.markerquestActivityTheme = "true";
+          frameDocument.head.appendChild(theme);
+        }
         const w = window as unknown as { H5P?: { externalDispatcher?: { on: (n: string, f: typeof onXAPI) => void } } };
         w.H5P?.externalDispatcher?.on("xAPI", onXAPI);
       } catch (e) {
@@ -84,13 +94,21 @@ const H5PActivity = ({ activityId, onAward, onStatus, preview, sharedLibraries }
   }, [activityId, preview, sharedLibraries]);
 
   return (
-    <div className="relative min-h-[160px] overflow-hidden rounded-lg bg-background">
+    <div className="activity-player relative min-h-[260px] overflow-hidden rounded-lg border border-activity-border bg-activity-paper sm:min-h-[320px]">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-activity-paper" role="status">
+          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-activity-soft">
+            <Loader2 className="h-6 w-6 animate-spin text-activity" />
+          </span>
+          <span className="font-activity-body text-sm font-medium text-activity-ink/70">Preparing your challenge…</span>
         </div>
       )}
-      {error && <p className="p-4 text-xs text-destructive">{error}</p>}
+      {error && (
+        <div className="flex min-h-[260px] flex-col items-center justify-center gap-3 p-6 text-center" role="alert">
+          <AlertCircle className="h-7 w-7 text-destructive" />
+          <p className="max-w-sm font-activity-body text-base leading-relaxed text-destructive">{error}</p>
+        </div>
+      )}
       <div ref={el} />
     </div>
   );

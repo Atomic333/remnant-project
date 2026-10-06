@@ -5,6 +5,49 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/activity/manrope-400.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/activity/manrope-500.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/activity/manrope-600.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/activity/sora-600.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/activity/sora-700.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/activity/sora-800.ttf') format('truetype');
+}
+
 @layer base {
   :root {
     /* M3 Light scheme — Teal seed */
@@ -38,6 +81,17 @@
     --border: 180 8% 90%;
     --input: 180 8% 88%;
     --ring: 263 75% 50%;
+
+    /* Focused activity stage */
+    --activity-primary: 173 77% 26%;
+    --activity-bright: 174 84% 40%;
+    --activity-gold: 43 88% 66%;
+    --activity-paper: 150 17% 98%;
+    --activity-surface: 0 0% 100%;
+    --activity-soft: 174 52% 94%;
+    --activity-ink: 174 54% 15%;
+    --activity-border: 173 42% 82%;
+    --activity-shadow: 0 14px 36px -24px hsl(var(--activity-primary) / 0.38), 0 2px 8px hsl(var(--activity-primary) / 0.08);
 
     /* M3 Tertiary */
     --tertiary: 260 40% 55%;

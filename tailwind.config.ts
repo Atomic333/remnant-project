@@ -18,6 +18,8 @@ export default {
         body: ["'Google Sans Text'", "'Google Sans'", "system-ui", "sans-serif"],
         atlas: ["'Newsreader'", "Georgia", "serif"],
         "atlas-sans": ["'IBM Plex Sans'", "system-ui", "sans-serif"],
+        "activity-heading": ["'Sora'", "system-ui", "sans-serif"],
+        "activity-body": ["'Manrope'", "system-ui", "sans-serif"],
       },
       colors: {
         atlas: {
@@ -87,6 +89,16 @@ export default {
           gold: "hsl(var(--quest-gold))",
           "gold-deep": "hsl(var(--quest-gold-deep))",
         },
+        activity: {
+          DEFAULT: "hsl(var(--activity-primary))",
+          bright: "hsl(var(--activity-bright))",
+          gold: "hsl(var(--activity-gold))",
+          paper: "hsl(var(--activity-paper))",
+          surface: "hsl(var(--activity-surface))",
+          soft: "hsl(var(--activity-soft))",
+          ink: "hsl(var(--activity-ink))",
+          border: "hsl(var(--activity-border))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -103,6 +115,9 @@ export default {
         lg: "var(--radius)",
         md: "var(--radius-sm)",
         sm: "calc(var(--radius-sm) - 2px)",
+      },
+      boxShadow: {
+        activity: "var(--activity-shadow)",
       },
       transitionTimingFunction: {
         // Industry-standard easing curves
