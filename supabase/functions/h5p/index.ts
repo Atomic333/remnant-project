@@ -1,5 +1,6 @@
 import { unzipSync } from "npm:fflate@0.8.2";
 import { adminClient, awardByRule, corsHeaders, getBalance, json, requireUser } from "../_shared/quest.ts";
+import { generateFor, type SourceInput } from "./generate.ts";
 
 /**
  * H5P activities: upload/unpack (managers), serve unpacked files, start attempts
@@ -88,6 +89,42 @@ async function upload(req: Request) {
   return json({ activity: data, skipped: Object.keys(files).length - entries.length });
 }
 
+/** Admin-only: build grounded activities for one marker from its own text. */
+async function generate(req: Request, body: Record<string, unknown>) {
+  const user = await requireUser(req);
+  if (!user) return json({ error: "Sign in first." }, 401);
+  const admin = adminClient();
+  const { data: isAdmin } = await admin.rpc("has_role", { _user_id: user.id, _role: "admin" });
+  if (!isAdmin) return json({ error: "Only admins can generate activities." }, 403);
+  const slug = String(body?.slug ?? "").slice(0, 120);
+  if (!slug) return json({ error: "slug required" }, 400);
+
+  let src: SourceInput | null = null;
+  const { data: story } = await admin.from("collection_markers")
+    .select("marker_id, title, summary, story, why_it_matters, period, sensitive, status").eq("marker_id", slug).maybeSingle();
+  if (story) {
+    if (story.status !== "published") return json({ error: "Only published stories get activities." }, 409);
+    const { data: srcs } = await admin.from("collection_sources").select("title").eq("marker_id", slug).order("position").limit(3);
+    const text = [story.summary, story.story, story.why_it_matters, story.period ? `Period: ${story.period}` : ""].filter(Boolean).join("\n\n");
+    src = { slug, title: story.title, text, sensitive: story.sensitive,
+      credits: srcs?.length ? `Based on: ${srcs.map((s) => s.title).join("; ")}.` : "Based on this story's research sources." };
+  } else {
+    const title = String(body?.title ?? "").trim().slice(0, 160);
+    const text = String(body?.text ?? "").trim().slice(0, 12000);
+    if (!title || text.length < 80) return json({ error: "Marker text is too short." }, 400);
+    const { data: row } = await admin.from("markers").select("sensitivity").eq("slug", slug).maybeSingle();
+    const sources = Array.isArray(body?.sources) ? (body.sources as unknown[]).map(String).slice(0, 3) : [];
+    src = { slug, title, text, sensitive: Boolean(body?.sensitive) || (row?.sensitivity && row.sensitivity !== "standard") || false,
+      credits: sources.length ? `Based on: ${sources.join("; ")}.` : "Based on this marker's plaque and sources." };
+  }
+  try {
+    return json(await generateFor(admin, user.id, src));
+  } catch (e) {
+    const status = (e as { status?: number }).status;
+    return json({ error: e instanceof Error ? e.message : "Generation failed." }, status === 402 || status === 429 ? status : 502);
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   const url = new URL(req.url);
@@ -98,6 +135,7 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const action = String(body?.action ?? "");
+    if (action === "generate") return await generate(req, body);
     const activityId = String(body?.activity_id ?? "");
     if (!UUID.test(activityId)) return json({ error: "activity_id required" }, 400);
     const admin = adminClient();
