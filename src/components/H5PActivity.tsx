@@ -16,10 +16,12 @@ interface Props {
   onStatus?: (status: string) => void;
   /** Admin preview: play without starting an attempt. */
   preview?: boolean;
+  /** Generated activities ship only content; libraries come from the app's shared set. */
+  sharedLibraries?: boolean;
 }
 
 /** Plays one unpacked H5P package and reports its completion to the server. */
-const H5PActivity = ({ activityId, onAward, onStatus, preview }: Props) => {
+const H5PActivity = ({ activityId, onAward, onStatus, preview, sharedLibraries }: Props) => {
   const el = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +63,7 @@ const H5PActivity = ({ activityId, onAward, onStatus, preview }: Props) => {
           frameJs: "/h5p-player/frame.bundle.js",
           frameCss: "/h5p-player/styles/h5p.css",
           fullScreen: true,
+          ...(sharedLibraries ? { librariesPath: `${window.location.origin}/h5p-libraries` } : {}),
         });
         if (cancelled) return;
         const w = window as unknown as { H5P?: { externalDispatcher?: { on: (n: string, f: typeof onXAPI) => void } } };
@@ -78,7 +81,7 @@ const H5PActivity = ({ activityId, onAward, onStatus, preview }: Props) => {
       w.H5P?.externalDispatcher?.off?.("xAPI", onXAPI);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activityId, preview]);
+  }, [activityId, preview, sharedLibraries]);
 
   return (
     <div className="relative min-h-[160px] overflow-hidden rounded-lg bg-background">

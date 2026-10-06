@@ -128,7 +128,7 @@ const H5PManager = ({ slug }: { slug: string }) => {
               <Trash2 className="h-3.5 w-3.5" /> Delete
             </button>
           </div>
-          {preview === a.id && <H5PActivity activityId={a.id} preview />}
+          {preview === a.id && <H5PActivity activityId={a.id} preview sharedLibraries={a.generated} />}
         </div>
       ))}
     </section>
