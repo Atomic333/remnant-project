@@ -274,6 +274,10 @@ const AdminPage = () => {
   const save = async (e: React.FormEvent) => {
     e.preventDefault();
     if (saving) return;
+    if (!form.city.trim()) {
+      toast({ title: "City required", description: "Please enter a city for this marker.", variant: "destructive" });
+      return;
+    }
 
     const name = form.name.trim();
     const lat = Number(form.lat);
@@ -349,7 +353,7 @@ const AdminPage = () => {
       name,
       address: form.address.trim(),
       category: form.category,
-      city: makeCityId(form.city.trim() || "Tacoma", form.state),
+      city: makeCityId(form.city.trim(), form.state),
       state: form.state,
       lat,
       lng,
