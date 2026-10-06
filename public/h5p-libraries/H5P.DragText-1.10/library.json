@@ -17,12 +17,12 @@
   "machineName": "H5P.DragText",
   "preloadedCss": [
     {
-      "path": "dist/h5p-drag-text.css"
+      "path": "bundle/h5p-drag-text.css"
     }
   ],
   "preloadedJs": [
     {
-      "path": "dist/h5p-drag-text.js"
+      "path": "bundle/h5p-drag-text.js"
     }
   ],
   "preloadedDependencies": [
