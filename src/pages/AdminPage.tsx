@@ -275,7 +275,7 @@ const AdminPage = () => {
     e.preventDefault();
     if (saving) return;
     if (!form.city.trim()) {
-      toast.error("Please enter a city for this marker.");
+      toast({ title: "City required", description: "Please enter a city for this marker.", variant: "destructive" });
       return;
     }
 
