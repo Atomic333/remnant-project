@@ -5,6 +5,7 @@ import PageHeader from "@/components/PageHeader";
 import MarkerQrCard from "@/components/MarkerQrCard";
 import DiscoveryEditor from "@/components/DiscoveryEditor";
 import H5PManager from "@/components/H5PManager";
+import GenerateAllActivities from "@/components/GenerateAllActivities";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -780,6 +781,8 @@ const AdminPage = () => {
             {form.id || form.lockSlug ? "Save changes" : "Add marker"}
           </button>
         </form>
+
+        <GenerateAllActivities />
 
         {form.id ? (
           <>

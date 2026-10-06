@@ -169,6 +169,13 @@
       "when": 1790814837760,
       "tag": "0023_secure_collection_feature_management",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1791253550484,
+      "tag": "0024_h5p_generated_activities",
+      "breakpoints": true
     }
   ]
 }

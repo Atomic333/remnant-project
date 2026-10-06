@@ -11,6 +11,8 @@ export interface H5PActivityRow {
   min_seconds: number;
   position: number;
   published: boolean;
+  generated?: boolean;
+  kind?: string | null;
 }
 
 const FN_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/h5p`;
@@ -46,7 +48,7 @@ export function useH5PActivities(slug: string | undefined, includeDrafts = false
   const reload = useCallback(async () => {
     if (!slug) return;
     let q = supabase.from("h5p_activities")
-      .select("id, marker_slug, title, library, reward_amount, min_seconds, position, published")
+      .select("id, marker_slug, title, library, reward_amount, min_seconds, position, published, generated, kind")
       .eq("marker_slug", slug).order("position");
     if (!includeDrafts) q = q.eq("published", true);
     const { data } = await q;
@@ -56,3 +58,11 @@ export function useH5PActivities(slug: string | undefined, includeDrafts = false
   useEffect(() => { reload(); }, [reload]);
   return { items, loading, reload };
 }
+
+/** Admin: build grounded activities for one marker (replaces earlier generated ones). */
+export const generateActivities = (m: { id: string; name: string; summary?: string; story?: string; sources?: { name: string }[] }) =>
+  callH5P<{ created: number; reason?: string; kinds?: string[] }>({
+    action: "generate", slug: m.id, title: m.name,
+    text: [m.summary, m.story].filter(Boolean).join("\n\n"),
+    sources: (m.sources ?? []).map((s) => s.name).slice(0, 3),
+  });

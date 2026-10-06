@@ -49,6 +49,7 @@ const MarkerActivities = ({ markerId }: { markerId: string }) => {
                 <div className="px-2 pb-3">
                   <H5PActivity
                     activityId={a.id}
+                    sharedLibraries={a.generated}
                     onAward={celebrate}
                     onStatus={(s) => setStatus((p) => ({ ...p, [a.id]: s }))}
                   />
