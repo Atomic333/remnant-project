@@ -122,6 +122,14 @@ button.h5p-joubelui-button {
   box-shadow: 0 8px 20px rgb(15 118 110 / 20%) !important;
 }
 
+.h5p-question-next.h5p-joubelui-button,
+.h5p-question-prev.h5p-joubelui-button {
+  min-width: 48px !important;
+  width: 48px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+}
+
 .h5p-joubelui-button:hover,
 .h5p-joubelui-button:focus-visible,
 .qs-startbutton:hover,
