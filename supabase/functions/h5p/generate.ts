@@ -3,7 +3,7 @@
  * Content comes only from the marker's own text; every item carries an evidence
  * quote that must appear verbatim in that text or the item is dropped.
  */
-import type { SupabaseClient } from "npm:@supabase/supabase-js@2";
+import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const BUCKET = "h5p-content";
 const MODEL = "openai/gpt-6-astra";
