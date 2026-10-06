@@ -618,7 +618,9 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          generated: boolean
           id: string
+          kind: string | null
           library: string | null
           marker_slug: string
           min_seconds: number
@@ -632,7 +634,9 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          generated?: boolean
           id?: string
+          kind?: string | null
           library?: string | null
           marker_slug: string
           min_seconds?: number
@@ -646,7 +650,9 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          generated?: boolean
           id?: string
+          kind?: string | null
           library?: string | null
           marker_slug?: string
           min_seconds?: number
