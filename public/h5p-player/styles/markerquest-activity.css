@@ -1,0 +1,178 @@
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/activity/manrope-400.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/activity/manrope-500.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/activity/manrope-600.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Sora";
+  font-style: normal;
+  font-weight: 600 800;
+  font-display: swap;
+  src: url("/fonts/activity/sora-700.ttf") format("truetype");
+}
+
+:root {
+  --mq-activity-ink: #123c38;
+  --mq-activity-teal: #0f766e;
+  --mq-activity-bright: #14b8a6;
+  --mq-activity-gold: #f4c95d;
+  --mq-activity-paper: #f8faf9;
+  --mq-activity-border: #bde8e2;
+}
+
+html.h5p-iframe,
+html.h5p-iframe > body,
+.h5p-content,
+.h5p-container,
+.h5p-question,
+.questionset {
+  background: #fff;
+  color: var(--mq-activity-ink);
+  font-family: "Manrope", system-ui, sans-serif;
+}
+
+.h5p-content {
+  border: 0;
+  font-size: 16px;
+}
+
+.intro-page,
+.h5p-question,
+.questionset-results {
+  padding: clamp(1.25rem, 5vw, 2.5rem) !important;
+}
+
+.intro-page .title,
+.h5p-question-introduction,
+.h5p-question-introduction > p,
+.questionset-results .greeting,
+.h5p-drag-text .h5p-question-introduction {
+  color: var(--mq-activity-ink) !important;
+  font-family: "Sora", system-ui, sans-serif !important;
+  line-height: 1.35 !important;
+}
+
+.intro-page .title {
+  font-size: clamp(1.75rem, 7vw, 2.5rem) !important;
+  font-weight: 800 !important;
+}
+
+.intro-page .introduction,
+.h5p-question-introduction,
+.h5p-question-introduction > p,
+.h5p-alternative-container,
+.h5p-drag-text,
+.h5p-drag-text p {
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+}
+
+.h5p-multichoice .h5p-answer,
+.h5p-true-false-answer,
+.h5p-drag-text [aria-dropeffect],
+.h5p-drag-text .h5p-draggable {
+  min-height: 48px;
+  border-radius: 10px !important;
+}
+
+.h5p-multichoice .h5p-alternative-container,
+.h5p-true-false-answer {
+  border-color: var(--mq-activity-border) !important;
+  background: var(--mq-activity-paper) !important;
+}
+
+.h5p-multichoice .h5p-answer:hover .h5p-alternative-container,
+.h5p-multichoice .h5p-answer:focus .h5p-alternative-container,
+.h5p-true-false-answer:hover,
+.h5p-true-false-answer:focus {
+  border-color: var(--mq-activity-bright) !important;
+  box-shadow: 0 0 0 3px rgb(20 184 166 / 18%) !important;
+}
+
+.h5p-joubelui-button,
+.h5p-question-check-answer,
+.h5p-question-finish,
+.qs-startbutton,
+button.h5p-joubelui-button {
+  min-height: 48px !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: var(--mq-activity-teal) !important;
+  color: #fff !important;
+  font-family: "Sora", system-ui, sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  padding: 0.75rem 1.5rem !important;
+  box-shadow: 0 8px 20px rgb(15 118 110 / 20%) !important;
+}
+
+.h5p-question-next.h5p-joubelui-button,
+.h5p-question-prev.h5p-joubelui-button {
+  min-width: 48px !important;
+  width: 48px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+}
+
+.h5p-joubelui-button:hover,
+.h5p-joubelui-button:focus-visible,
+.qs-startbutton:hover,
+.qs-startbutton:focus-visible {
+  background: var(--mq-activity-bright) !important;
+  outline: 3px solid rgb(20 184 166 / 28%) !important;
+  outline-offset: 2px !important;
+}
+
+.progress-dot.current,
+.progress-dot.answered,
+.h5p-question-scorebar-full-score {
+  background-color: var(--mq-activity-teal) !important;
+}
+
+.h5p-question-feedback {
+  border-radius: 10px;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+@media (max-width: 520px) {
+  .intro-page,
+  .h5p-question,
+  .questionset-results {
+    padding: 1.1rem !important;
+  }
+
+  .h5p-question-buttons.h5p-question-visible {
+    display: grid !important;
+    gap: 0.65rem;
+  }
+
+  .h5p-question-buttons .h5p-joubelui-button {
+    width: 100%;
+    margin: 0 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
