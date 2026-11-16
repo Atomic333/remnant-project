@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo2, Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
@@ -165,15 +165,9 @@ const AdminPage = () => {
       if (!raw) return;
       const saved = JSON.parse(raw) as Partial<FormState>;
       setForm({ ...emptyForm, ...saved });
-      toast("Restored your unsaved draft", {
-        description: "Re-pick any photo or 3D model file you had chosen.",
-        action: {
-          label: "Discard draft",
-          onClick: () => {
-            localStorage.removeItem(draftKey);
-            setForm(emptyForm);
-          },
-        },
+      toast({
+        title: "Restored your unsaved draft",
+        description: "Re-pick any photo or 3D model file. Use Clear/Cancel on the form to discard it.",
       });
     } catch {
       /* ignore bad draft */
