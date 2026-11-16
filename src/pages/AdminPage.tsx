@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Loader2, Plus, Sparkles, Trash2, Pencil, LogOut, Inbox, X, QrCode, Undo2, Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
@@ -154,7 +154,40 @@ const AdminPage = () => {
       return { ...prev, city: name };
     });
 
+  // Keep typed marker info across tab switches / background reloads (this device only).
+  const draftKey = user ? `mq-admin-marker-draft:${user.id}` : null;
+  const draftRestored = useRef(false);
+  useEffect(() => {
+    if (!draftKey || draftRestored.current) return;
+    draftRestored.current = true;
+    try {
+      const raw = localStorage.getItem(draftKey);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as Partial<FormState>;
+      setForm({ ...emptyForm, ...saved });
+      toast({
+        title: "Restored your unsaved draft",
+        description: "Re-pick any photo or 3D model file. Use Clear/Cancel on the form to discard it.",
+      });
+    } catch {
+      /* ignore bad draft */
+    }
+  }, [draftKey]);
+  useEffect(() => {
+    if (!draftKey || !draftRestored.current) return;
+    const t = setTimeout(() => {
+      try {
+        if (JSON.stringify(form) === JSON.stringify(emptyForm)) localStorage.removeItem(draftKey);
+        else localStorage.setItem(draftKey, JSON.stringify(form));
+      } catch {
+        /* storage full or blocked */
+      }
+    }, 400);
+    return () => clearTimeout(t);
+  }, [form, draftKey]);
+
   const resetForm = () => {
+    if (draftKey) localStorage.removeItem(draftKey);
     setForm(emptyForm);
     setPhoto(null);
     setExistingImagePath(null);
